@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include thaisummit *.css
+recursive-include thaisummit *.csv
+recursive-include thaisummit *.html
+recursive-include thaisummit *.ico
+recursive-include thaisummit *.js
+recursive-include thaisummit *.json
+recursive-include thaisummit *.md
+recursive-include thaisummit *.png
+recursive-include thaisummit *.py
+recursive-include thaisummit *.svg
+recursive-include thaisummit *.txt
+recursive-exclude thaisummit *.pyc
