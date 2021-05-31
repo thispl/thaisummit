@@ -1,0 +1,117 @@
+{
+ "actions": [],
+ "autoname": "QRC-.####",
+ "creation": "2021-04-20 18:58:57.087444",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "department",
+  "employee_type",
+  "column_break_4",
+  "qr_shift",
+  "created_date",
+  "shift_date",
+  "section_break_9",
+  "qr_scan_time",
+  "column_break_11",
+  "attendance"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Department",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qr_shift",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "QR Shift",
+   "options": "Shift Type"
+  },
+  {
+   "fieldname": "qr_scan_time",
+   "fieldtype": "Datetime",
+   "label": "QR Scan Time"
+  },
+  {
+   "fieldname": "attendance",
+   "fieldtype": "Link",
+   "label": "Attendance",
+   "options": "Attendance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "created_date",
+   "fieldtype": "Date",
+   "label": "Created Date"
+  },
+  {
+   "fieldname": "shift_date",
+   "fieldtype": "Date",
+   "label": "Shift Date"
+  },
+  {
+   "fieldname": "section_break_9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_type",
+   "fieldtype": "Data",
+   "label": "Employee Type",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-05-17 07:43:16.675010",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "QR Checkin",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "creation": "2021-04-29 19:45:48.999073",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "qr",
+  "parts_no",
+  "parts_name",
+  "mat_no",
+  "quantity",
+  "model",
+  "date_and_time",
+  "card_type",
+  "date"
+ ],
+ "fields": [
+  {
+   "fieldname": "qr",
+   "fieldtype": "Data",
+   "label": "QR"
+  },
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parts No",
+   "options": "Part Master",
+   "unique": 1
+  },
+  {
+   "fetch_from": "parts_no.parts_name",
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parts Name"
+  },
+  {
+   "fetch_from": "parts_no.mat_no",
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "label": "Mat No"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Quantity"
+  },
+  {
+   "fetch_from": "parts_no.model_no",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "date_and_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Date and Time"
+  },
+  {
+   "fieldname": "card_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tag Type"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-05-07 07:49:34.441192",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag Receipt Entry Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

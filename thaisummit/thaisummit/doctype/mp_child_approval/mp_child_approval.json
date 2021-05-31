@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "creation": "2021-04-30 10:01:03.799391",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "attendance_date",
+  "attendance",
+  "column_break_5",
+  "miss_punch_application",
+  "in_time",
+  "out_time",
+  "qr_scan_time",
+  "approve",
+  "correction"
+ ],
+ "fields": [
+  {
+   "columns": 1,
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "columns": 2,
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "columns": 2,
+   "fieldname": "attendance_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date"
+  },
+  {
+   "fieldname": "attendance",
+   "fieldtype": "Link",
+   "label": "Attendance",
+   "options": "Attendance"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "columns": 2,
+   "fieldname": "in_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "IN Time"
+  },
+  {
+   "columns": 2,
+   "fieldname": "out_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "OUT Time"
+  },
+  {
+   "columns": 2,
+   "fieldname": "qr_scan_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "QR Scan Time"
+  },
+  {
+   "columns": 1,
+   "fieldname": "approve",
+   "fieldtype": "Button",
+   "in_list_view": 1,
+   "label": "Approve"
+  },
+  {
+   "fieldname": "miss_punch_application",
+   "fieldtype": "Link",
+   "label": "Miss Punch Application",
+   "options": "Miss Punch Application"
+  },
+  {
+   "fieldname": "correction",
+   "fieldtype": "Select",
+   "label": "Correction",
+   "options": "\nIN Time\nOUT Time\nQR Scan Time"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-05-25 06:58:39.568471",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "MP Child Approval",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

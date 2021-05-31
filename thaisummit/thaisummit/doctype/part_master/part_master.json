@@ -1,0 +1,125 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:parts_no",
+ "creation": "2021-04-26 18:19:41.164184",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parts_no",
+  "parts_name",
+  "group",
+  "tag_type",
+  "column_break_3",
+  "customer",
+  "model_no",
+  "mat_no",
+  "section_break_7",
+  "sap_available_quantity",
+  "temp_avl_qty",
+  "column_break_9",
+  "sap_quantity_updated_on",
+  "temp_qty_updated_on"
+ ],
+ "fields": [
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Data",
+   "label": "Part No",
+   "unique": 1
+  },
+  {
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "label": "Part Name"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "model_no",
+   "fieldtype": "Data",
+   "label": "Model No"
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "label": "Mat No"
+  },
+  {
+   "fieldname": "tag_type",
+   "fieldtype": "Link",
+   "label": "Tag Type",
+   "options": "Tag Type"
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "sap_available_quantity",
+   "fieldtype": "Data",
+   "label": "SAP Available Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sap_quantity_updated_on",
+   "fieldtype": "Data",
+   "label": "SAP Quantity Updated On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "temp_avl_qty",
+   "fieldtype": "Data",
+   "label": "Temp Available Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "temp_qty_updated_on",
+   "fieldtype": "Data",
+   "label": "Temp Quantity Updated On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "group",
+   "fieldtype": "Data",
+   "label": "Group"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-05-06 21:08:03.428553",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Part Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

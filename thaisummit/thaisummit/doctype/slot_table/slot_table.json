@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "creation": "2021-04-30 10:50:24.091304",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tag_no",
+  "parts_no",
+  "mat_no",
+  "required_quantity",
+  "sap_quantity",
+  "difference",
+  "datetime",
+  "tag_type",
+  "dispatch_datetime"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "tag_no",
+   "fieldtype": "Data",
+   "label": "Tag No"
+  },
+  {
+   "columns": 2,
+   "fieldname": "parts_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parts No"
+  },
+  {
+   "columns": 2,
+   "fieldname": "required_quantity",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Required Quantity"
+  },
+  {
+   "columns": 2,
+   "fieldname": "sap_quantity",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "SAP Quantity"
+  },
+  {
+   "columns": 2,
+   "fieldname": "difference",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Diff."
+  },
+  {
+   "columns": 2,
+   "fieldname": "datetime",
+   "fieldtype": "Datetime",
+   "label": "Datetime"
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "label": "Mat No"
+  },
+  {
+   "fieldname": "tag_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Tag Type",
+   "options": "Tag Type"
+  },
+  {
+   "fieldname": "dispatch_datetime",
+   "fieldtype": "Data",
+   "label": "Dispatch DateTime"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-05-17 12:04:23.507603",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Slot Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

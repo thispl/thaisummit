@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "creation": "2021-05-06 12:03:27.956792",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "qr",
+  "status",
+  "items_recieved_section",
+  "receipt_entry_table",
+  "submit_time",
+  "submit"
+ ],
+ "fields": [
+  {
+   "fieldname": "qr",
+   "fieldtype": "Data",
+   "label": "QR"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Status",
+   "options": "\nWeld\nACD\nDirect SPD\nOMP SPD\nPartial\nSubmit"
+  },
+  {
+   "fieldname": "items_recieved_section",
+   "fieldtype": "Section Break",
+   "label": "Items Recieved"
+  },
+  {
+   "fieldname": "receipt_entry_table",
+   "fieldtype": "Table",
+   "label": "Receipt Entry Table",
+   "options": "Tag Receipt Entry Table"
+  },
+  {
+   "fieldname": "submit_time",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "label": "Submit Time"
+  },
+  {
+   "fieldname": "submit",
+   "fieldtype": "Button",
+   "label": "Submit"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2021-05-15 15:51:52.361511",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TAG Cancel",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

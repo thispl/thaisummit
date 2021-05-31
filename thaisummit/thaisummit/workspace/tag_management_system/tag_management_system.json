@@ -1,0 +1,115 @@
+{
+ "category": "Modules",
+ "charts": [],
+ "creation": "2021-05-06 12:55:02.333924",
+ "developer_mode_only": 0,
+ "disable_user_customization": 1,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "TAG Management System",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Part Master",
+   "link_to": "Part Master",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "TAG Management Settings",
+   "link_to": "TAG Monitoring Management",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "TAG Master Report",
+   "link_to": "TAG Master Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "TAG Master 8 to 8 Report",
+   "link_to": "TAG Master 8 to 8 Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "TAG Master Monthly Report",
+   "link_to": "TAG Master Monthly Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2021-05-15 12:15:03.284369",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TAG Management System",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "TAG IN",
+   "link_to": "TAG IN",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "TAG OUT",
+   "link_to": "TAG OUT",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "TAG Cancel",
+   "link_to": "TAG Cancel",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "TAG Slot",
+   "link_to": "TAG Slot",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "List",
+   "label": "TAG Master",
+   "link_to": "TAG Master",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "TAG Monitoring",
+   "link_to": "tag-monitoring",
+   "type": "Page"
+  }
+ ]
+}

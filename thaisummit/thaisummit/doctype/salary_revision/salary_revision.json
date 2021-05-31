@@ -1,0 +1,130 @@
+{
+ "actions": [],
+ "creation": "2021-05-11 21:48:46.674593",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "basic",
+  "house_rent_allowance",
+  "conveyance_allowance",
+  "special_allowance",
+  "other_allowance",
+  "medical_allowance",
+  "leave_travel_allowance",
+  "column_break_8",
+  "position_allowance",
+  "children_education",
+  "children_hostel",
+  "washing_allowance",
+  "welding_allowance",
+  "temp_allowance"
+ ],
+ "fields": [
+  {
+   "fieldname": "basic",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Basic",
+   "search_index": 1
+  },
+  {
+   "fieldname": "house_rent_allowance",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "House Rent Allowance",
+   "search_index": 1
+  },
+  {
+   "fieldname": "conveyance_allowance",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Conveyance Allowance",
+   "search_index": 1
+  },
+  {
+   "fieldname": "special_allowance",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Special Allowance",
+   "search_index": 1
+  },
+  {
+   "fieldname": "other_allowance",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Other Allowance",
+   "search_index": 1
+  },
+  {
+   "fieldname": "medical_allowance",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Medical Allowance",
+   "search_index": 1
+  },
+  {
+   "fieldname": "leave_travel_allowance",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Leave Travel Allowance",
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "position_allowance",
+   "fieldtype": "Currency",
+   "label": "Position Allowance"
+  },
+  {
+   "fieldname": "children_education",
+   "fieldtype": "Currency",
+   "label": "Children Education"
+  },
+  {
+   "fieldname": "children_hostel",
+   "fieldtype": "Currency",
+   "label": "Children Hostel"
+  },
+  {
+   "fieldname": "washing_allowance",
+   "fieldtype": "Currency",
+   "label": "Washing Allowance"
+  },
+  {
+   "fieldname": "welding_allowance",
+   "fieldtype": "Currency",
+   "label": "Welding Allowance"
+  },
+  {
+   "fieldname": "temp_allowance",
+   "fieldtype": "Currency",
+   "label": "Temp Allowance"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2021-05-11 22:07:20.116753",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Salary Revision",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

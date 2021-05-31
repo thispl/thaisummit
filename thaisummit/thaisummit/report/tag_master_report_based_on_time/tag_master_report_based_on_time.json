@@ -1,0 +1,119 @@
+{
+ "add_total_row": 0,
+ "columns": [
+  {
+   "fieldname": "qr",
+   "fieldtype": "Data",
+   "label": "QR",
+   "width": 0
+  },
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Data",
+   "label": "Parts No",
+   "width": 0
+  },
+  {
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "label": "Parts Name",
+   "width": 0
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "label": "Mat No",
+   "width": 0
+  },
+  {
+   "fieldname": "required_quantity",
+   "fieldtype": "Data",
+   "label": "Required Quantity",
+   "width": 0
+  },
+  {
+   "fieldname": "sap_quantity",
+   "fieldtype": "Data",
+   "label": "SAP Quantity",
+   "width": 0
+  },
+  {
+   "fieldname": "difference",
+   "fieldtype": "Data",
+   "label": "Diff.",
+   "width": 0
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model",
+   "width": 0
+  },
+  {
+   "fieldname": "date_and_time",
+   "fieldtype": "Datetime",
+   "label": "Date and Time",
+   "width": 0
+  },
+  {
+   "fieldname": "delay_duration",
+   "fieldtype": "Time",
+   "label": "Delay Duration",
+   "width": 0
+  },
+  {
+   "fieldname": "card_type",
+   "fieldtype": "Data",
+   "label": "Card Type",
+   "width": 0
+  }
+ ],
+ "creation": "2021-05-06 12:58:58.819979",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "from_time",
+   "fieldtype": "Time",
+   "label": "From Time",
+   "mandatory": 0,
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "to_time",
+   "fieldtype": "Time",
+   "label": "To Time",
+   "mandatory": 0,
+   "wildcard_filter": 0
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "TS_logo",
+ "modified": "2021-05-06 13:12:38.230289",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TAG Master Report Based on Time",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select\n`tabTAG Master`.qr,\n`tabTAG Master`.parts_no,\n`tabTAG Master`.parts_name,\n`tabTAG Master`.mat_no,\n`tabTAG Master`.required_quantity,\n`tabTAG Master`.sap_quantity,\n`tabTAG Master`.difference,\n`tabTAG Master`.model,\n`tabTAG Master`.date_and_time,\n`tabTAG Master`.delay_duration,\n`tabTAG Master`.card_type\nfrom\n`tabTAG Master`\nwhere\ndate(date_and_time) = CURDATE() \nand\ntime(date_and_time) between %(from_time)s and %(to_time)s\n",
+ "ref_doctype": "TAG Master",
+ "report_name": "TAG Master Report Based on Time",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "Employee"
+  }
+ ]
+}

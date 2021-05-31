@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "autoname": "TI.####",
+ "creation": "2021-05-15 11:34:06.127257",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "qr",
+  "status",
+  "items_recieved_section",
+  "receipt_entry_table",
+  "submit_time",
+  "submit",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "qr",
+   "fieldtype": "Data",
+   "label": "QR"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Status",
+   "options": "\nWeld\nACD\nDirect SPD\nOMP SPD\nPartial\nSubmit"
+  },
+  {
+   "fieldname": "items_recieved_section",
+   "fieldtype": "Section Break",
+   "label": "Items Recieved"
+  },
+  {
+   "fieldname": "receipt_entry_table",
+   "fieldtype": "Table",
+   "label": "Receipt Entry Table",
+   "options": "Tag Receipt Entry Table"
+  },
+  {
+   "fieldname": "submit_time",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "label": "Submit Time"
+  },
+  {
+   "fieldname": "submit",
+   "fieldtype": "Button",
+   "hidden": 1,
+   "label": "Submit"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Tag In doctype",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-05-15 11:44:28.311708",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag In doctype",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

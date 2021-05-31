@@ -1,0 +1,125 @@
+{
+ "actions": [],
+ "autoname": "field:slot_no",
+ "creation": "2021-04-30 10:48:04.118439",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "slot_no",
+  "datetime",
+  "data_3",
+  "status",
+  "section_break_5",
+  "tag_wise_list",
+  "last_updated_on",
+  "amended_from",
+  "dispatch_details_section",
+  "dispatch_time",
+  "dispatch_readiness",
+  "section_break_12",
+  "download"
+ ],
+ "fields": [
+  {
+   "fieldname": "slot_no",
+   "fieldtype": "Data",
+   "label": "Slot No",
+   "unique": 1
+  },
+  {
+   "fieldname": "datetime",
+   "fieldtype": "Datetime",
+   "label": "DateTime"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nLive\nPending\nDelivered\nCancelled"
+  },
+  {
+   "fieldname": "tag_wise_list",
+   "fieldtype": "Table",
+   "label": "Tag Wise List",
+   "options": "Slot Table"
+  },
+  {
+   "fieldname": "data_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "last_updated_on",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Last Updated On"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "TAG Slot",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "dispatch_details_section",
+   "fieldtype": "Section Break",
+   "label": "Dispatch Details"
+  },
+  {
+   "fieldname": "dispatch_time",
+   "fieldtype": "Datetime",
+   "label": "Dispatch Time"
+  },
+  {
+   "fieldname": "dispatch_readiness",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Dispatch Readiness"
+  },
+  {
+   "fieldname": "section_break_12",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "download",
+   "fieldtype": "Button",
+   "label": "Download"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-05-17 09:53:50.216072",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TAG Slot",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

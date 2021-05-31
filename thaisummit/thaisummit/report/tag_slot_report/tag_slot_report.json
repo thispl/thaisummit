@@ -1,0 +1,86 @@
+{
+ "add_total_row": 0,
+ "columns": [
+  {
+   "fieldname": "recieved_time",
+   "fieldtype": "Datetime",
+   "label": "CARD RECEIVED DATE & TIME",
+   "width": 0
+  },
+  {
+   "fieldname": "delivered_time",
+   "fieldtype": "Date",
+   "label": "DISPATCH DATE & TIME",
+   "width": 0
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "label": "MAT NO",
+   "width": 0
+  },
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Data",
+   "label": "PART NO",
+   "width": 0
+  },
+  {
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "label": "PART NAME",
+   "width": 0
+  },
+  {
+   "fieldname": "required_quantity",
+   "fieldtype": "Data",
+   "label": "DISPATCH QTY",
+   "width": 0
+  },
+  {
+   "fieldname": "sap_quantity",
+   "fieldtype": "Data",
+   "label": "SAP STOCK",
+   "width": 0
+  },
+  {
+   "fieldname": "dispatch_readiness",
+   "fieldtype": "Data",
+   "label": "DISPATCH READINESS STATUS",
+   "width": 0
+  }
+ ],
+ "creation": "2021-05-15 15:04:02.280710",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "TS_logo",
+ "modified": "2021-05-15 16:04:07.537558",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TAG Slot Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT\n`tabSlot Table`.datetime,\n`tabTAG Slot`.dispatch_time,\n`tabSlot Table`.mat_no,\n`tabSlot Table`.parts_no,\n`tabSlot Table`.parts_no,\n`tabSlot Table`.required_quantity,\n`tabSlot Table`.sap_quantity,\n`tabTAG Slot`.dispatch_readiness\nFROM\n`tabTAG Slot`\nLEFT JOIN `tabSlot Table` ON `tabSlot Table`.parent = `tabTAG Slot`.name",
+ "ref_doctype": "TAG Slot",
+ "report_name": "TAG Slot Report",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "Employee"
+  }
+ ]
+}

@@ -1,0 +1,156 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "TM.#####",
+ "creation": "2021-04-26 18:22:07.448796",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "qr",
+  "parts_no",
+  "parts_name",
+  "mat_no",
+  "item_delivered",
+  "sent",
+  "delivery_status",
+  "column_break_4",
+  "required_quantity",
+  "sap_quantity",
+  "difference",
+  "model",
+  "recieved_time",
+  "date_and_time",
+  "delay_duration",
+  "tag_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Link",
+   "label": "Parts No",
+   "options": "Part Master",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "parts_no.parts_name",
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "label": "Parts Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "parts_no.model_no",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_and_time",
+   "fieldtype": "Datetime",
+   "label": "Delivered Time"
+  },
+  {
+   "fieldname": "qr",
+   "fieldtype": "Data",
+   "label": "QR",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sent",
+   "fieldtype": "Select",
+   "label": "Sent",
+   "options": "\nOn Time Sent\nDelay",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "item_delivered",
+   "fieldtype": "Check",
+   "label": "Item Delivered"
+  },
+  {
+   "default": "00:00:00",
+   "fieldname": "delay_duration",
+   "fieldtype": "Time",
+   "label": "Delay Duration",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "parts_no.mat_no",
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "label": "Mat No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sap_quantity",
+   "fieldtype": "Data",
+   "label": "SAP Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "required_quantity",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Required Quantity"
+  },
+  {
+   "default": "0",
+   "fieldname": "difference",
+   "fieldtype": "Data",
+   "label": "Diff.",
+   "read_only": 1
+  },
+  {
+   "default": "Pending",
+   "fieldname": "delivery_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nDelivered\nPending\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recieved_time",
+   "fieldtype": "Datetime",
+   "label": "Recieved Time"
+  },
+  {
+   "fieldname": "tag_type",
+   "fieldtype": "Link",
+   "label": "Tag Type",
+   "options": "Tag Type",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-05-14 12:03:09.725310",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TAG Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

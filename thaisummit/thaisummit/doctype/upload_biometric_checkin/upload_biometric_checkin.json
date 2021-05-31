@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "autoname": "UBC-.####",
+ "creation": "2021-05-08 12:34:59.946830",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "attach",
+  "upload",
+  "column_break_3",
+  "date",
+  "amended_from",
+  "section_break_6",
+  "error_preview"
+ ],
+ "fields": [
+  {
+   "description": "Attach ESSL Biometric Checkins in CSV format",
+   "fieldname": "attach",
+   "fieldtype": "Attach"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.docstatus == 0 && !doc.__islocal",
+   "fieldname": "upload",
+   "fieldtype": "Button",
+   "label": "Upload"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Upload Biometric Checkin",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "error_preview",
+   "fieldtype": "HTML",
+   "label": "error preview"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-05-24 11:21:01.943426",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Upload Biometric Checkin",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

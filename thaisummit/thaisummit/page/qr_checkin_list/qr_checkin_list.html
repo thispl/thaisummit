@@ -1,0 +1,53 @@
+<div class="container">
+  <br>
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <ul id="qr-list" class="list-group">
+          {% for d in data %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ d["employee"] }} : {{ d["employee_name"] }}
+            <span id="delete" class="badge badge-danger badge-pill" onclick="deleteCheckin(`{{d["\checkinid"\]}}`)">Delete</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-md-5 col-xs-3"></div>
+      <div class=" col-md-2 col-xs-5">
+        <button id="back" type="button" class="btn btn-primary btn-lg">Back</button>
+      </div>
+      <div class="col-md-5 col-xs-2"></div>
+    </div>
+    <br>
+  </div>
+
+
+</div>
+
+<script type="text/javascript">
+  if(document.getElementById("back")){
+    document.getElementById("back").onclick = function () {
+        location.href = "/app/scan-qr";
+    };
+}
+
+  function deleteCheckin(checkin) {
+    frappe.call({
+      method: "thaisummit.qr_utils.update_deleted_qr",
+      args: { checkin: checkin },
+      callback: function (r) {
+        frappe.msgprint(r.message);
+        setTimeout(function () {
+          window.location.href = "/app/qr-checkin-list";
+      }, 1000);
+
+      }
+    })
+
+  }
+</script>

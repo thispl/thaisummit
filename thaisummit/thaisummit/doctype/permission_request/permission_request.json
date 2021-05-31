@@ -1,0 +1,191 @@
+{
+ "actions": [],
+ "autoname": "PR-.####",
+ "creation": "2021-05-06 18:16:34.374775",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "attendance",
+  "requested_date",
+  "column_break_4",
+  "department",
+  "designation",
+  "approver_section",
+  "permission_approver",
+  "column_break_9",
+  "permission_approver_name",
+  "section_break_7",
+  "attendance_date",
+  "shift",
+  "reason",
+  "column_break_10",
+  "session",
+  "from_time",
+  "to_time",
+  "hours",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee ID",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Read Only",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "attendance",
+   "fieldtype": "Link",
+   "label": "Attendance",
+   "options": "Attendance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_7",
+   "fieldtype": "Section Break",
+   "label": "Permission Details"
+  },
+  {
+   "fieldname": "attendance_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Permission Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "from_time",
+   "fieldtype": "Time",
+   "label": "From Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "to_time",
+   "fieldtype": "Time",
+   "label": "To Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Permission Request",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.shift",
+   "fieldname": "session",
+   "fieldtype": "Select",
+   "label": "Session",
+   "options": "First Half\nSecond Half"
+  },
+  {
+   "fetch_from": "department.permission_approver",
+   "fieldname": "permission_approver",
+   "fieldtype": "Link",
+   "label": "Permission Approver",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "permission_approver.full_name",
+   "fieldname": "permission_approver_name",
+   "fieldtype": "Read Only",
+   "label": "Permission Approver Name"
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Read Only",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "approver_section",
+   "fieldtype": "Section Break",
+   "label": "Approver Details"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason",
+   "reqd": 1
+  },
+  {
+   "fieldname": "requested_date",
+   "fieldtype": "Date",
+   "label": "Requested Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hours",
+   "fieldtype": "Data",
+   "label": "Hours",
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-05-27 14:52:50.364836",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Permission Request",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "employee_name",
+ "track_changes": 1
+}

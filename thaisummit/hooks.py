@@ -83,9 +83,21 @@ app_license = "MIT"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Salary Slip": "thaisummit.overrides.CustomSalarySlip",
+	"Payroll Entry": "thaisummit.overrides.CustomPayrollEntry",
+	"Shift Assignment": "thaisummit.overrides.CustomShiftAssignment",
+	"Leave Application": "thaisummit.overrides.CustomLeaveApplication"
+}
+
+jenv = {
+	"methods": [
+		"manpower_attendance_report:thaisummit.thaisummit.doctype.manpower_attendance_report.manpower_attendance_report.manpower_attendance_report",
+		"shift_wise_count:thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.shift_wise_count",
+		"shift_employees:thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.shift_employees",
+		"get_shift_status:thaisummit.thaisummit.doctype.shift_schedule_status_summary.shift_schedule_status_summary.get_shift_status",
+	]
+}
 
 # Document Events
 # ---------------
@@ -102,13 +114,15 @@ app_license = "MIT"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"thaisummit.tasks.all"
 # 	],
-# 	"daily": [
-# 		"thaisummit.tasks.daily"
-# 	],
+	"daily": [
+		"thaisummit.custom.send_birthday_wish",
+		"thaisummit.custom.send_mail_hr",
+		"thaisummit.custom.create_leave_allocation"
+	],
 # 	"hourly": [
 # 		"thaisummit.tasks.hourly"
 # 	],
@@ -118,7 +132,21 @@ app_license = "MIT"
 # 	"monthly": [
 # 		"thaisummit.tasks.monthly"
 # 	]
-# }
+	"weekly": [
+        "thaisummit.custom.mail_wc_get_trainee",
+        "thaisummit.custom.mail_wc_get_probation",
+        "thaisummit.custom.mail_wc_probation"
+	],
+	"yearly": [
+		"thaisummit.custom.el_leave_policy",
+		"thaisummit.custom.el_leave_encashment"
+	],
+	"cron": {
+        "5 0 1 * *": [
+            "thaisummit.custom.mark_deductions"
+        ]
+	}
+}
 
 # Testing
 # -------
