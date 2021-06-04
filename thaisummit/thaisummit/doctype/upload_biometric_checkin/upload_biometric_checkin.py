@@ -13,7 +13,7 @@ class UploadBiometricCheckin(Document):
 	def error_preview(self):
 		filepath = get_file(self.attach)
 		pps = read_csv_content(filepath[1])
-		errs = '<h2>Error Checkins </h2><table class="table table-bordered"><tr><td style="background-color:#f0b27a">Row No.</td><td style="background-color:#f0b27a">Employee ID</td><td style="background-color:#f0b27a">Error</td><tr>'
+		errs = '<h2>Error Checkins </h2><table class="table table-bordered"><tr><td style="background-color:#f0b27a; border: 1px solid black">Row No.</td><td style="background-color:#f0b27a; border: 1px solid black">Employee ID</td><td style="background-color:#f0b27a; border: 1px solid black">Error</td><tr>'
 		i = 1
 		rows = 1
 		err_rows = 1
@@ -21,11 +21,11 @@ class UploadBiometricCheckin(Document):
 			if pp[5] != 'Employee Name':
 				if pp[5]:
 					if not frappe.db.exists("Employee",pp[5]):
-						errs += '<tr><td>%s</td><td>%s</td><td>Employee not found</td></tr>'%(i,pp[5])
+						errs += '<tr><td style="border: 1px solid black">%s</td><td style="border: 1px solid black">%s</td><td style="border: 1px solid black">Employee not found</td></tr>'%(i,pp[5])
 						err_rows += 1
 					rows += 1
 			i += 1
-		count = '<h2>Summary</h2><table class="table table-bordered"><tr><td style="background-color:#f0b27a">Valid Rows</td><th>%s</th><td style="background-color:#f0b27a">Invalid Rows</td><th>%s</th></tr></table>'%(rows,err_rows)
+		count = '<h2>Summary</h2><table class="table table-bordered"><tr><td style="background-color:#f0b27a; border: 1px solid black">Total Checkins</td><td style="border: 1px solid black">%s</td><td style="background-color:#f0b27a; border: 1px solid black">Valid Checkins</td><td style="border: 1px solid black">%s</td><td style="background-color:#f0b27a; border: 1px solid black">Invalid Checkins</td><td style="border: 1px solid black">%s</td></tr></table>'%(rows,rows-err_rows,err_rows)
 		data = count + errs + '</table>'
 		return data
 	

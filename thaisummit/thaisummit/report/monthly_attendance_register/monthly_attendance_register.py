@@ -320,10 +320,10 @@ def get_columns(filters):
 
 def get_attendance_list(conditions, filters):
 
-	query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,qr_shift,leave_type,attendance_request from tabAttendance where docstatus = 1 and attendance_date between '%s' and '%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.company)
+	query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,qr_shift,leave_type,attendance_request from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.company)
 	# query = """ select employee, day(attendance_date) as day_of_month,status,shift,qr_shift,leave_type,attendance_request from tabAttendance where docstatus = 1  and attendance_date between '2021-03-01' and '2021-03-31' order by employee, attendance_date"""
 	if filters.employee:
-		query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,qr_shift,leave_type,attendance_request from tabAttendance where docstatus = 1 and attendance_date between '%s' and '%s' and employee='%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.employee,filters.company)
+		query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,qr_shift,leave_type,attendance_request from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and employee='%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.employee,filters.company)
 
 	attendance_list = frappe.db.sql(query,as_dict=1)
 
@@ -388,7 +388,7 @@ def get_conditions(filters):
 def get_employee_details(employee_type,department,group_by, company):
 	emp_map = {}
 	query = """select name, employee_name, designation, department, branch, company,
-	holiday_list from `tabEmployee` where company = %s and employee_type = '%s' """ % (frappe.db.escape(company),employee_type)
+	holiday_list from `tabEmployee` where company = %s and employee_type = '%s' and vacant = '0' """ % (frappe.db.escape(company),employee_type)
 
 	if group_by:
 		group_by = group_by.lower()

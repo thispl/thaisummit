@@ -8,12 +8,10 @@ frappe.ui.form.on('Manual Attendance Correction Approval', {
 			frm.set_value("from_date", frappe.datetime.month_start());
 			frm.set_value("to_date", frappe.datetime.month_end());
 		}
-		// $.each(frm.doc.mp_child_approval,function(i,d){
-			// console.log(d.in_time)
-			// $("div[data-fieldname=in_time]").find(format('div.grid-row[data-idx="{0}"]', [0])).css({'background-color': '#FF0000'});
-			// $("div[data-fieldname=in_time]").find(format('div.grid-row[data-idx="{0}"]', [d.idx])).find('.grid-static-col').css({'background-color': '#FF0000'});    
-		// })
+		frm.trigger("highlight_changes")
 	},
+
+
 	mp_child_approval_on_form_rendered: function (frm, cdt, cdn) {
 		frm.fields_dict['mp_child_approval'].grid.wrapper.find('.grid-delete-row').hide();
 		frm.fields_dict['mp_child_approval'].grid.wrapper.find('.grid-duplicate-row').hide();
@@ -23,6 +21,7 @@ frappe.ui.form.on('Manual Attendance Correction Approval', {
 		frm.fields_dict['mp_child_approval'].grid.wrapper.find('.grid-insert-row').hide();
 	},
 	from_date: function (frm) {
+
 		if (frm.doc.from_date && frm.doc.to_date) {
 			if (frappe.user.has_role('HOD')) {
 				frm.trigger('get_mp_hod')
@@ -31,6 +30,12 @@ frappe.ui.form.on('Manual Attendance Correction Approval', {
 				frm.trigger('get_mp_hr')
 			}
 		}
+		
+		$.each(frm.doc.mp_child_approval, function (i, d) {
+			
+		})
+		frm.trigger("highlight_changes")
+
 	},
 	to_date: function (frm) {
 		if (frm.doc.from_date && frm.doc.to_date) {
@@ -41,6 +46,31 @@ frappe.ui.form.on('Manual Attendance Correction Approval', {
 				frm.trigger('get_mp_hr')
 			}
 		}
+	},
+
+	highlight_changes(frm) {
+		// $.each(frm.doc.mp_child_approval, function (i, d) {
+
+			cur_frm.fields_dict["mp_child_approval"].$wrapper.find('.grid-body .rows').find(".grid-row").each(function(i, item) {
+				let d = locals[cur_frm.fields_dict["mp_child_approval"].grid.doctype][$(item).attr('data-fieldname')];
+				if(d["correction"] == 'OUT Time'){
+					$(item).find('.grid-static-col').css({'background-color': '#FF0000'});
+				}
+			});	
+
+			// if(d.correction == 'OUT Time'){
+			// 	console.log($("div[data-fieldname='out_time']"))
+			// 	$("div[data-fieldname='out_time']").find('.grid-static-col').css({'background-color': '#FF0000'});    
+			// 	// $("div[data-fieldname='out_time']").css({'background-color': '#FF0000'});
+			// }
+			// if(d.correction == 'IN Time'){
+			// 	// $("div[data-fieldname=in_time]").find(format('div.grid-row[data-idx="{0}"]', [d.idx])).find('.grid-static-col').css({'background-color': '#FF0000'});    
+			// 	$("div[data-fieldname='in_time']").css({'background-color': '#FF0000'});
+			// }
+			// $("div[data-fieldname=mp_child_approval]").find(".grid-static-col[data-fieldname='in_time']").css({ 'background-color': 'lightgreen' });
+			// $('div.grid-row[data-idx="{0}"]', [0]).css({'background-color': '#FF0000'});
+			// $("div[data-fieldname=in_time]").find(format('div.grid-row[data-idx="{0}"]', [d.idx])).find('.grid-static-col').css({'background-color': '#FF0000'});    
+		// })
 	},
 	get_mp_hod(frm) {
 		frm.clear_table('mp_child_approval')
@@ -57,10 +87,11 @@ frappe.ui.form.on('Manual Attendance Correction Approval', {
 						'in_time': d.in_time,
 						'out_time': d.out_time,
 						'qr_scan_time': d.qr_scan_time,
-						'correction' : d.correction
+						'correction': d.correction
 					})
 				})
 				frm.refresh_field('mp_child_approval')
+				frm.trigger("highlight_changes")
 			})
 	},
 	get_mp_hr(frm) {
@@ -78,7 +109,7 @@ frappe.ui.form.on('Manual Attendance Correction Approval', {
 						'in_time': d.in_time,
 						'out_time': d.out_time,
 						'qr_scan_time': d.qr_scan_time,
-						'correction' : d.correction
+						'correction': d.correction
 					})
 				})
 				frm.refresh_field('mp_child_approval')
@@ -86,47 +117,63 @@ frappe.ui.form.on('Manual Attendance Correction Approval', {
 	}
 });
 
-frappe.ui.form.on('MP Child Approval', {
-	approve(frm, cdt, cdn) {
-		var child = locals[cdt][cdn]
-		if (!child.in_time) {
-			frappe.throw("Please Enter IN Time")
+
+// })
+
+frappe.ui.form.on("MP Child Approval", "onload", function (frm, cdt, cdn) {
+	console.log('hi')
+	var child = locals[cdt][cdn];
+	cur_frm.doc.mp_child_approval.forEach(function (child) {
+		var sel = format('div[data-fieldname="mp_child_approval"] > div.grid-row[data-idx="{0}"]', [child.idx]);
+		if (child.amount > 1000) {
+			$(sel).css('background-color', "#ff5858");
+		} else {
+			$(sel).css('background-color', 'red');
 		}
-		if (!child.out_time) {
-			frappe.throw("Please Enter OUT Time")
-		}
-		if (!child.qr_scan_time) {
-			frappe.throw("Please Enter QR Scan Time")
-		}
-		if (frappe.user.has_role('HOD')) {
-			if (child.in_time && child.out_time && child.qr_scan_time) {
-				frm.call('approve_miss_punch_hod', {
-					row: child,
-					from_date: frm.doc.from_date,
-					to_date: frm.doc.to_date
-				}).then((mp) => {
-					if (mp.message == 'ok') {
-						frm.get_field("mp_child_approval").grid.grid_rows[child.idx - 1].remove();
-						frm.refresh_field('mp_child_approval')
-						frappe.msgprint('Approved')
-					}
-				})
-			}
-		}
-		if (frappe.user.has_role('HR GM')) {
-			if (child.in_time && child.out_time && child.qr_scan_time) {
-				frm.call('approve_miss_punch_hr', {
-					row: child,
-					from_date: frm.doc.from_date,
-					to_date: frm.doc.to_date
-				}).then((mp) => {
-					if (mp.message == 'ok') {
-						frm.get_field("mp_child_approval").grid.grid_rows[child.idx - 1].remove();
-						frm.refresh_field('mp_child_approval')
-						frappe.msgprint('Approved')
-					}
-				})
-			}
-		}
-	},
-})
+	});
+});
+
+// frappe.ui.form.on('MP Child Approval', {
+// 	approve(frm, cdt, cdn) {
+// 		var child = locals[cdt][cdn]
+// 		if (!child.in_time) {
+// 			frappe.throw("Please Enter IN Time")
+// 		}
+// 		if (!child.out_time) {
+// 			frappe.throw("Please Enter OUT Time")
+// 		}
+// 		if (!child.qr_scan_time) {
+// 			frappe.throw("Please Enter QR Scan Time")
+// 		}
+// 		if (frappe.user.has_role('HOD')) {
+// 			if (child.in_time && child.out_time && child.qr_scan_time) {
+// 				frm.call('approve_miss_punch_hod', {
+// 					row: child,
+// 					from_date: frm.doc.from_date,
+// 					to_date: frm.doc.to_date
+// 				}).then((mp) => {
+// 					if (mp.message == 'ok') {
+// 						frm.get_field("mp_child_approval").grid.grid_rows[child.idx - 1].remove();
+// 						frm.refresh_field('mp_child_approval')
+// 						frappe.msgprint('Approved')
+// 					}
+// 				})
+// 			}
+// 		}
+// 		if (frappe.user.has_role('HR GM')) {
+// 			if (child.in_time && child.out_time && child.qr_scan_time) {
+// 				frm.call('approve_miss_punch_hr', {
+// 					row: child,
+// 					from_date: frm.doc.from_date,
+// 					to_date: frm.doc.to_date
+// 				}).then((mp) => {
+// 					if (mp.message == 'ok') {
+// 						frm.get_field("mp_child_approval").grid.grid_rows[child.idx - 1].remove();
+// 						frm.refresh_field('mp_child_approval')
+// 						frappe.msgprint('Approved')
+// 					}
+// 				})
+// 			}
+// 		}
+// 	},
+// })

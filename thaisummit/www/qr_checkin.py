@@ -31,7 +31,7 @@ def mark_checkin(employee=None):
     if shift_type == 'NA':
         return 'Wrong Shift Time'
 
-    existing_employee = frappe.db.exists('Employee',{'employee':employee, 'status':'Active'})
+    existing_employee = frappe.db.exists('Employee',{'employee':employee, 'status':'Active','employee_type':('!=','WC')})
     if not existing_employee:
         return 'Employee Not Found'
     existing_checkin = frappe.db.exists('QR Checkin',{'employee':employee, 'shift_date':shift_date, 'qr_shift': shift_type})

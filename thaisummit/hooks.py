@@ -93,9 +93,12 @@ override_doctype_class = {
 jenv = {
 	"methods": [
 		"manpower_attendance_report:thaisummit.thaisummit.doctype.manpower_attendance_report.manpower_attendance_report.manpower_attendance_report",
+		"manpower_attendance_report_total:thaisummit.thaisummit.doctype.manpower_attendance_report.manpower_attendance_report.manpower_attendance_report_total",
 		"shift_wise_count:thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.shift_wise_count",
 		"shift_employees:thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.shift_employees",
 		"get_shift_status:thaisummit.thaisummit.doctype.shift_schedule_status_summary.shift_schedule_status_summary.get_shift_status",
+		"get_dates:thaisummit.thaisummit.doctype.monthly_sales_per_head.monthly_sales_per_head.get_dates",
+
 	]
 }
 
@@ -121,7 +124,8 @@ scheduler_events = {
 	"daily": [
 		"thaisummit.custom.send_birthday_wish",
 		"thaisummit.custom.send_mail_hr",
-		"thaisummit.custom.create_leave_allocation"
+		"thaisummit.custom.create_leave_allocation",
+		"thaisummit.custom.delete_shift_summary"
 	],
 # 	"hourly": [
 # 		"thaisummit.tasks.hourly"

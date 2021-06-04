@@ -47,15 +47,15 @@
             
             <tr>
                 <td>Planned</td>
-                <td> {{ data["planned_bc_count"] }}</td>
+                <td> {{ data["planned_onroll_count"] }}</td>
                 <td>{{ data["planned_cl_count"] }} </td>
-                <td>{{ data["planned_bc_count"] + data["planned_cl_count"] }}</td>
+                <td>{{ data["planned_onroll_count"] + data["planned_cl_count"] }}</td>
             </tr>
             <tr>
                 <td>Actual</td>
-                <td>{{ data["actual_bc_count"] }}</td>
+                <td>{{ data["actual_onroll_count"] }}</td>
                 <td>{{ data["actual_cl_count"] }}</td>
-                <td>{{ data["actual_bc_count"] + data["actual_cl_count"] }}</td>
+                <td>{{ data["actual_onroll_count"] + data["actual_cl_count"] }}</td>
             </tr>
             <tr>
                 <td>OT</td>
@@ -66,19 +66,19 @@
 
             <tr style="background-color: lightgreen;">
                 <td>Total</td>
-                <td>{{ data["actual_bc_count"] + 0 }}</td>
+                <td>{{ data["actual_onroll_count"] + 0 }}</td>
                 <td>{{ data["actual_cl_count"] + 0 }}</td>
-                <td>{{  data["actual_bc_count"] + data["actual_cl_count"] + 0}}</td>
+                <td>{{  data["actual_onroll_count"] + data["actual_cl_count"] + 0}}</td>
             </tr>
             <tr>
-                <td>Absent</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
+                <td>Shortage</td>
+                <td>{{ data["onroll_shortage"] }}</td>
+                <td>{{ data["cl_shortage"] }}</td>
+                <td>{{ data["onroll_shortage"] + data["cl_shortage"] }}</td>
             </tr>
             <tr>
                 <td>%</td>
-                <td>{{ data["bc_percentage"] }} %</td>
+                <td>{{ data["onroll_percentage"] }} %</td>
                 <td>{{ data["cl_percentage"] }} %</td>
                 <td>{{ data["total_percentage"] }} %</td>
             </tr>

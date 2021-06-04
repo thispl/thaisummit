@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_copy": 1,
  "autoname": "MAR-.####",
  "creation": "2021-05-14 11:40:16.239599",
  "doctype": "DocType",
@@ -7,24 +8,41 @@
  "engine": "InnoDB",
  "field_order": [
   "date",
-  "shift"
+  "shift",
+  "column_break_3",
+  "download"
  ],
  "fields": [
   {
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
   },
   {
    "fieldname": "shift",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Shift",
-   "options": "Shift Type"
+   "options": "Shift Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:!doc.__islocal",
+   "fieldname": "download",
+   "fieldtype": "Button",
+   "label": "Download"
   }
  ],
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-05-14 11:40:27.650401",
+ "modified": "2021-06-03 13:22:54.640267",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Manpower Attendance Report",

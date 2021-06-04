@@ -26,42 +26,42 @@ def get_shift_status(doc):
 		if date1:
 			if date1[0].workflow_state == 'Approved':
 				mark1 = '<td style="background-color:#7dcea0">✓</td>'
-			elif date1[0].workflow_state == 'Approval Pending':
+			elif date1[0].workflow_state in ('Review Pending','Approval Pending'):
 				mark1 = '<td style="background-color:#f0b27a">-</td>'
 		else:
 			mark1 = '<td style="background-color:#f95848">X</td>'
 		if date2:
 			if date2[0].workflow_state == 'Approved':
 				mark2 = '<td style="background-color:#7dcea0">✓</td>'
-			elif date2[0].workflow_state == 'Approval Pending':
+			elif date2[0].workflow_state in ('Review Pending','Approval Pending'):
 				mark2 = '<td style="background-color:#f0b27a">-</td>'
 		else:
 			mark2 = '<td style="background-color:#f95848">X</td>'
 		if date3:
 			if date3[0].workflow_state == 'Approved':
 				mark3 = '<td style="background-color:#7dcea0">✓</td>'
-			elif date3[0].workflow_state == 'Approval Pending':
+			elif date3[0].workflow_state in ('Review Pending','Approval Pending'):
 				mark3 = '<td style="background-color:#f0b27a">-</td>'
 		else:
 			mark3 = '<td style="background-color:#f95848">X</td>'
 		if date4:
 			if date4[0].workflow_state == 'Approved':
 				mark4 = '<td style="background-color:#7dcea0">✓</td>'
-			elif date4[0].workflow_state == 'Approval Pending':
+			elif date4[0].workflow_state in ('Review Pending','Approval Pending'):
 				mark4 = '<td style="background-color:#f0b27a">-</td>'
 		else:
 			mark4 = '<td style="background-color:#f95848">X</td>'
 		if date5:
 			if date5[0].workflow_state == 'Approved':
 				mark5 = '<td style="background-color:#7dcea0">✓</td>'
-			elif date5[0].workflow_state == 'Approval Pending':
+			elif date5[0].workflow_state in ('Review Pending','Approval Pending'):
 				mark5 = '<td style="background-color:#f0b27a">-</td>'
 		else:
 			mark5 = '<td style="background-color:#f95848">X</td>'
 		if date6:
 			if date6[0].workflow_state == 'Approved':
 				mark6 = '<td style="background-color:#7dcea0">✓</td>'
-			elif date6[0].workflow_state == 'Approval Pending':
+			elif date6[0].workflow_state in ('Review Pending','Approval Pending'):
 				mark6 = '<td style="background-color:#f0b27a">-</td>'
 		else:
 			mark6 = '<td style="background-color:#f95848">X</td>'

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "autoname": "SLA-.###",
  "creation": "2021-05-24 16:13:29.763787",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -59,7 +60,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-05-24 17:44:16.165461",
+ "modified": "2021-05-31 19:54:42.817621",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Special Leave Allocation",

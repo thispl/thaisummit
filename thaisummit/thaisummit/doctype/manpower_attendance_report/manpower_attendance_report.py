@@ -11,175 +11,101 @@ class ManpowerAttendanceReport(Document):
 
 
 @frappe.whitelist()
-def manpower_attendance_report(doc):
-    re_depts =  ["WELD-RE - TSAIP","Weld-RE P1E","Weld-RE J LINE - TSAIP","WELD-RE J LINE 2 - TSAIP","PRESS-RE - TSAIP","Total DIRECT RE"]
-    re_dept_list = [["WELD-RE - TSAIP"],["Weld-RE P1E"],["Weld-RE J LINE - TSAIP"],["WELD-RE J LINE 2 - TSAIP"],["PRESS-RE - TSAIP"],["Total DIRECT RE"]]
-    i = 0
-    for dept in re_depts:
-        if dept != "Total DIRECT RE":
-            c = frappe.db.count("Attendance",{'employee_type':'WC',"shift":"1","attendance_date":doc.date,"Department":dept})
-            re_dept_list[i].append(c)
-            emp_type = ["BC","NT","FT","CL"]
-            for e in emp_type:
-                c = frappe.db.count("QR Checkin",{'employee_type':e,"qr_shift":"1","shift_date":doc.date,"Department":dept})
-                re_dept_list[i].append(c)
-            c = frappe.db.count("QR Checkin",{'employee_type':['!=','WC'],"qr_shift":"1","shift_date":doc.date,"Department":dept})
-            re_dept_list[i].append(c)
-            
-            # BC FC NT CL count
+def manpower_attendance_report(doc,depts):
+    data = ''
+    for dept in depts:
+        data += "<tr><td>%s</td>"%dept
+        wc = frappe.db.count("Attendance",{'employee_type':'WC',"shift":doc.shift,"attendance_date":doc.date,"Department":dept})
+        data += "<td>%s</td>"%wc
+        emp_type = ["BC","NT","FT","CL"]
+        for e in emp_type:
+            c = frappe.db.count("Attendance",{'employee_type':e,"qr_shift":doc.shift,"attendance_date":doc.date,"Department":dept})
+            data += "<td>%s</td>"%c
+        qc = frappe.db.count("Attendance",{'employee_type':['!=','WC'],"qr_shift":doc.shift,"attendance_date":doc.date,"Department":dept})
+        data += "<td>%s</td>"%(wc+qc)
+        
+        ### BC FC NT CL count
 
-            bfnc_plan =  frappe.db.count("Shift Assignment",{'employee_type':['!=','WC'],"shift_type":"1","start_date":doc.date,"Department":dept})
-            re_dept_list[i].append(bfnc_plan)
-            bfnc_actual = frappe.db.count("QR Checkin",{'employee_type':['!=','WC'],"qr_shift":"1","shift_date":doc.date,"Department":dept})
-            re_dept_list[i].append(bfnc_actual)
-            bfnc_diff = bfnc_actual - bfnc_plan
-            re_dept_list[i].append(bfnc_diff)
-            if bfnc_plan != 0:
-                bfnc_percent = (bfnc_diff*100)/bfnc_plan
+        bfnc_plan =  frappe.db.count("Shift Assignment",{'employee_type':['!=','WC'],"shift_type":doc.shift,"start_date":doc.date,"Department":dept})
+        data += "<td>%s</td>"%bfnc_plan
+        bfnc_actual = frappe.db.count("Attendance",{'employee_type':['!=','WC'],"qr_shift":doc.shift,"attendance_date":doc.date,"Department":dept})
+        data += "<td>%s</td>"%bfnc_actual
+        bfnc_diff = bfnc_actual - bfnc_plan
+        data += "<td style='background-color:#DE3163'>%s</td>"%bfnc_diff
+        if bfnc_plan != 0:
+            bfnc_percent = (bfnc_diff*100)/bfnc_plan
+        else:
+            bfnc_percent = '-'
+        data += "<td style='background-color:#DE3163'>%s</td>"%bfnc_percent
+        bfnc_ot = 0
+        data += "<td>%s</td>"%bfnc_ot
+
+        emp_type = ["BC","NT","FT","CL"]
+        for e in emp_type:
+            plan =  frappe.db.count("Shift Assignment",{'employee_type':e,"shift_type":doc.shift,"start_date":doc.date,"Department":dept})
+            data += "<td>%s</td>"%plan
+            actual = frappe.db.count("Attendance",{'employee_type':e,"qr_shift":doc.shift,"attendance_date":doc.date,"Department":dept})
+            data += "<td>%s</td>"%actual
+            diff = actual - plan
+            data += "<td style='background-color:#DE3163'>%s</td>"%diff
+            if plan != 0:
+                percent = (diff*100)/plan
             else:
-                bfnc_percent = '-'
-            re_dept_list[i].append(bfnc_percent)
-            bfnc_ot = 0
-            re_dept_list[i].append(bfnc_ot)
+                percent = '-'
+            data += "<td style='background-color:#DE3163'>%s</td>"%percent
+        data += "</tr>"
+    return data
 
-            # BC Count
-            bc_plan = 0
-            re_dept_list[i].append(bc_plan)
-            bc_actual = 0
-            re_dept_list[i].append(bc_actual)
-            bc_diff = bc_actual - bc_plan
-            re_dept_list[i].append(bc_diff)
-            if bc_plan != 0:
-                bc_percent = (bc_diff*100)/bc_plan
-            else:
-                bc_percent = '-'
-            re_dept_list[i].append(bc_percent)
 
-            # NT Count
-            nt_plan = 0
-            re_dept_list[i].append(nt_plan)
-            nt_actual = 0
-            re_dept_list[i].append(nt_actual)
-            nt_diff = nt_actual - nt_plan
-            re_dept_list[i].append(nt_diff)
-            if nt_plan != 0:
-                nt_percent = (nt_diff*100)/nt_plan
-            else:
-                nt_percent = '-'
-            re_dept_list[i].append(nt_percent)
+@frappe.whitelist()
+def manpower_attendance_report_total(doc,depts,title):
+    data = ''
+    data += "<tr><td style='background-color:#f1948a'>%s</td>"%title
+    wc = frappe.db.count("Attendance",{'employee_type':'WC',"shift":doc.shift,"attendance_date":doc.date,"Department":['in',depts]})
+    data += "<td style='background-color:#228B22'>%s</td>"%wc
+    emp_type = ["BC","NT","FT","CL"]
+    for e in emp_type:
+        c = frappe.db.count("Attendance",{'employee_type':e,"qr_shift":doc.shift,"attendance_date":doc.date,"Department":['in',depts]})
+        data += "<td style='background-color:#228B22'>%s</td>"%c
+    qc = frappe.db.count("Attendance",{'employee_type':['!=','WC'],"qr_shift":doc.shift,"attendance_date":doc.date,"Department":['in',depts]})
+    data += "<td style='background-color:#228B22'>%s</td>"%(wc+qc)
+        
+    ### BC FC NT CL count
 
-            # FT Count
-            ft_plan = 0
-            re_dept_list[i].append(ft_plan)
-            ft_actual = 0
-            re_dept_list[i].append(ft_actual)
-            ft_diff = ft_actual - ft_plan
-            re_dept_list[i].append(ft_diff)
-            if ft_plan != 0:
-                ft_percent = (ft_diff*100)/ft_plan
-            else:
-                ft_percent = '-'
-            re_dept_list[i].append(ft_percent)
+    bfnc_plan =  frappe.db.count("Shift Assignment",{'employee_type':['!=','WC'],"shift_type":doc.shift,"start_date":doc.date,"Department":['in',depts]})
+    data += "<td style='background-color:#85c1e9'>%s</td>"%bfnc_plan
+    bfnc_actual = frappe.db.count("Attendance",{'employee_type':['!=','WC'],"qr_shift":doc.shift,"attendance_date":doc.date,"Department":['in',depts]})
+    data += "<td style='background-color:#85c1e9'>%s</td>"%bfnc_actual
+    bfnc_diff = bfnc_actual - bfnc_plan
+    data += "<td style='background-color:#85c1e9'>%s</td>"%bfnc_diff
+    if bfnc_plan != 0:
+        bfnc_percent = (bfnc_diff*100)/bfnc_plan
+    else:
+        bfnc_percent = '-'
+    data += "<td style='background-color:#85c1e9'>%s</td>"%bfnc_percent
+    bfnc_ot = 0
+    data += "<td style='background-color:#85c1e9'>%s</td>"%bfnc_ot
 
-            # CL Count
-            cl_plan = 0
-            re_dept_list[i].append(cl_plan)
-            cl_actual = 0
-            re_dept_list[i].append(cl_actual)
-            cl_diff = cl_actual - cl_plan
-            re_dept_list[i].append(cl_diff)
-            if cl_plan != 0:
-                cl_percent = (cl_diff*100)/cl_plan
-            else:
-                cl_percent = '-'
-            re_dept_list[i].append(cl_percent)
-
-            # total direct RE
-        elif dept == "Total DIRECT RE":
-            c = frappe.db.count("Attendance",{'employee_type':'WC',"shift":"1","attendance_date":doc.date,"Department":['in',re_depts]})
-            frappe.errprint(re_dept_list[i])
-            re_dept_list[i].append(c)
-            frappe.errprint(i)
-            frappe.errprint(c)
-            frappe.errprint(re_dept_list[i])
-            emp_type = ["BC","NT","FT","CL"]
-            for e in emp_type:
-                c = frappe.db.count("QR Checkin",{'employee_type':e,"qr_shift":"1","shift_date":doc.date,"Department":['in',re_depts]})
-                re_dept_list[i].append(c)
-            c = frappe.db.count("QR Checkin",{'employee_type':['!=','WC'],"qr_shift":"1","shift_date":doc.date,"Department":['in',re_depts]})
-            re_dept_list[i].append(c)
-            
-            # BC FC NT CL count
-
-            bfnc_plan =  frappe.db.count("Shift Assignment",{'employee_type':['!=','WC'],"shift_type":"1","start_date":doc.date,"Department":re_depts})
-            re_dept_list[i].append(bfnc_plan)
-            bfnc_actual = frappe.db.count("QR Checkin",{'employee_type':['!=','WC'],"qr_shift":"1","shift_date":doc.date,"Department":re_depts})
-            re_dept_list[i].append(bfnc_actual)
-            bfnc_diff = bfnc_actual - bfnc_plan
-            re_dept_list[i].append(bfnc_diff)
-            if bfnc_plan != 0:
-                bfnc_percent = (bfnc_diff*100)/bfnc_plan
-            else:
-                bfnc_percent = '-'
-            re_dept_list[i].append(bfnc_percent)
-            bfnc_ot = 0
-            re_dept_list[i].append(bfnc_ot)
-
-            # BC Count
-            bc_plan = 0
-            re_dept_list[i].append(bc_plan)
-            bc_actual = 0
-            re_dept_list[i].append(bc_actual)
-            bc_diff = bc_actual - bc_plan
-            re_dept_list[i].append(bc_diff)
-            if bc_plan != 0:
-                bc_percent = (bc_diff*100)/bc_plan
-            else:
-                bc_percent = '-'
-            re_dept_list[i].append(bc_percent)
-
-            # NT Count
-            nt_plan = 0
-            re_dept_list[i].append(nt_plan)
-            nt_actual = 0
-            re_dept_list[i].append(nt_actual)
-            nt_diff = nt_actual - nt_plan
-            re_dept_list[i].append(nt_diff)
-            if nt_plan != 0:
-                nt_percent = (nt_diff*100)/nt_plan
-            else:
-                nt_percent = '-'
-            re_dept_list[i].append(nt_percent)
-
-            # FT Count
-            ft_plan = 0
-            re_dept_list[i].append(ft_plan)
-            ft_actual = 0
-            re_dept_list[i].append(ft_actual)
-            ft_diff = ft_actual - ft_plan
-            re_dept_list[i].append(ft_diff)
-            if ft_plan != 0:
-                ft_percent = (ft_diff*100)/ft_plan
-            else:
-                ft_percent = '-'
-            re_dept_list[i].append(ft_percent)
-
-            # CL Count
-            cl_plan = 0
-            re_dept_list[i].append(cl_plan)
-            cl_actual = 0
-            re_dept_list[i].append(cl_actual)
-            cl_diff = cl_actual - cl_plan
-            re_dept_list[i].append(cl_diff)
-            if cl_plan != 0:
-                cl_percent = (cl_diff*100)/cl_plan
-            else:
-                cl_percent = '-'
-            re_dept_list[i].append(cl_percent)
-
-        i += 1
-    re_support_depts =  ["QA-RE - TSAIP","PPC-RE - TSAIP","BOP-RE - TSAIP","NPD-RE - TSAIP","JIGS MTN-RE - TSAIP","SALES-RE - TSAIP","TOTAL SUPPORT RE","GRAND TOTAL RE"]
-    re_support_dept_list = [["QA-RE - TSAIP"],["PPC-RE - TSAIP"],["BOP-RE - TSAIP"],["NPD-RE - TSAIP"],["JIGS MTN-RE - TSAIP"],["SALES-RE - TSAIP"],["TOTAL SUPPORT RE"],["GRAND TOTAL RE"]]
-    i = 0
-    # print(re_dept_list)
-    return re_dept_list
+    emp_type = ["BC","NT","FT","CL"]
+    for e in emp_type:
+        if e == 'BC':
+            bg = '#85c1e9'
+        elif e == 'NT':
+            bg = '#f5cba7'
+        elif e == 'FT':
+            bg = '#d98880'
+        elif e == 'CL':
+            bg = '#f8c471'
+        plan =  frappe.db.count("Shift Assignment",{'employee_type':e,"shift_type":doc.shift,"start_date":doc.date,"Department":['in',depts]})
+        data += "<td style='background-color:%s'>%s</td>"%(bg,plan)
+        actual = frappe.db.count("Attendance",{'employee_type':e,"qr_shift":doc.shift,"attendance_date":doc.date,"Department":['in',depts]})
+        data += "<td style='background-color:%s'>%s</td>"%(bg,actual)
+        diff = actual - plan
+        data += "<td style='background-color:%s'>%s</td>"%(bg,diff)
+        if plan != 0:
+            percent = (diff*100)/plan
+        else:
+            percent = '-'
+        data += "<td style='background-color:%s'>%s</td>"%(bg,percent)
+    data += "</tr>"
+    return data

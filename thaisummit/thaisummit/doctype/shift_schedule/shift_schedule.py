@@ -79,9 +79,9 @@ class ShiftSchedule(Document):
 		data_list = ''
 		for pp in pps:
 			if pp[0] == 'ID':
-				data_list += "<tr><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th></tr>"%(pp[0],pp[1],pp[2],pp[3],pp[4],pp[5],pp[6],pp[7])
+				data_list += "<tr><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td></tr>"%(pp[0],pp[1],pp[2],pp[3],pp[4],pp[5],pp[6],pp[7])
 			else:
-				data_list += "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>"%(pp[0],pp[1],pp[2],pp[3],pp[4],pp[5],pp[6],pp[7])
+				data_list += "<tr><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td></tr>"%(pp[0],pp[1],pp[2],pp[3],pp[4],pp[5],pp[6],pp[7])
 
 		return data_list
 
@@ -172,26 +172,26 @@ class ShiftSchedule(Document):
 				elif pp[5] == "PP2":
 					clpp2 +=1
 		total = wc1+wc2+wc3+wcpp1+wcpp2+bc1+bc2+bc3+bcpp1+bcpp2+ft1+ft2+ft3+ftpp1+ftpp2+nt1+nt2+nt3+ntpp1+ntpp2+cl1+cl2+cl3+clpp1+clpp2
-		data += """<tr>
-			<td style="background-color:#f0b27a">Shift</td><td style="background-color:#f0b27a">1</td><td style="background-color:#f0b27a">2</td><td style="background-color:#f0b27a">3</td><td style="background-color:#f0b27a">PP1</td><td style="background-color:#f0b27a">PP2</td><td style="background-color:#f0b27a">Total</td>
+		data += """
+			<td style="background-color:#f0b27a; border: 1px solid black">Shift</td><td style="background-color:#f0b27a ; border: 1px solid black">1</td><td style="background-color:#f0b27a; border: 1px solid black">2</td><td style="background-color:#f0b27a; border: 1px solid black">3</td><td style="background-color:#f0b27a; border: 1px solid black">PP1</td><td style="background-color:#f0b27a; border: 1px solid black">PP2</td><td style="background-color:#f0b27a ; border: 1px solid black">Total</td>
 			</tr>
 			<tr>
-				<th>WC</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style="background-color:#58d68d">%s</td>
+				<th style = 'border: 1px solid black'>WC</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d ; border: 1px solid black">%s</td>
 			</tr>
 			<tr>
-				<th>BC</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style="background-color:#58d68d">%s</td>
+				<th style = 'border: 1px solid black'>BC</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d ; border: 1px solid black">%s</td>
 			</tr>
 			<tr>
-				<th>FT</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style="background-color:#58d68d">%s</td>
+				<th style = 'border: 1px solid black'>FT</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
 			</tr>
 			<tr>
-				<th>NT</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style="background-color:#58d68d">%s</td>
+				<th style = 'border: 1px solid black'>NT</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
 			</tr>
 			<tr>
-				<th>CL</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td style="background-color:#58d68d">%s</td>
+				<th style = 'border: 1px solid black'>CL</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
 			</tr>
 			<tr>
-				<td style="background-color:#58d68d">Total</td><td style="background-color:#58d68d">%s</td><td style="background-color:#58d68d">%s</td><td style="background-color:#58d68d">%s</td><td style="background-color:#58d68d">%s</td><td style="background-color:#58d68d">%s</td><td style="background-color:#58d68d">%s</td>
+				<td style="background-color:#58d68d; border: 1px solid black">Total</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
 			</tr>"""%(wc1,wc2,wc3,wcpp1,wcpp2,(wc1+wc2+wc3+wcpp1+wcpp2),bc1,bc2,bc3,bcpp1,bcpp2,(bc1+bc2+bc3+bcpp1+bcpp2),ft1,ft2,ft3,ftpp1,ftpp2,(ft1+ft2+ft3+ftpp1+ftpp2),nt1,nt2,nt3,ntpp1,ntpp2,(nt1+nt2+nt3+ntpp1+ntpp2),cl1,cl2,cl3,clpp1,clpp2,(cl1+cl2+cl3+clpp1+clpp2),(wc1+bc1+ft1+nt1+cl1),(wc2+bc2+ft2+nt2+cl2),(wc3+bc3+ft3+nt3+cl3),(wcpp1+bcpp1+ftpp1+ntpp1+clpp1),(wcpp2+bcpp2+ftpp2+ntpp2+clpp2),total)
 
 		return data
@@ -280,7 +280,7 @@ def get_active_employees(args):
 
 @frappe.whitelist()
 def shift_wise_count(doc):
-	employee_type = ["BC","WC","CL"]
+	employee_type = ["BC","WC","CL","NT","FT"]
 	data = "<table class='table table-bordered'><tr><td colspan='2' style='background-color:#f0b27a'><center>Shift 1</center></td><td colspan='2' style='background-color:#f0b27a'><center>Shift 2</center></td><td colspan='2' style='background-color:#f0b27a'><center>Shift 3</center></td><td colspan='2' style='background-color:#f0b27a'><center>Shift PP1</center></td><td colspan='2' style='background-color:#f0b27a'><center>Shift PP2</center></td><td colspan='2' style='background-color:#f0b27a'><center>Total Head Count</center></td></tr>"
 	for emp_type in employee_type:
 		s1 = 0

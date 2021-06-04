@@ -2,7 +2,13 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Manpower Attendance Report', {
-	// refresh: function(frm) {
 
-	// }
+	download(frm) {
+		window.open(
+			frappe.urllib.get_full_url(`/api/method/frappe.utils.print_format.download_pdf?
+						doctype=${encodeURIComponent("Manpower Attendance Report")}
+						&name=${encodeURIComponent(frm.doc.name)}
+						&format=${encodeURIComponent('Manpower Attendance Report')}`)
+		);
+	}
 });

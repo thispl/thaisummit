@@ -1,51 +1,32 @@
 {
  "actions": [],
- "allow_copy": 1,
- "autoname": "SSS-.####",
- "creation": "2021-05-25 18:05:57.154777",
+ "autoname": "SPH-.###",
+ "creation": "2021-06-04 11:21:03.102381",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "from_date",
-  "to_date",
-  "column_break_3",
-  "download"
+  "to_date"
  ],
  "fields": [
   {
    "fieldname": "from_date",
    "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "From Date",
-   "reqd": 1
+   "label": "From Date"
   },
   {
    "fieldname": "to_date",
    "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "To Date",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:!doc.__islocal",
-   "fieldname": "download",
-   "fieldtype": "Button",
-   "label": "Download"
+   "label": "To Date"
   }
  ],
- "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-05-31 14:05:07.014005",
+ "modified": "2021-06-04 11:21:24.255700",
  "modified_by": "Administrator",
  "module": "Thaisummit",
- "name": "Shift Schedule Status Summary",
+ "name": "Monthly Sales Per Head",
  "owner": "Administrator",
  "permissions": [
   {
@@ -62,5 +43,6 @@
   }
  ],
  "sort_field": "modified",
- "sort_order": "DESC"
+ "sort_order": "DESC",
+ "track_changes": 1
 }

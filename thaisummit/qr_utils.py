@@ -19,43 +19,64 @@ def get_qr_details(user):
 
     if shift_type == 'NA':
         scan_active = 0
-    planned_bc_count = frappe.db.count('Shift Assignment',{'employee_type':'BC','shift_type':shift_type,'start_date': shift_date })
-    planned_ft_count = frappe.db.count('Shift Assignment',{'employee_type':'FT','shift_type':shift_type,'start_date': shift_date })
-    planned_cl_count = frappe.db.count('Shift Assignment',{'employee_type':'CL','shift_type':shift_type,'start_date': shift_date })
+    planned_bc_count = frappe.db.count('Shift Assignment',{'employee_type':'BC','shift_type':shift_type,'start_date': shift_date, 'docstatus':1, 'department':department})
+    planned_ft_count = frappe.db.count('Shift Assignment',{'employee_type':'FT','shift_type':shift_type,'start_date': shift_date, 'docstatus':1,'department':department})
+    planned_cl_count = frappe.db.count('Shift Assignment',{'employee_type':'CL','shift_type':shift_type,'start_date': shift_date, 'docstatus':1, 'department':department})
     actual_bc_count = frappe.db.count('QR Checkin',{'employee_type':'BC','qr_shift':shift_type,'shift_date': shift_date })
     actual_ft_count = frappe.db.count('QR Checkin',{'employee_type':'FT','qr_shift':shift_type,'shift_date': shift_date })
     actual_cl_count = frappe.db.count('QR Checkin',{'employee_type':'CL','qr_shift':shift_type,'shift_date': shift_date })
+    
     ot_bc_count = ot_ft_count = ot_cl_count = 0
+    
+    planned_onroll_count = planned_bc_count + planned_ft_count
+
+    actual_onroll_count = actual_bc_count + actual_ft_count
+
+    ot_onroll_count = ot_bc_count + ot_ft_count
+
+
+    
     qr_details['scan_active'] = scan_active
     qr_details['employee_name'] = employee_name
     qr_details['department'] = department
     qr_details['shift_type'] = shift_type
-    qr_details['planned_bc_count'] = planned_bc_count + planned_ft_count
+    qr_details['planned_onroll_count'] = planned_onroll_count
     qr_details['planned_cl_count'] = planned_cl_count
-    qr_details['total_planned_count'] =  planned_bc_count + planned_ft_count + planned_cl_count
-    qr_details['actual_bc_count'] = actual_bc_count + actual_ft_count
+    qr_details['total_planned_count'] =  planned_onroll_count + planned_cl_count
+    qr_details['actual_onroll_count'] = actual_onroll_count
     qr_details['actual_cl_count'] = actual_cl_count
-    qr_details['total_actual_count'] = actual_bc_count + actual_ft_count + actual_cl_count
-    qr_details['ot_bc_count'] = ot_bc_count + ot_ft_count
+    qr_details['total_actual_count'] = actual_onroll_count + actual_cl_count
+    qr_details['ot_onroll_count'] = ot_onroll_count
     qr_details['ot_cl_count'] = ot_cl_count
-    qr_details['total_ot_count'] = ot_bc_count + ot_ft_count + ot_cl_count
-    qr_details['total_bc_count'] = planned_bc_count + planned_ft_count +  actual_bc_count + actual_ft_count +  ot_bc_count + ot_ft_count
+    qr_details['total_ot_count'] = ot_onroll_count + ot_cl_count
+    qr_details['total_onroll_count'] = planned_onroll_count +  actual_onroll_count +  ot_onroll_count
     qr_details['total_cl_count'] = planned_cl_count + actual_cl_count + ot_cl_count
     qr_details['nowtime'] = datetime.strftime(nowtime,'%d-%m-%Y %H:%M:%S')
     bc_percentage = 0
     cl_percentage = 0
     total_percentage = 0
+    onroll_shortage = 0
+    cl_shortage = 0
 
     if planned_bc_count or planned_ft_count:
-        planned_count = planned_bc_count + planned_ft_count
-        actual_count =actual_bc_count + actual_ft_count
-        bc_percentage = round(( actual_count / planned_count )* 100)
+        if actual_onroll_count < planned_onroll_count:
+            onroll_shortage = planned_onroll_count - actual_onroll_count
+
+        onroll_percentage = round(( actual_onroll_count / planned_onroll_count )* 100)
+
+    if planned_cl_count:    
+        if actual_cl_count < planned_cl_count:
+            cl_shortage = planned_cl_count - actual_cl_count
+
         cl_percentage = round(((actual_cl_count) / (planned_cl_count))* 100)
-        total_percentage = round(((actual_count + actual_cl_count) / (planned_count + planned_cl_count))*100)
+
+    total_percentage = round(((actual_onroll_count + actual_cl_count) / (planned_onroll_count + planned_cl_count))*100)
     
-    qr_details['bc_percentage'] = bc_percentage
+    qr_details['onroll_percentage'] = onroll_percentage
     qr_details['cl_percentage'] = cl_percentage
     qr_details['total_percentage'] = total_percentage
+    qr_details['onroll_shortage'] = onroll_shortage
+    qr_details['cl_shortage'] = cl_shortage
         
     
     return qr_details
@@ -69,7 +90,7 @@ def is_between(time, time_range):
 def  get_shift_type():
     nowtime = datetime.now()
     shift1_time = [time(hour=6, minute=0, second=0),time(hour=10, minute=0, second=0)]
-    shift2_time = [time(hour=15, minute=00, second=0),time(hour=18, minute=30, second=0)]
+    shift2_time = [time(hour=14, minute=00, second=0),time(hour=18, minute=30, second=0)]
     shift3_time = [time(hour=0, minute=0, second=1),time(hour=2, minute=0, second=0)]
     # shiftpp1_time = [time(hour=7, minute=0, second=0),time(hour=10, minute=0, second=0)]
     shiftpp2_time = [time(hour=19, minute=30, second=0),time(hour=22, minute=0, second=0)]

@@ -196,8 +196,9 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
                 return att
 
 def mark_absent(from_date):
-    emps = frappe.get_all("Employee",{'status':'Active'})
+    emps = frappe.get_all("Employee",{'status':'Active','vacant':'0'})
     for emp in emps:
+        frappe.errprint(emp.name)
         if not frappe.db.exists('Attendance',{'attendance_date':from_date,'employee':emp.name}):
             doc = frappe.new_doc('Attendance')
             doc.employee = emp.name

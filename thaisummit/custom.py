@@ -679,9 +679,10 @@ def change_od_approver(employee,od_approver):
 
 # def employee_type():
 #     emps = frappe.db.sql("select name from `tabEmployee` where name like 'V%' ")
+#     print(len(emps))
 #     for emp in emps:
 #         print(emp[0])
-#         frappe.db.set_value("Employee",emp[0],"employee_type","CL")
+#         frappe.db.set_value("Employee",emp[0],"vacant",1)
 
 
 
@@ -867,5 +868,20 @@ def add_special_leave():
 def exceed_vehicle_load(name,vehicle_name):
     emp = frappe.db.count('Employee',{'vehicle_name':vehicle_name})
     load = frappe.db.get_value("Vehicle Management",{'name':vehicle_name},['load_capacity'])
-    if(emp > load):
+    if(emp >= load):
         return "Vehicle Load Exceeded"
+
+@frappe.whitelist()
+def delete_shift_summary():
+    ss = frappe.get_all("Shift Schedule Status Summary")
+    for s in ss:
+        doc = frappe.get_doc("Shift Schedule Status Summary",s.name)
+        doc.delete()
+
+# def update_qr():
+#     qrs = frappe.get_all("QR Checkin",{'shift_date':'2021-05-05'},["shift_date","qr_shift","employee"])
+#     for qr in qrs:
+#         att = frappe.db.exists("Attendance",{'employee':qr.employee,'attendance_date':qr.shift_date})
+#         print(att)
+#         frappe.db.set_value("Attendance",att,"qr_shift",qr.qr_shift)
+#         frappe.db.set_value("Attendance",att,"qr_scan_time",qr.qr_scan_time)

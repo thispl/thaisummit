@@ -29,7 +29,9 @@ class PermissionRequest(Document):
 		self.hours = '2'
 		month_start = get_first_day(self.attendance_date)
 		month_end = get_last_day(self.attendance_date)
-		count = frappe.db.sql("select count(*) as count from `tabPermission Request` where employee = '%s' and attendance_date between '%s' and '%s' and name != '%s' and workflow_state != 'Rejected' and docstatus != '2' "%(self.employee,month_start,month_end,self.name),as_dict=True)
-		frappe.errprint(count)
+		today = frappe.db.sql("select count(*) as count from `tabPermission Request` where employee = '%s' and attendance_date = '%s' and name != '%s' and workflow_state != 'Rejected' "%(self.employee,self.attendance_date,self.name),as_dict=True)
+		if today[0].count >= 1:
+			frappe.throw("Only 1 permission are allowed for a day")
+		count = frappe.db.sql("select count(*) as count from `tabPermission Request` where employee = '%s' and attendance_date between '%s' and '%s' and name != '%s' and workflow_state != 'Rejected' "%(self.employee,month_start,month_end,self.name),as_dict=True)
 		if count[0].count >= 2:
 			frappe.throw("Only 2 permissions are allowed for a month")
