@@ -1,7 +1,7 @@
 {
  "actions": [],
- "autoname": "SPH-.###",
- "creation": "2021-06-04 11:21:03.102381",
+ "autoname": "OTS-.###",
+ "creation": "2021-06-11 07:09:09.021086",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -34,10 +34,10 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-06-10 21:58:03.819852",
+ "modified": "2021-06-11 07:09:09.021086",
  "modified_by": "Administrator",
  "module": "Thaisummit",
- "name": "Monthly Sales Per Head",
+ "name": "OT Sales Report",
  "owner": "Administrator",
  "permissions": [
   {

@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Vehicle Management', {
-	// refresh: function(frm) {
-
-	// }
+	refresh: function(frm) {
+		// frappe.breadcrumbs.add("HR","Vehicle Management");
+	}
 });

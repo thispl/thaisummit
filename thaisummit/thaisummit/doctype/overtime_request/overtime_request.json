@@ -15,11 +15,11 @@
   "approver_name",
   "section_break_5",
   "from_date",
-  "to_date",
   "remarks",
   "column_break_8",
   "from_time",
   "to_time",
+  "extra_hours",
   "ot_hours",
   "amended_from"
  ],
@@ -68,12 +68,7 @@
    "fieldname": "from_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "From Date"
-  },
-  {
-   "fieldname": "to_date",
-   "fieldtype": "Date",
-   "label": "To Date"
+   "label": "Request Date"
   },
   {
    "fieldname": "column_break_8",
@@ -90,22 +85,25 @@
    "label": "To Time"
   },
   {
+   "fetch_from": "approver.username",
    "fieldname": "approver_id",
    "fieldtype": "Data",
    "label": "Approver ID",
    "read_only": 1
   },
   {
+   "fetch_from": "approver.full_name",
    "fieldname": "approver_name",
    "fieldtype": "Data",
    "label": "Approver Name",
    "read_only": 1
   },
   {
-   "fetch_from": "employee.overtime_approver",
+   "fetch_from": "department.hod",
    "fieldname": "approver",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Approver",
+   "options": "User",
    "read_only": 1
   },
   {
@@ -118,12 +116,18 @@
    "fieldtype": "Time",
    "label": "OT Hours",
    "read_only": 1
+  },
+  {
+   "fieldname": "extra_hours",
+   "fieldtype": "Time",
+   "label": "Extra Hours",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-05-12 08:59:13.586610",
+ "modified": "2021-06-09 09:50:00.642796",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Overtime Request",

@@ -14,7 +14,7 @@
 <script>
     $(document).ready(function () {
         var table = $('#pager').DataTable({
-            pageLength: 10,
+            pageLength: 5,
             searching: false,
             lengthChange: false
         });
@@ -89,7 +89,7 @@
                 table.destroy();
                 $('#pager').html(html);
                 table = $('#pager').DataTable({
-                    pageLength: 50,
+                    pageLength: 5,
                     searching: false,
                     lengthChange: false
                 }

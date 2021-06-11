@@ -868,8 +868,11 @@ def add_special_leave():
 def exceed_vehicle_load(name,vehicle_name):
     emp = frappe.db.count('Employee',{'vehicle_name':vehicle_name})
     load = frappe.db.get_value("Vehicle Management",{'name':vehicle_name},['load_capacity'])
-    if(emp >= load):
-        return "Vehicle Load Exceeded"
+    balance_load = int(load - emp)
+    # frappe.errprint(balance_load)
+    # if(emp >= load):
+    #     return "Vehicle Load Exceeded"
+    return emp,load
 
 @frappe.whitelist()
 def delete_shift_summary():

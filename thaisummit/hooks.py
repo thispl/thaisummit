@@ -98,7 +98,12 @@ jenv = {
 		"shift_employees:thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.shift_employees",
 		"get_shift_status:thaisummit.thaisummit.doctype.shift_schedule_status_summary.shift_schedule_status_summary.get_shift_status",
 		"get_dates:thaisummit.thaisummit.doctype.monthly_sales_per_head.monthly_sales_per_head.get_dates",
-
+		"get_att_count:thaisummit.thaisummit.doctype.monthly_sales_per_head.monthly_sales_per_head.get_att_count",
+		"get_total_count:thaisummit.thaisummit.doctype.monthly_sales_per_head.monthly_sales_per_head.get_total_count",
+		"get_support_att_count:thaisummit.thaisummit.doctype.monthly_sales_per_head.monthly_sales_per_head.get_support_att_count",
+		"get_grand_total:thaisummit.thaisummit.doctype.monthly_sales_per_head.monthly_sales_per_head.get_grand_total",
+		"get_ot_amt:thaisummit.thaisummit.doctype.ot_sales_report.ot_sales_report.get_ot_amt",
+		"get_ot_total:thaisummit.thaisummit.doctype.ot_sales_report.ot_sales_report.get_ot_total",
 	]
 }
 
@@ -174,4 +179,7 @@ scheduler_events = {
 # exempt linked doctypes from being automatically cancelled
 #
 # auto_cancel_exempted_doctypes = ["Auto Repeat"]
+
+fixtures = ['Custom Field','Workspace']
+
 

@@ -1,43 +1,50 @@
 {
  "actions": [],
- "autoname": "SPH-.###",
- "creation": "2021-06-04 11:21:03.102381",
+ "autoname": "SAPD-.###",
+ "creation": "2021-06-10 22:40:27.334242",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "from_date",
-  "to_date",
+  "date",
+  "department",
   "column_break_3",
-  "download"
+  "sales_amount"
  ],
  "fields": [
   {
-   "fieldname": "from_date",
+   "fieldname": "date",
    "fieldtype": "Date",
-   "label": "From Date"
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
   },
   {
-   "fieldname": "to_date",
-   "fieldtype": "Date",
-   "label": "To Date"
+   "fieldname": "sales_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Sales Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department",
+   "options": "Department",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_3",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "download",
-   "fieldtype": "Button",
-   "label": "Download"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-06-10 21:58:03.819852",
+ "modified": "2021-06-10 23:35:46.654503",
  "modified_by": "Administrator",
  "module": "Thaisummit",
- "name": "Monthly Sales Per Head",
+ "name": "Sales Amount Per Day",
  "owner": "Administrator",
  "permissions": [
   {

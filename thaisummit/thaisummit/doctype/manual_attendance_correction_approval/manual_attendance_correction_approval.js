@@ -49,28 +49,18 @@ frappe.ui.form.on('Manual Attendance Correction Approval', {
 	},
 
 	highlight_changes(frm) {
-		// $.each(frm.doc.mp_child_approval, function (i, d) {
+		$.each(frm.doc.mp_child_approval, function (i, d) {
+			if(d.correction == 'IN Time'){
+				$("div[data-fieldname='in_time']")[i+1].setAttribute("style", "background-color:yellow;");
+			}
 
-			cur_frm.fields_dict["mp_child_approval"].$wrapper.find('.grid-body .rows').find(".grid-row").each(function(i, item) {
-				let d = locals[cur_frm.fields_dict["mp_child_approval"].grid.doctype][$(item).attr('data-fieldname')];
-				if(d["correction"] == 'OUT Time'){
-					$(item).find('.grid-static-col').css({'background-color': '#FF0000'});
-				}
-			});	
-
-			// if(d.correction == 'OUT Time'){
-			// 	console.log($("div[data-fieldname='out_time']"))
-			// 	$("div[data-fieldname='out_time']").find('.grid-static-col').css({'background-color': '#FF0000'});    
-			// 	// $("div[data-fieldname='out_time']").css({'background-color': '#FF0000'});
-			// }
-			// if(d.correction == 'IN Time'){
-			// 	// $("div[data-fieldname=in_time]").find(format('div.grid-row[data-idx="{0}"]', [d.idx])).find('.grid-static-col').css({'background-color': '#FF0000'});    
-			// 	$("div[data-fieldname='in_time']").css({'background-color': '#FF0000'});
-			// }
-			// $("div[data-fieldname=mp_child_approval]").find(".grid-static-col[data-fieldname='in_time']").css({ 'background-color': 'lightgreen' });
-			// $('div.grid-row[data-idx="{0}"]', [0]).css({'background-color': '#FF0000'});
-			// $("div[data-fieldname=in_time]").find(format('div.grid-row[data-idx="{0}"]', [d.idx])).find('.grid-static-col').css({'background-color': '#FF0000'});    
-		// })
+			if(d.correction == 'OUT Time'){
+				$("div[data-fieldname='out_time']")[i+1].setAttribute("style", "background-color:yellow;");
+			}
+			if(d.correction == 'QR Scan Time'){
+				$("div[data-fieldname='qr_scan_time']")[i+1].setAttribute("style", "background-color:yellow;");
+			}
+		})
 	},
 	get_mp_hod(frm) {
 		frm.clear_table('mp_child_approval')

@@ -16,13 +16,11 @@ frappe.ui.form.on('Overtime Request', {
 						fieldname: ["name", "employee_name"]
 					},
 					callback(r) {
-						console.log(r.message)
 						if (r.message.name) {
 							frm.set_value('approver_id', r.message.name)
 							frm.set_value('approver_name', r.message.employee_name)
 						}
 						else {
-							console.log('hi')
 							frm.set_value('approver_id', '')
 							frm.set_value('approver_name', '')
 						}
@@ -43,7 +41,8 @@ frappe.ui.form.on('Overtime Request', {
 					"to_time": frm.doc.to_time
 				},
 				callback(r) {
-					frm.set_value('ot_hours', r.message)
+					frm.set_value('ot_hours', r.message[1])
+					frm.set_value('extra_hours', r.message[0])
 				}
 			})
 		}

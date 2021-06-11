@@ -28,6 +28,7 @@ def mark_att(from_date):
                                     c.name, "skip_auto_attendance", "1")
         mark_permission(from_date)
         mark_absent(from_date)
+        calculate_ot(from_date)
         frappe.msgprint("Attendance Marked Successfully")
         return "ok"
         
@@ -325,3 +326,46 @@ def mark_permission(from_date):
                         leave_balance['leave_allocation']['Casual Leave'] = 0
                         leave_balance['leave_allocation']['Sick Leave'] = 0
                         leave_balance['leave_allocation']['Earned Leave'] = 0
+
+@frappe.whitelist()
+def calculate_ot(from_date):
+    # from_date = '2021-06-05'
+    qr_checkins = frappe.db.sql("select * from `tabQR Checkin` where shift_date = '%s' and overtime_request is null and ot = '1' "%(from_date),as_dict=True)
+    for qr in qr_checkins:
+        if qr.qr_scan_time:
+            max_out_time = qr.qr_scan_time + timedelta(hours=8)
+            bio_checkins = frappe.db.sql("select * from `tabEmployee Checkin` where employee = '%s' and time between '%s' and '%s' and log_type = 'OUT' order by time "%(qr.employee,qr.qr_scan_time,max_out_time),as_dict=True)
+            t_diff = bio_checkins[0].time - qr.qr_scan_time
+            try:
+                time_diff = datetime.strptime(str(t_diff), '%H:%M:%S.%f')
+            except:
+                time_diff = datetime.strptime(str(t_diff), '%H:%M:%S')
+            if time_diff.hour >= 1:
+                if time_diff.minute <= 29:
+                    ot_hours = time(time_diff.hour,0,0)
+                else:
+                    ot_hours = time(time_diff.hour,30,0)
+            if time_diff.hour >= 4:
+                if time_diff.minute <= 29:
+                    ot_hours = time(time_diff.hour-1,30,0)
+                else:
+                    ot_hours = time(time_diff.hour,0,0)
+            if ot_hours:
+                req = frappe.new_doc("Overtime Request")
+                req.employee = qr.employee
+                req.from_date = from_date
+                req.from_time = qr.qr_scan_time
+                req.to_time = bio_checkins[0].time
+                req.ot_hours = ot_hours
+                req.save(ignore_permissions=True)
+                frappe.db.set_value("QR Checkin",qr.name,'overtime_request',req.name)
+
+
+
+# def add_checkin():
+#     doc = frappe.new_doc("QR Checkin")
+#     doc.employee = '23'
+#     doc.qr_shift = '2'
+#     doc.qr_scan_time = '2021-06-05 14:04:23'
+#     doc.shift_date = '2021-06-05'
+#     doc.save(ignore_permissions=True)
