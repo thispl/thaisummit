@@ -8,7 +8,6 @@
  "field_order": [
   "employee",
   "employee_name",
-  "attendance",
   "requested_date",
   "column_break_4",
   "department",
@@ -32,6 +31,7 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Employee ID",
    "options": "Employee",
    "reqd": 1
@@ -41,13 +41,6 @@
    "fieldname": "employee_name",
    "fieldtype": "Read Only",
    "label": "Employee Name"
-  },
-  {
-   "fieldname": "attendance",
-   "fieldtype": "Link",
-   "label": "Attendance",
-   "options": "Attendance",
-   "read_only": 1
   },
   {
    "fieldname": "column_break_4",
@@ -113,7 +106,6 @@
    "options": "First Half\nSecond Half"
   },
   {
-   "fetch_from": "department.permission_approver",
    "fieldname": "permission_approver",
    "fieldtype": "Link",
    "label": "Permission Approver",
@@ -162,7 +154,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2021-05-27 14:52:50.364836",
+ "modified": "2021-06-28 17:13:47.888784",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Permission Request",

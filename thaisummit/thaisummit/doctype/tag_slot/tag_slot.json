@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "slot_no",
+  "vehicle",
   "datetime",
   "data_3",
   "status",
@@ -16,14 +17,13 @@
   "amended_from",
   "dispatch_details_section",
   "dispatch_time",
-  "dispatch_readiness",
-  "section_break_12",
-  "download"
+  "dispatch_readiness"
  ],
  "fields": [
   {
    "fieldname": "slot_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Slot No",
    "unique": 1
   },
@@ -36,6 +36,7 @@
    "default": "Pending",
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Status",
    "options": "\nLive\nPending\nDelivered\nCancelled"
   },
@@ -76,6 +77,7 @@
   {
    "fieldname": "dispatch_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Dispatch Time"
   },
   {
@@ -85,19 +87,16 @@
    "label": "Dispatch Readiness"
   },
   {
-   "fieldname": "section_break_12",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "download",
-   "fieldtype": "Button",
-   "label": "Download"
+   "fieldname": "vehicle",
+   "fieldtype": "Data",
+   "label": "Vehicle",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-05-17 09:53:50.216072",
+ "modified": "2021-07-01 20:17:57.242216",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TAG Slot",
@@ -121,5 +120,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "slot_no",
  "track_changes": 1
 }

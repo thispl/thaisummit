@@ -1,0 +1,83 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "creation": "2021-07-05 18:22:10.964126",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employees",
+  "section_break_1",
+  "approver",
+  "approver_id",
+  "approver_name",
+  "column_break_6",
+  "requested_by"
+ ],
+ "fields": [
+  {
+   "fieldname": "employees",
+   "fieldtype": "Table",
+   "label": "Employees",
+   "options": "Bulk OT"
+  },
+  {
+   "fieldname": "approver",
+   "fieldtype": "Read Only",
+   "label": "Approver",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.approver",
+   "fieldname": "approver_id",
+   "fieldtype": "Data",
+   "label": "Approver ID",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.approver",
+   "fieldname": "approver_name",
+   "fieldtype": "Data",
+   "label": "Approver Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "requested_by",
+   "fieldtype": "Read Only",
+   "label": "Requested By",
+   "options": "User"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2021-07-14 18:40:23.295998",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Bulk Overtime Request",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

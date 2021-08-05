@@ -9,6 +9,7 @@ from datetime import timedelta,datetime
 from frappe.utils import cint, getdate, get_datetime
 
 class TAGOUT(Document):
+	@frappe.whitelist()
 	def make_as_delivery(self,receipt_entry):
 		for row in receipt_entry:
 			tag_master =frappe.db.sql("""select name,recieved_time from `tabTAG Master` where  parts_no = '%s' and required_quantity = '%s' and item_delivered = 0 and delivery_status != 'Cancelled' order by name""" %(row["parts_no"],row["quantity"]),as_dict=True)[0]

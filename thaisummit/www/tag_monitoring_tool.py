@@ -19,20 +19,17 @@ def get_tag_list():
     current_time = now.strftime("%H:%M:%S")
     month_start = (datetime.today()).strftime("%Y-%m-01 08:00:00")
     today_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
-    # frappe.errprint(month_start)
-    # frappe.errprint(today_datetime)
-    total_tbs = frappe.db.sql("""select parts_no,recieved_time,parts_name,name,required_quantity,sap_quantity,difference,model,date_and_time,mat_no,delay_duration from `tabTAG Master` where item_delivered = 0 and delivery_status != 'Cancelled' order by name""",as_dict=True)
-    total_tbs_today = frappe.db.sql("""select name from `tabTAG Master` where date(recieved_time) = CURDATE() and (hour(recieved_time) between 8 and '%s') and item_delivered = 0 and delivery_status != 'Cancelled' """ % (current_time),as_dict=True)
-    total_tbs_month = frappe.db.sql("""SELECT name FROM `tabTAG Master` WHERE item_delivered = 0 and delivery_status != 'Cancelled' and recieved_time between '%s' and '%s' """%(str(month_start),str(today_datetime)),as_dict=True)
-    # frappe.errprint(total_tbs)
-    # frappe.errprint(total_tbs_month)
+    total_tbs = frappe.db.sql("""select parts_no,recieved_time,parts_name,name,required_quantity,sap_quantity,difference,model,date_and_time,mat_no,delay_duration,reason_for_card_delay from `tabTAG Master` where item_delivered = 0 and delivery_status != 'Cancelled' order by name""",as_dict=True)
+    total_tbs_today = frappe.db.sql("""select name from `tabTAG Master` where date(recieved_time) = CURDATE() and (hour(recieved_time) between 8 and '%s') and delivery_status != 'Cancelled' """ % (current_time),as_dict=True)
+    total_tbs_month = frappe.db.sql("""SELECT name FROM `tabTAG Master` WHERE delivery_status != 'Cancelled' and recieved_time between '%s' and '%s' """%(str(month_start),str(today_datetime)),as_dict=True)
     updated_tbs_list = []
     updated_tbs_dict = {}
+    failure = failure_percent = failure_month = failure_percent_month = 0
     tbs_ontime = tbs_delay = 0
     # recieved = month_start
     recieved = len(total_tbs_today)
     recieved_month = len(total_tbs_month)
-    percent = 0
+    delay_percent = delay_percent_monthly = 0
     allowed_delay_duration = timedelta(seconds=cint(frappe.db.get_value("TAG Monitoring Management",None,"delay_duration")))
     for tbs in total_tbs:
         tag_entry_time = tbs['recieved_time']
@@ -57,14 +54,23 @@ def get_tag_list():
         updated_tbs_dict['delay_duration'] = tbs['delay_duration']
         updated_tbs_dict['time_taken'] = time_taken - timedelta(microseconds=time_taken.microseconds)
         updated_tbs_dict['status'] = status
+        updated_tbs_dict['reason_for_card_delay'] = "" if tbs['reason_for_card_delay'] == None else tbs['reason_for_card_delay']
         updated_tbs_list.append(updated_tbs_dict.copy())
     
-    on_time_sent = frappe.db.sql(""" select count(sent) as count from `tabTAG Master` where sent = 'On Time Sent' and item_delivered = 1 and date(date_and_time) = CURDATE() and (hour(date_and_time) between 8 and '%s')"""% (current_time),as_dict=True)[0]
-    on_time_sent_monthly = frappe.db.sql(""" select count(sent) as count from `tabTAG Master` where sent = 'On Time Sent' and item_delivered = 1 and recieved_time between '%s' and '%s' """%(str(month_start),str(today_datetime)),as_dict=True)[0]
-    if recieved:
-        percent = round((tbs_delay/recieved)*100, 2)
+    on_time_sent = frappe.db.sql(""" select count(sent) as count from `tabTAG Master` where item_delivered = 1 and date(recieved_time) = CURDATE() and (hour(recieved_time) between 8 and '%s')"""% (current_time),as_dict=True)[0]
+    on_time_sent_monthly = frappe.db.sql(""" select count(sent) as count from `tabTAG Master` where item_delivered = 1 and recieved_time between '%s' and '%s' """%(str(month_start),str(today_datetime)),as_dict=True)[0]
+    delay_monthly = frappe.db.sql(""" select count(sent) as count from `tabTAG Master` where item_delivered = 1 and sent = 'Delay' and date_and_time between '%s' and '%s' """%(str(month_start),str(today_datetime)),as_dict=True)[0]
+    # if recieved:
+    #     delay_percent = round((tbs_delay/recieved)*100, 2)
+   
     current_datetime =datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    data = [updated_tbs_list,current_datetime,recieved,recieved_month,on_time_sent['count'],on_time_sent_monthly['count'],tbs_ontime,tbs_delay,percent]
+    if recieved:
+        failure = recieved - on_time_sent['count'] - tbs_ontime
+        failure_percent = round((failure/recieved)*100, 2) 
+        failure_month = recieved_month - on_time_sent_monthly['count'] - tbs_ontime
+        failure_percent_month = round((failure_month/recieved_month)*100, 2)
+
+    data = [updated_tbs_list,current_datetime,recieved,on_time_sent['count'],tbs_ontime,failure,failure_percent,recieved_month,on_time_sent_monthly['count'],failure_month,failure_percent_month]
     return data
 
 @frappe.whitelist()

@@ -7,6 +7,7 @@ frappe.pages['scan-qr'].on_page_load = function (wrapper) {
 		card_layout : true
 	});
 	frappe.breadcrumbs.add('HR');
+	
 	let emp_details = {};
 	frappe.call({
 		'method': 'thaisummit.qr_utils.get_qr_details',
@@ -22,6 +23,9 @@ frappe.pages['scan-qr'].on_page_load = function (wrapper) {
 	
 	// window.location.href = "/qr_checkin";
 }
+
+
+
 let show_employee_info = function (me) {
 	frappe.call({
 		'method': 'frappe.client.get_value',
@@ -32,17 +36,10 @@ let show_employee_info = function (me) {
 		},
 		callback: function (r) {
 			emp_details = r.message;
-			// console.log(data)
-			// return data;
-			// let details = '';
-
-			// details += `<b>Employee Name: <b> ${data.employee_name} </b> <br> Department: ${data.department}`;
-
-			// if (details) {
-			// 	details = `<div style='padding-left:10px; font-size:13px;' align='left'>` + details + `</div>`;
-			// }
-			// me.page.main.find('.employee_details').html(details);
+			
 		}
 	});
 };
+
+
 

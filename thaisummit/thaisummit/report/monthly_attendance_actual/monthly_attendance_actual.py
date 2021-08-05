@@ -64,16 +64,16 @@ def add_department(filters):
     total_re = ["WELD-RE - TSAIP","Weld-RE P1E - TSAIP","Weld-RE J LINE - TSAIP","WELD-RE J LINE 2 - TSAIP","PRESS-RE - TSAIP","QA-RE - TSAIP","PPC-RE - TSAIP","BOP-RE - TSAIP","NPD-RE - TSAIP","JIGS MTN-RE - TSAIP","SALES-RE - TSAIP"]
     data += add_total_data(filters,total_re,"Total RE")
 
-    # direct_iym = ["WELD-IYM - TSAIP","HPS LINE - TSAIP","PRESS-IYM - TSAIP"]
-    # data = add_data(filters,direct_iym)
-    # data += add_total_data(filters,direct_iym,"Total Direct IYM")
+    direct_iym = ["WELD-IYM - TSAIP","HPS LINE - TSAIP","PRESS-IYM - TSAIP"]
+    data = add_data(filters,direct_iym)
+    data += add_total_data(filters,direct_iym,"Total Direct IYM")
 
-    # support_iym = ["QA-IYM - TSAIP","PPC-IYM - TSAIP","BOP-IYM - TSAIP","SALES-IYM - TSAIP","JIGS MTN-IYM - TSAIP","NPD-IYM - TSAIP"]
-    # data += add_data(filters,support_iym)
-    # data += add_total_data(filters,support_iym,"Total Support IYM")
+    support_iym = ["QA-IYM - TSAIP","PPC-IYM - TSAIP","BOP-IYM - TSAIP","SALES-IYM - TSAIP","JIGS MTN-IYM - TSAIP","NPD-IYM - TSAIP"]
+    data += add_data(filters,support_iym)
+    data += add_total_data(filters,support_iym,"Total Support IYM")
 
-    # total_iym = ["WELD-IYM - TSAIP","HPS LINE - TSAIP","PRESS-IYM - TSAIP","QA-IYM - TSAIP","PPC-IYM - TSAIP","BOP-IYM - TSAIP","SALES-IYM - TSAIP","JIGS MTN-IYM - TSAIP","NPD-IYM - TSAIP"]
-    # data += add_total_data(filters,total_iym,"Total IYM")
+    total_iym = ["WELD-IYM - TSAIP","HPS LINE - TSAIP","PRESS-IYM - TSAIP","QA-IYM - TSAIP","PPC-IYM - TSAIP","BOP-IYM - TSAIP","SALES-IYM - TSAIP","JIGS MTN-IYM - TSAIP","NPD-IYM - TSAIP"]
+    data += add_total_data(filters,total_iym,"Total IYM")
 
     return data
 

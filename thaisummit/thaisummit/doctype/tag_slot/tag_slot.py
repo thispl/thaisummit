@@ -12,12 +12,12 @@ from datetime import datetime
 from frappe.utils.csvutils import UnicodeWriter, read_csv_content
 from frappe.utils import cstr, add_days, date_diff, getdate
 
-
-
 class TAGSlot(Document):
+    @frappe.whitelist()
     def create_tag_master(self):
         for rq in self.tag_wise_list:
             tm = frappe.new_doc("TAG Master")
+            tm.slot_no = self.name
             tm.qr = rq.tag_no 
             tm.recieved_time = self.datetime
             tm.parts_no = rq.parts_no
@@ -26,6 +26,8 @@ class TAGSlot(Document):
             tm.sap_quantity = rq.sap_quantity
             tm.difference = rq.difference
             tm.tag_type = rq.tag_type
+            tm.sp_purchase_price = rq.sp_purchase_price
+            tm.vehicle = self.vehicle
             tm.save(ignore_permissions=True)
             frappe.db.commit()
         return "TAG Masters Created"
@@ -38,6 +40,7 @@ class TAGSlot(Document):
             #     (tag.difference).indicator_color = 'blue'
                 # <style="background-color:red"><center> <h4>'tag.difference'</h4></center></style>
 
+    @frappe.whitelist()
     def calculate_quantity(self):
         tag_list = self.tag_wise_list
         sap_item_qty = 0
@@ -76,7 +79,7 @@ def download_excel():
     frappe.response['doctype'] = "Tag Slot"
 
 def add_header(w):
-    w.writerow(["SL.No","CARD RECEIVED DATE & TIME","DISPATCH DATE & TIME","MAT NO","PART NO","PART NAME","DISPATCH QTY" ,"SAP STOCK","DISPATCH READINESS STATUS"])
+    w.writerow(["SL.No","CARD RECEIVED DATE & TIME","DISPATCH DATE & TIME","MAT NO","PART NO","PART NAME","MODEL","DISPATCH QTY" ,"SAP STOCK","DISPATCH READINESS STATUS"])
     return w
 
 def add_data(w, args):
@@ -89,7 +92,7 @@ def get_data(args):
     data = []
     for idx,child in enumerate(tag_slot.tag_wise_list):
     	row = [
-    		idx+1,child.datetime,child.dispatch_datetime,child.mat_no,child.parts_no,child.parts_no,child.required_quantity,child.sap_quantity
+    		idx+1,child.datetime,child.dispatch_datetime,child.mat_no,child.parts_no,child.parts_name,child.model,child.required_quantity,child.sap_quantity
     	]
     	data.append(row)
     return data

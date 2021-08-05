@@ -3,13 +3,12 @@
 
 frappe.ui.form.on('Shift Schedule', {
 	refresh: function (frm) {
-		frappe.breadcrumbs.add("HR", "Shift Schedule");
+		frappe.breadcrumbs.add("Home","Shift Schedule");
 		frm.fields_dict.error_preview.$wrapper.empty()
 		frm.fields_dict.csv_preview.$wrapper.empty()
 		frm.fields_dict.summary.$wrapper.empty()
 		frm.trigger('show_csv_data')
 		frm.trigger('show_summary')
-		// frm.trigger('upload')
 		frm.add_custom_button(__('Print Summary'), function (){
 			window.open(
 				frappe.urllib.get_full_url(`/api/method/frappe.utils.print_format.download_pdf?
@@ -18,6 +17,27 @@ frappe.ui.form.on('Shift Schedule', {
 					&format=${encodeURIComponent('Shift Report')}`)
 			);
 		})
+			// frm.set_df_property('department', 'read_only', 0);
+			if (frappe.user.has_role('HR')) {
+			frm.add_custom_button(__('Re-Check'), function (){
+				frappe.call({
+					"method": "thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.enqueue_shift_assignment",
+					"args":{
+						"file" : frm.doc.upload,
+						"from_date" : frm.doc.from_date,
+						"to_date" : frm.doc.to_date,
+						"name" : frm.doc.name
+					},
+					freeze: true,
+					freeze_message: 'Submitting Shift Schedule....',
+					// callback(r){
+					// 	if(r.message == "ok"){
+					// 		// frappe.msgprint("Attendance Marked Successfully")
+					// 	}
+					// }
+				})
+			})
+		}
 	},
 	get_template: function (frm) {
 		console.log(frappe.request.url)
@@ -26,7 +46,7 @@ frappe.ui.form.on('Shift Schedule', {
 			cmd: "thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.get_template",
 			from_date: frm.doc.from_date,
 			to_date: frm.doc.to_date,
-			department: (frm.doc.department).replace("&", "1")
+			department: (frm.doc.department).replace("&", "5")
 		});
 	},
 	from_date(frm) {
@@ -57,7 +77,6 @@ frappe.ui.form.on('Shift Schedule', {
 				frappe.msgprint("To Date should be within 6 days from From Date")
 				frm.set_value('to_date', '')
 
-				// frm.call('date_diff')
 			}
 
 		}
@@ -80,11 +99,25 @@ frappe.ui.form.on('Shift Schedule', {
 		frm.trigger('show_csv_data')
 		frm.trigger('upload')
 		frm.trigger('show_summary')
-		
+		// console.log(frm.doc.name)
+		// if(frm.doc.workflow_state){
+	    //     frappe.call({
+	    //         method :'thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.mail_alerts',
+		// 		args:{
+		// 		    workflow_state : frm.doc.workflow_state,
+		// 			department : frm.doc.department,
+		// 			name : frm.doc.name,
+		// 			from_date : frm.doc.from_date,
+		// 			to_date : frm.doc.to_date
+		// 		},
+		// 		callback(r){			    
+		// 		}
+	    //     })
+	    // }
 	},
 	after_save(frm){
 		frappe.call({
-			"method": "thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.create_shift_assignment",
+			"method": "thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.enqueue_shift_assignment",
 			"args":{
 				"file" : frm.doc.upload,
 				"from_date" : frm.doc.from_date,

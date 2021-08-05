@@ -14,8 +14,7 @@
   "column_break_5",
   "in_time",
   "out_time",
-  "qr_scan_time",
-  "submit",
+  "qr_shift",
   "correction"
  ],
  "fields": [
@@ -46,20 +45,6 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "OUT Time"
-  },
-  {
-   "columns": 2,
-   "fieldname": "qr_scan_time",
-   "fieldtype": "Datetime",
-   "in_list_view": 1,
-   "label": "QR Scan Time"
-  },
-  {
-   "columns": 1,
-   "fieldname": "submit",
-   "fieldtype": "Button",
-   "in_list_view": 1,
-   "label": "Submit"
   },
   {
    "fieldname": "attendance",
@@ -97,14 +82,23 @@
   {
    "fieldname": "correction",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Correction",
    "options": "\nIN Time\nOUT Time\nQR Scan Time"
+  },
+  {
+   "columns": 2,
+   "fieldname": "qr_shift",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "QR Shift",
+   "options": "Shift Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-05-25 06:50:35.190993",
+ "modified": "2021-07-07 19:01:42.505401",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "MP Child",

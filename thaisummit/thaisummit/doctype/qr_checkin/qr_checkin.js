@@ -2,9 +2,9 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('QR Checkin', {
-	// refresh: function(frm) {
-	// 	frappe.breadcrumbs.add("HR", "QR Checkin");
-	// 	frm.call('scan_qr')
+	refresh: function(frm) {
+		frappe.breadcrumbs.add('Home','QR Checkin');
+		// frm.call('scan_qr'
 	// 	// if (frappe.is_mobile()) {
 	//     //     console.log("hi")
 	//     // let qr_code = frm.get_field('qr_code');
@@ -35,5 +35,5 @@ frappe.ui.form.on('QR Checkin', {
 	// 	}
 	// 	})
 	// }
-	// }
+	}
 });

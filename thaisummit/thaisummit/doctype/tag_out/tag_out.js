@@ -15,8 +15,7 @@ frappe.ui.form.on('TAG OUT', {
 				receipt_entry:frm.doc.receipt_entry_table
 			})
             .then(r =>{
-                // frappe.msgprint(__(r.message))
-                frappe.show_alert(__(r.message), 5);
+                frappe.msgprint(__(r.message))
             })
     },
     refresh: function(frm) {
@@ -48,7 +47,8 @@ frappe.ui.form.on('TAG OUT', {
                     model:doc.model_no,
                     date_and_time:datetime,
                     qr :frm.doc.qr,
-                    date :date
+                    date :date,
+                    sp_purchase_price:doc.sp_purchase_price
                     
                 })
                 frm.refresh_field("receipt_entry_table")
@@ -69,7 +69,8 @@ frappe.ui.form.on('TAG OUT', {
                     model:doc.model_no,
                     date_and_time:datetime,
                     qr :frm.doc.qr,
-                    date :date
+                    date :date,
+                    sp_purchase_price:doc.sp_purchase_price
             });
             frm.refresh_field("receipt_entry_table")
             frm.set_value("qr","")

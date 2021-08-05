@@ -4,17 +4,30 @@
 frappe.ui.form.on('Delete Shift Schedule', {
 	refresh: function (frm) {
 		frm.disable_save()
+		frappe.breadcrumbs.add("Home","Shift Schedule");
 	},
 	delete_shift(frm) {
-		frappe.call({
-			method: "thaisummit.thaisummit.doctype.delete_shift_schedule.delete_shift_schedule.delete_shift",
-			args:{
-				department : frm.doc.department,
-				from_date : frm.doc.from_date,
-			},
-			freeze: true,
-			freeze_message: "Deleting Shift Schedule"
-		});
+		if (frm.doc.department != 'All Departments') {
+			frappe.call({
+				method: "thaisummit.thaisummit.doctype.delete_shift_schedule.delete_shift_schedule.delete_shift",
+				args: {
+					department: frm.doc.department,
+					from_date: frm.doc.from_date,
+				},
+				freeze: true,
+				freeze_message: "Deleting Shift Schedule"
+			});
+		}
+		else{
+			frappe.call({
+				method: "thaisummit.thaisummit.doctype.delete_shift_schedule.delete_shift_schedule.delete_all_shift",
+				args: {
+					from_date: frm.doc.from_date,
+				},
+				freeze: true,
+				freeze_message: "Deleting Shift Schedule"
+			});
+		}
 	},
 	// to_date(frm) {
 	// 	if (frm.doc.to_date) {

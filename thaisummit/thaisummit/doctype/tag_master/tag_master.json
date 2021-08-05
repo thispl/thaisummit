@@ -8,12 +8,14 @@
  "engine": "InnoDB",
  "field_order": [
   "qr",
+  "slot_no",
   "parts_no",
   "parts_name",
   "mat_no",
   "item_delivered",
   "sent",
   "delivery_status",
+  "reason_for_card_delay",
   "column_break_4",
   "required_quantity",
   "sap_quantity",
@@ -22,13 +24,16 @@
   "recieved_time",
   "date_and_time",
   "delay_duration",
-  "tag_type"
+  "tag_type",
+  "sp_purchase_price",
+  "vehicle"
  ],
  "fields": [
   {
    "fieldname": "parts_no",
    "fieldtype": "Link",
-   "label": "Parts No",
+   "in_list_view": 1,
+   "label": "Part No",
    "options": "Part Master",
    "read_only": 1
   },
@@ -36,7 +41,7 @@
    "fetch_from": "parts_no.parts_name",
    "fieldname": "parts_name",
    "fieldtype": "Data",
-   "label": "Parts Name",
+   "label": "Part Name",
    "read_only": 1
   },
   {
@@ -85,6 +90,7 @@
    "fetch_from": "parts_no.mat_no",
    "fieldname": "mat_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Mat No",
    "read_only": 1
   },
@@ -97,7 +103,6 @@
   {
    "fieldname": "required_quantity",
    "fieldtype": "Data",
-   "hidden": 1,
    "label": "Required Quantity"
   },
   {
@@ -112,6 +117,7 @@
    "fieldname": "delivery_status",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
    "options": "\nDelivered\nPending\nCancelled",
    "read_only": 1
@@ -127,11 +133,34 @@
    "label": "Tag Type",
    "options": "Tag Type",
    "read_only": 1
+  },
+  {
+   "fieldname": "slot_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Slot No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reason_for_card_delay",
+   "fieldtype": "Small Text",
+   "label": "Reason for Card Delay"
+  },
+  {
+   "fieldname": "sp_purchase_price",
+   "fieldtype": "Currency",
+   "label": "SP Purchase Price"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Data",
+   "label": "Vehicle",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-05-14 12:03:09.725310",
+ "modified": "2021-07-01 20:19:05.591902",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TAG Master",
@@ -152,5 +181,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "slot_no",
  "track_changes": 1
 }

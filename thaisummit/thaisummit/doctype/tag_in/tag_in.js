@@ -14,6 +14,7 @@ frappe.ui.form.on('TAG IN', {
         frm.call('new_tag_slot')
             .then(r => {
                 frappe.show_alert(__(r.message), 5);
+                frappe.set_route("Form", "TAG Slot", r.message.name);
             })
     },
     refresh: function (frm) {
@@ -42,7 +43,8 @@ frappe.ui.form.on('TAG IN', {
                         mat_no: doc.mat_no,
                         model: doc.model_no,
                         date_and_time: datetime,
-                        qr: frm.doc.qr
+                        qr: frm.doc.qr,
+                        sp_purchase_price:doc.sp_purchase_price
                     })
                     frm.refresh_field("receipt_entry_table")
                 })
@@ -62,7 +64,8 @@ frappe.ui.form.on('TAG IN', {
                         mat_no: doc.mat_no,
                         model: doc.model_no,
                         date_and_time: datetime,
-                        qr: frm.doc.qr
+                        qr: frm.doc.qr,
+                        sp_purchase_price:doc.sp_purchase_price
                     });
                     frm.refresh_field("receipt_entry_table")
                 })

@@ -14,6 +14,7 @@ class TAGMaster(Document):
         if self.required_quantity and self.sap_quantity:
             self.difference = int(self.required_quantity) - int(self.sap_quantity)
         
+    @frappe.whitelist()
     def parts(self):
         ch = []
         qr_code = self.qr
@@ -33,7 +34,7 @@ class TAGMaster(Document):
         # frappe.errprint(qty)
         return parts_no,qty
 
-# @frappe.whitelist()
+    @frappe.whitelist()
     def get_delay(self):
         status = 'On Time Sent'
         delay = frappe.db.get_value("TAG Monitoring Management",None,"delay_duration")

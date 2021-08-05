@@ -49,7 +49,8 @@ frappe.ui.form.on('TAG Cancel', {
                     model:doc.model_no,
                     date_and_time:datetime,
                     qr :frm.doc.qr,
-                    date :date
+                    date :date,
+                    sp_purchase_price:doc.sp_purchase_price
                     
                 })
                 frm.refresh_field("receipt_entry_table")
@@ -70,7 +71,8 @@ frappe.ui.form.on('TAG Cancel', {
                     model:doc.model_no,
                     date_and_time:datetime,
                     qr :frm.doc.qr,
-                    date :date
+                    date :date,
+                    sp_purchase_price:doc.sp_purchase_price
             });
             frm.refresh_field("receipt_entry_table")
             frm.set_value("qr","")

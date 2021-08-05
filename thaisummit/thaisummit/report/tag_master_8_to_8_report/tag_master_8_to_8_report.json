@@ -2,64 +2,89 @@
  "add_total_row": 0,
  "columns": [
   {
-   "fieldname": "parts_no",
+   "fieldname": "sno",
    "fieldtype": "Data",
-   "label": "Parts No",
-   "width": 0
+   "label": "S.No",
+   "options": "Tag Master",
+   "width": 10
   },
   {
-   "fieldname": "parts_name",
+   "fieldname": "slot_no",
    "fieldtype": "Data",
-   "label": "Parts Name",
-   "width": 0
+   "label": "Slot No",
+   "width": 110
   },
   {
    "fieldname": "mat_no",
    "fieldtype": "Data",
    "label": "Mat No",
-   "width": 0
-  },
-  {
-   "fieldname": "required_quantity",
-   "fieldtype": "Data",
-   "label": "Required Quantity",
-   "width": 0
-  },
-  {
-   "fieldname": "sap_quantity",
-   "fieldtype": "Data",
-   "label": "SAP Quantity",
-   "width": 0
-  },
-  {
-   "fieldname": "difference",
-   "fieldtype": "Data",
-   "label": "Diff.",
-   "width": 0
+   "width": 100
   },
   {
    "fieldname": "model",
    "fieldtype": "Data",
    "label": "Model",
-   "width": 0
-  },
-  {
-   "fieldname": "recieved_time",
-   "fieldtype": "Datetime",
-   "label": "Received Time",
-   "width": 0
-  },
-  {
-   "fieldname": "delay_duration",
-   "fieldtype": "Time",
-   "label": "Delay Duration",
-   "width": 0
+   "width": 130
   },
   {
    "fieldname": "card_type",
    "fieldtype": "Data",
-   "label": "Card Type",
-   "width": 0
+   "label": "Type",
+   "width": 80
+  },
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Data",
+   "label": "Part No",
+   "width": 140
+  },
+  {
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "label": "Part Name",
+   "width": 250
+  },
+  {
+   "fieldname": "required_quantity",
+   "fieldtype": "Data",
+   "label": "Req Qty",
+   "width": 80
+  },
+  {
+   "fieldname": "sap_quantity",
+   "fieldtype": "Data",
+   "label": "SAP Qty",
+   "width": 80
+  },
+  {
+   "fieldname": "difference",
+   "fieldtype": "Data",
+   "label": "Diff.",
+   "width": 50
+  },
+  {
+   "fieldname": "recieved_time",
+   "fieldtype": "Datetime",
+   "label": "IYM Card In Time",
+   "width": 170
+  },
+  {
+   "fieldname": "date_and_time",
+   "fieldtype": "Datetime",
+   "label": "IYM Card Out Time",
+   "width": 170
+  },
+  {
+   "fieldname": "delay_duration",
+   "fieldtype": "Time",
+   "label": "Duration Gap",
+   "width": 120
+  },
+  {
+   "fieldname": "reason_for_card_delay",
+   "fieldtype": "Data",
+   "label": "Reason for Card Delay",
+   "width": 200
   }
  ],
  "creation": "2021-05-06 14:15:29.953516",
@@ -71,13 +96,13 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "TS_logo",
- "modified": "2021-05-08 10:53:46.908041",
+ "modified": "2021-06-16 17:34:45.923512",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TAG Master 8 to 8 Report",
  "owner": "Administrator",
  "prepared_report": 0,
- "query": "select\n`tabTAG Master`.parts_no,\n`tabTAG Master`.parts_name,\n`tabTAG Master`.mat_no,\n`tabTAG Master`.required_quantity,\n`tabTAG Master`.sap_quantity,\n`tabTAG Master`.difference,\n`tabTAG Master`.model,\n`tabTAG Master`.recieved_time,\n`tabTAG Master`.delay_duration,\n`tabTAG Master`.tag_type\nfrom\n`tabTAG Master`\nwhere\ndate(recieved_time) = CURDATE() and\nhour(recieved_time) between 8 and 20\n",
+ "query": "select\nROW_NUMBER() OVER(PARTITION BY `tabTAG Master`.name) AS sno,\n`tabTAG Master`.slot_no,\n`tabTAG Master`.mat_no,\n`tabTAG Master`.model,\n`tabTAG Master`.tag_type,\n`tabTAG Master`.parts_no,\n`tabTAG Master`.parts_name,\n`tabTAG Master`.required_quantity,\n`tabTAG Master`.sap_quantity,\n`tabTAG Master`.difference,\n`tabTAG Master`.recieved_time,\n`tabTAG Master`.date_and_time,\nTIMEDIFF(IFNULL(`tabTAG Master`.date_and_time, NOW()),`tabTAG Master`.recieved_time),\n`tabTAG Master`.reason_for_card_delay\nfrom\n`tabTAG Master`\nwhere\ndate(recieved_time) = CURDATE() and\nhour(recieved_time) between 8 and 20\n",
  "ref_doctype": "TAG Master",
  "report_name": "TAG Master 8 to 8 Report",
  "report_type": "Query Report",
@@ -86,10 +111,22 @@
    "role": "System Manager"
   },
   {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
    "role": "HR User"
   },
   {
    "role": "HR Manager"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "Employee"
   },
   {
    "role": "Employee"

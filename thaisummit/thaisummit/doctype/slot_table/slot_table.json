@@ -5,15 +5,18 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "tag_no",
-  "parts_no",
+  "model",
   "mat_no",
+  "parts_no",
+  "parts_name",
   "required_quantity",
   "sap_quantity",
   "difference",
   "datetime",
+  "tag_no",
   "tag_type",
-  "dispatch_datetime"
+  "dispatch_datetime",
+  "sp_purchase_price"
  ],
  "fields": [
   {
@@ -72,12 +75,27 @@
    "fieldname": "dispatch_datetime",
    "fieldtype": "Data",
    "label": "Dispatch DateTime"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "label": "Parts Name"
+  },
+  {
+   "fieldname": "sp_purchase_price",
+   "fieldtype": "Currency",
+   "label": "SP Purchase Price"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-05-17 12:04:23.507603",
+ "modified": "2021-06-18 15:42:22.395016",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Slot Table",

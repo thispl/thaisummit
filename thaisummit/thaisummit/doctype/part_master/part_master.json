@@ -7,13 +7,14 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "parts_no",
+  "model_no",
   "parts_name",
+  "parts_no",
+  "sp_purchase_price",
+  "column_break_3",
   "group",
   "tag_type",
-  "column_break_3",
   "customer",
-  "model_no",
   "mat_no",
   "section_break_7",
   "sap_available_quantity",
@@ -26,12 +27,14 @@
   {
    "fieldname": "parts_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Part No",
    "unique": 1
   },
   {
    "fieldname": "parts_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Part Name"
   },
   {
@@ -41,6 +44,7 @@
   {
    "fieldname": "model_no",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Model No"
   },
   {
@@ -96,11 +100,17 @@
    "fieldtype": "Link",
    "label": "Customer",
    "options": "Customer"
+  },
+  {
+   "fieldname": "sp_purchase_price",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Part Price"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-05-06 21:08:03.428553",
+ "modified": "2021-06-25 16:01:28.047190",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Part Master",
@@ -121,5 +131,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "model_no",
  "track_changes": 1
 }

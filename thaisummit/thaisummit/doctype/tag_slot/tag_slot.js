@@ -16,17 +16,31 @@ frappe.ui.form.on('TAG Slot', {
 			})
 
 		}
+		frm.add_custom_button(__("Download .xlsx"), function () {
+			console.log(frappe.request.url)
+			window.location.href = repl(frappe.request.url +
+				'?cmd=%(cmd)s&name=%(name)s', {
+				cmd: "thaisummit.thaisummit.doctype.tag_slot.tag_slot.download_excel",
+				name: frm.doc.name
+			});
+		})
+		frm.add_custom_button(__("Download .pdf"), function () {
+			var f_name = frm.doc.name
+			var print_format ="Tag Slot";
+			 window.open(frappe.urllib.get_full_url("/api/method/frappe.utils.print_format.download_pdf?"
+				+ "doctype=" + encodeURIComponent("TAG Slot")
+				+ "&name=" + encodeURIComponent(f_name)
+				+ "&trigger_print=1"
+				+ "&format=" + print_format
+				+ "&no_letterhead=0"
+			   ));
+		
+
+		})
 		
 	
 	},
-	download:function(frm) {
-		console.log(frappe.request.url)
-		window.location.href = repl(frappe.request.url +
-			'?cmd=%(cmd)s&name=%(name)s', {
-			cmd: "thaisummit.thaisummit.doctype.tag_slot.tag_slot.download_excel",
-			name: frm.doc.name
-		});
-	},
+	
 	// onload:function(frm){
 	// 	console.log("hi")
 	// 	cur_frm.fields_dict["tag_wise_list"].$wrapper.find('.grid-body .rows').find(".grid-row").each(function(i, item) {

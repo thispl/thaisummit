@@ -3,6 +3,7 @@
 
 frappe.ui.form.on('Deleted QR Checkin', {
 	onload: function(frm) {
-		frappe.breadcrumbs.add('HR');
+		frappe.breadcrumbs.add('Home','Deleted QR Checkin');
+
 	}
 });

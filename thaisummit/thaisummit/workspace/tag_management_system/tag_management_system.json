@@ -1,12 +1,13 @@
 {
  "category": "Modules",
  "charts": [],
- "creation": "2021-06-08 12:12:06.757691",
+ "creation": "2021-06-11 15:36:51.173824",
  "developer_mode_only": 0,
  "disable_user_customization": 1,
  "docstatus": 0,
  "doctype": "Workspace",
  "extends_another_page": 0,
+ "for_user": "",
  "hide_custom": 0,
  "idx": 0,
  "is_default": 0,
@@ -42,8 +43,8 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "TAG Master Report",
-   "link_to": "TAG Master Report",
+   "label": "IYM Card IN & OUT 8 to 8 Report",
+   "link_to": "IYM Card IN & OUT 8 to 8 Report",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
@@ -51,8 +52,8 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "TAG Master 8 to 8 Report",
-   "link_to": "TAG Master 8 to 8 Report",
+   "label": "IYM Card IN & OUT Monthly Report",
+   "link_to": "IYM Card IN & OUT Monthly Report",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
@@ -60,14 +61,32 @@
   {
    "hidden": 0,
    "is_query_report": 1,
-   "label": "TAG Master Monthly Report",
-   "link_to": "TAG Master Monthly Report",
+   "label": "IYM Card IN & OUT Yearly Report",
+   "link_to": "IYM Card IN & OUT Yearly Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "IYM Card IN & OUT Overall Report",
+   "link_to": "IYM Card IN & OUT Overall Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "IYM Card IN & OUT Current Failure Report",
+   "link_to": "IYM Card IN & OUT Current Failure Report",
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2021-06-08 12:16:20.159765",
+ "modified": "2021-06-24 12:39:12.049940",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TAG Management System",

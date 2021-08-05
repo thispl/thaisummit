@@ -6,6 +6,8 @@
  "engine": "InnoDB",
  "field_order": [
   "qr",
+  "column_break_2",
+  "vehicle",
   "status",
   "items_recieved_section",
   "receipt_entry_table",
@@ -47,13 +49,23 @@
    "fieldname": "submit",
    "fieldtype": "Button",
    "label": "Submit"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-05-15 11:33:23.059498",
+ "modified": "2021-07-01 20:07:01.951492",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TAG IN",

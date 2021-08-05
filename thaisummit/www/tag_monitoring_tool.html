@@ -14,20 +14,17 @@
 <script>
     $(document).ready(function () {
         var table = $('#pager').DataTable({
-            pageLength: 5,
+            pageLength: 10,
             searching: false,
             lengthChange: false
         });
         var today = new Date();
         var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
         document.getElementById("date").innerHTML = date;
-        document.getElementById("date_s").innerHTML = date;
-
         var month = today.toLocaleString('default', { month: 'short' })
         var current_yr =today.getFullYear()
         month_yr = month +' '+current_yr
         document.getElementById("month").innerHTML = month_yr;
-        document.getElementById("month_y").innerHTML = month_yr;
         setInterval(function () {
             opts = {
                 method: "thaisummit.www.tag_monitoring_tool.get_tag_list",
@@ -35,31 +32,34 @@
             frappe.call(opts).then(res => {
                 let html = ''
                 $.each(res, function (i, d) {
-                    console.log(d)
                     $("#livetimer").html(d[1]);
                     $("#recieved").html(d[2]);
-                    $("#recieved_month").html(d[3]);
-                    $("#ots").html(d[4]);
-                    $("#ots_month").html(d[5]);
-                    $("#tbs").html(d[6]);
-                    $("#delay").html(d[7]);
-                    $("#delaypercent").html(d[8]);
+                    $("#ots").html(d[3]);
+                    $("#tbs").html(d[4]);
+                    $("#delay").html(d[5]);
+                    $("#delaypercent").html(d[6]);
+                    $("#recieved_month").html(d[7]);
+                    $("#ots_month").html(d[8]);
+                    $("#delay_month").html(d[9]);
+                    $("#delay_month_percent").html(d[10]);
 
                     let tags = d[0];
                     html = '<thead><tr>\
                             <td style="background-color:steelblue;align-content: center;"><center><h4 style="color:white"><b>S.No</b></h4></center></td>\
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>Mat No</b></h4></center></td>\
-                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Parts No</b></h4></center></td>\
-                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Parts Name</b></h4></center></td>\
+                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Part No</b></h4></center></td>\
+                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Part Name</b></h4></center></td>\
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>Model</b></h4></center></td>\
-                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Required Qty</b></h4></center></td>\
+                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Req. Qty</b></h4></center></td>\
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>SAP Qty</b></h4></center></td>\
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>Diff.</b></h4></center></td>\
-                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Pickup Date/Time</b></h4></center></td>\
-                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Gap</b></h4></center></td>\
+                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>IYM Card IN</b></h4></center></td>\
+                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Delay</b></h4></center></td>\
+                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Reason</b></h4></center></td>\
                             </tr></thead><tbody>'
 
                     $.each(tags, function (j, k) {
+                        console.log(k)
                         index = parseInt(j) + 1;
                         html += "<tr>\
                             <td><center><h4>"+ index + "</h4></center></td>\
@@ -78,10 +78,11 @@
                             <td><center><h4>"+ k['recieved_time'] + "</h4></center></td>"
                         }
                         if (k['status'] == 'on-time') {
-                            html += "<td style='background-color:yellow'><center><h4>" + k['time_taken'] + "</h4></center></td></tr>";
+                            html += "<td style='background-color:yellow'><center><h4>" + k['time_taken'] + "</h4></center></td>";
                         } else {
-                            html += "<td style='background-color:red'><center><h4 style='color:white'>" + k['time_taken'] + "</h4></center></td></tr>";
+                            html += "<td style='background-color:red'><center><h4 style='color:white'>" + k['time_taken'] + "</h4></center></td>";
                         }
+                        html += "<td><center><h4>" + k['reason_for_card_delay'] + "</h4></center></td></tr>";
 
                     })
                 })
@@ -89,7 +90,7 @@
                 table.destroy();
                 $('#pager').html(html);
                 table = $('#pager').DataTable({
-                    pageLength: 5,
+                    pageLength: 10,
                     searching: false,
                     lengthChange: false
                 }
@@ -101,45 +102,41 @@
        }, 60000);
 
         // Get the page info, so we know what the last is
-        count = 0
+         count = 0
         var pageInfo = table.page.info(),
 
-            // Set the ending interval to the last page
+        //     // Set the ending interval to the last page
             endInt = pageInfo.end,
 
-            // Current page
-            currentInt = 0,
+        //     // Current page
+             currentInt = 0,
 
-            // Start an interval to go to the "next" page every 3 seconds
-            interval = setInterval(function () {
-                // "Next" ...
-                table.page(currentInt).draw('page');
+        //     // Start an interval to go to the "next" page every 3 seconds
+             interval = setInterval(function () {
+        //         // "Next" ...
+                 table.page(currentInt).draw('page');
 
-                // Increment the current page int
-                currentInt++;
+        //         // Increment the current page int
+                 currentInt++;
 
-                // If were on the last page, reset the currentInt to the first page #
+        //         // If were on the last page, reset the currentInt to the first page #
                 if (currentInt === endInt)
-                    currentInt = 0;
+                     currentInt = 0;
 
             }, 5000); // 3 seconds
-
-
-
     });
 </script>
 {% endblock %}
 
 {%- block content -%}
 
-<a  href="https://thaisummit.teamproit.com/app/tag-management-system"> <p style="text-align:right">Tag Management system</p></a>
-<table border="1" class="table table-bordered">
+<a  href="/app/tag-management-system"> <p style="text-align:right">Tag Management system</p></a>
+<table border="1px solid" style="width: 100%;">
     <tr>
-        <td style="background-image:url('https://i.pinimg.com/564x/37/aa/87/37aa8725510aac487fa585278f1a884b.jpg');background-repeat:no-repeat;background-size:cover;"
-            width="250"  height="100" rowspan="4" colspan="4"> </td>
+        <td rowspan="4" colspan="4" align="center" valign="middle"><img src="/files/iym-thai-logo.jpeg" width="200" height="100"> </td>
         <td style="background-color:steelblue"  colspan="4">
             <center>
-                <h2 style="color:white"><b>PENDING IYM CARD STATUS </b></h2>
+                <h2 style="color:white"><b>IYM PENDING CARD STATUS </b></h2>
             </center>
         </td>
         <td style="background-color:steelblue"  colspan="4">
@@ -150,29 +147,32 @@
 
     </tr>
     <tr>
-        <td  colspan="2" style="background-color:white;color:brown">
+        <td  colspan="1" style="background-color:white;color:brown">
+           
+        </td> 
+        <td style="background-color:white;color:brown">
             <center>
-                <h5 style="color:black"><b>RECEIVED (8AM Onwards)</b> </h5>
+                <h5 style="color:black"><b>IYM CARD IN (From 8AM)</b> </h5>
             </center>
         </td>
-        <td  colspan="2" style="background-color:white;color:green">
+        <td  style="background-color:white;color:green">
             <center>
-                <h5 style="color:black"><b>ON TIME SENT (8AM Onwards)</b></h5>
+                <h5 style="color:black"><b>IYM CARD OUT (From 8AM)</b></h5>
             </center>
         </td>
-        <td  rowspan="2" colspan="1" style="background-color:yellow;color:black">
+        <td  colspan="1" style="background-color:yellow;color:black">
             <center>
                 <h5 style="color:black"><b>TO BE SENT </b></h5>
             </center>
         </td>
-        <td  rowspan="2" colspan="1" style="background-color:red;color:black">
+        <td  colspan="1" style="background-color:red;color:black">
             <center>
-                <h5 style="color:white"><b>DELAY </b></h5>
+                <h5 style="color:white"><b>FAILURE </b></h5>
             </center>
         </td>
-        <td  rowspan="2" colspan="1" style="background-color:red;color:black">
+        <td  colspan="1" style="background-color:red;color:black">
             <center>
-                <h5 style="color:white"><b> DELAY % </b></h5>
+                <h5 style="color:white"><b> FAILURE % </b></h5>
             </center>
         </td>
     </tr>
@@ -184,59 +184,68 @@
         </td>
         <td  colspan="1" style="background-color:white;color:brown">
             <center>
-                <h6 style="color:black"><b><p id ="month"></p></b> </h6>
+                <h3 id="recieved"> {{ tag_list[2] }} </h3>
             </center>
         </td>
         <td  colspan="1" style="background-color:white;color:green">
             <center>
-                <h6 style="color:black"><b><p id ="date_s"></p></b></h6>
+                <h3 id="ots"> {{ tag_list[3] }} </h3>
             </center>
+            
         </td>   
         <td  colspan="1" style="background-color:white;color:brown">
             <center>
-                <h6 style="color:black"><b><p id ="month_y"></p></b></h6>
+                <h3 id="tbs"> {{ tag_list[4] }} </h3>
             </center>
         </td> 
+        <td  colspan="1" style="background-color:white;color:brown">
+            <center><h3 id="delay"> {{ tag_list[5] }} </h3>
+            </center> 
+        </td> 
+        <td  colspan="1" style="background-color:white;color:brown">
+        <center>
+            <h3 id="delaypercent">{{ tag_list[6] }} </h3>
+        </center>
+        </td> 
     </tr>
-    <tr>
+    <tr>  
+        <td  colspan="1">
+            <center>
+                <h6 style="color:black"><b><p id ="month"></p></b> </h6>
+            </center>
+            
+        </td>
+        <td  colspan="1">
+            <center>
+                <h3 id="recieved_month"> {{ tag_list[7] }} </h3>
+            </center>
+        </td>
+       
+        <td  colspan="1">
+            <center>
+                <h3 id="ots_month"> {{ tag_list[8] }} </h3>
+            </center>
+        </td>
+        <td  colspan="1">
+            <center>
+                <h3 id="tbs_month">{{ tag_list[4] }} </h3> 
+                <!-- to be sent will be same for both daily and monthly -->
+            </center>
+        </td>
+        <td  colspan="1">
+            <center>
+                <h3 id="delay_month"> {{ tag_list[9] }} </h3>
+            </center>
+        </td>
         
         <td  colspan="1">
             <center>
-                <h3 id="recieved"> {{ tag_list[2] }} </h3>
-            </center>
-        </td>
-        <td  colspan="1">
-            <center>
-                <h3 id="recieved"> {{ tag_list[3] }} </h3>
-            </center>
-        </td>
-        <td  colspan="1">
-            <center>
-                <h3 id="ots"> {{ tag_list[4] }} </h3>
-            </center>
-        </td>
-        <td  colspan="1">
-            <center>
-                <h3 id="ots_month"> {{ tag_list[5] }} </h3>
-            </center>
-        </td>
-        <td colspan="1">
-            <center>
-                <h3 id="tbs"> {{ tag_list[6] }} </h3>
-            </center>
-        </td>
-        <td  colspan="1.5">
-            <center>
-                <h3 id="delay"> {{ tag_list[7] }} </h3>
-            </center>
-        </td>
-        <td colspan="1.5">
-            <center>
-                <h3 id="delaypercent">{{ tag_list[8] }} </h3>
+                <h3 id="delay_month_percent"> {{ tag_list[10] }} </h3>
             </center>
         </td>
     </tr>
 </table>
+<br>
 
 <table border="1" width="100%" id="pager">
     <thead>
@@ -253,12 +262,12 @@
             </td>
             <td style="background-color:steelblue">
                 <center>
-                    <h4 style="color:white"><b>Parts No</b></h4>
+                    <h4 style="color:white"><b>Part No</b></h4>
                 </center>
             </td>
             <td style="background-color:steelblue">
                 <center>
-                    <h4 style="color:white"><b>Parts Name</b></h4>
+                    <h4 style="color:white"><b>Part Name</b></h4>
                 </center>
             </td>
             <td style="background-color:steelblue">
@@ -268,7 +277,7 @@
             </td>
             <td style="background-color:steelblue">
                 <center>
-                    <h4 style="color:white"><b>Required Qty</b></h4>
+                    <h4 style="color:white"><b>Req.Qty.</b></h4>
                 </center>
             </td>
             <td style="background-color:steelblue">
@@ -283,12 +292,17 @@
             </td>
             <td style="background-color:steelblue">
                 <center>
-                    <h4 style="color:white"><b>Pickup Date/Time</b></h4>
+                    <h4 style="color:white"><b>IYM Card IN</b></h4>
                 </center>
             </td>
             <td style="background-color:steelblue">
                 <center>
-                    <h4 style="color:white"><b>Gap</b></h4>
+                    <h4 style="color:white"><b>Delay</b></h4>
+                </center>
+            </td>
+            <td style="background-color:steelblue">
+                <center>
+                    <h4 style="color:white"><b>Reason</b></h4>
                 </center>
             </td>
         </tr>
@@ -361,6 +375,11 @@
                     </center>
                 </td>
                 {% endif %}
+            <td>
+                <center>
+                    <h4>{{ row['reason_for_card_delay'] }}</h4>
+                </center>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

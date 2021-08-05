@@ -1,0 +1,142 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "SAP-OUT.####",
+ "creation": "2021-08-05 10:34:31.692507",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ar_invoice_no",
+  "ar_invoice_date",
+  "part_no",
+  "item_service_description",
+  "column_break_5",
+  "customer_ref_no",
+  "customer_code",
+  "customer_name",
+  "customer_group",
+  "short_name",
+  "section_break_11",
+  "base_price",
+  "base_value",
+  "sales_price",
+  "column_break_15",
+  "quantity",
+  "sales_value"
+ ],
+ "fields": [
+  {
+   "fieldname": "ar_invoice_no",
+   "fieldtype": "Int",
+   "label": "AR Invoice No"
+  },
+  {
+   "fieldname": "ar_invoice_date",
+   "fieldtype": "Date",
+   "label": "AR Invoice Date"
+  },
+  {
+   "fieldname": "customer_code",
+   "fieldtype": "Data",
+   "label": "Customer Code"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer Name",
+   "options": "TSAI Customer"
+  },
+  {
+   "fieldname": "customer_ref_no",
+   "fieldtype": "Data",
+   "label": "Customer Ref No"
+  },
+  {
+   "fieldname": "part_no",
+   "fieldtype": "Link",
+   "label": "Part No",
+   "options": "Part Master"
+  },
+  {
+   "fieldname": "item_service_description",
+   "fieldtype": "Small Text",
+   "label": "Item/Service Description"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer_name.customer_group",
+   "fieldname": "customer_group",
+   "fieldtype": "Data",
+   "label": "Customer Group"
+  },
+  {
+   "fieldname": "section_break_11",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "base_price",
+   "fieldtype": "Currency",
+   "label": "Base Price"
+  },
+  {
+   "fieldname": "base_value",
+   "fieldtype": "Currency",
+   "label": "Base Value"
+  },
+  {
+   "fieldname": "sales_price",
+   "fieldtype": "Currency",
+   "label": "Sales Price"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "sales_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Sales Value"
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "customer_name.short_name",
+   "fieldname": "short_name",
+   "fieldtype": "Data",
+   "label": "Short Name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-08-05 11:43:52.177525",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "SAP OUT Going Report",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

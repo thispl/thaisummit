@@ -16,7 +16,7 @@ app_license = "MIT"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/thaisummit/css/thaisummit.css"
-# app_include_js = "/assets/thaisummit/js/thaisummit.js"
+app_include_js = "/assets/thaisummit/js/thaisummit.js"
 
 # include js, css files in header of web template
 # web_include_css = "/assets/thaisummit/css/thaisummit.css"
@@ -104,6 +104,7 @@ jenv = {
 		"get_grand_total:thaisummit.thaisummit.doctype.monthly_sales_per_head.monthly_sales_per_head.get_grand_total",
 		"get_ot_amt:thaisummit.thaisummit.doctype.ot_sales_report.ot_sales_report.get_ot_amt",
 		"get_ot_total:thaisummit.thaisummit.doctype.ot_sales_report.ot_sales_report.get_ot_total",
+		"get_cl_count:thaisummit.thaisummit.print_format.cl_headcount_plan.cl_headcount_plan.get_cl_count",
 	]
 }
 
@@ -126,12 +127,12 @@ scheduler_events = {
 # 	"all": [
 # 		"thaisummit.tasks.all"
 # 	],
-	"daily": [
-		"thaisummit.custom.send_birthday_wish",
-		"thaisummit.custom.send_mail_hr",
-		"thaisummit.custom.create_leave_allocation",
-		"thaisummit.custom.delete_shift_summary"
-	],
+	# "daily": [
+	# 	"thaisummit.custom.send_birthday_wish",
+	# 	"thaisummit.custom.send_mail_hr",
+	# 	"thaisummit.custom.create_leave_allocation",
+	# 	"thaisummit.custom.delete_shift_summary"
+	# ],
 # 	"hourly": [
 # 		"thaisummit.tasks.hourly"
 # 	],
@@ -153,7 +154,10 @@ scheduler_events = {
 	"cron": {
         "5 0 1 * *": [
             "thaisummit.custom.mark_deductions"
-        ]
+        ],
+		"0 9 * * *": [
+			"thaisummit.custom.bulk_mail_alerts"
+		]
 	}
 }
 

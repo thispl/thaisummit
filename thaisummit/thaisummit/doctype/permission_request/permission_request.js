@@ -18,6 +18,41 @@ frappe.ui.form.on('Permission Request', {
 // 	}
 // }
 	},
+	employee(frm){
+		if (frm.doc.employee){
+			if (frappe.user.has_role('GM')){
+			frm.call('get_ceo').then(r=>{
+				frm.set_value('permission_approver',r.message)
+			})
+			}
+			else if (frappe.user.has_role('HOD')){
+				frm.call('get_gm').then(r=>{
+					frm.set_value('permission_approver',r.message)
+				})
+			}
+			else {
+				frm.call('get_hod').then(r=>{
+					frm.set_value('permission_approver',r.message)
+				})
+				}
+
+		}
+	},
+	attendance_date(frm){
+		if(frm.doc.attendance_date){
+			frappe.call({
+				method : 'thaisummit.custom.application_allowed_from',
+				args:{
+					date : frm.doc.attendance_date
+				},
+				callback(r){
+					if (r.message == 'NO'){
+						frm.set_value('attendance_date','')
+					}
+				}
+			})
+		}
+	},
 	shift(frm){
 		if(frm.doc.shift){
 			frappe.call({

@@ -1,0 +1,19 @@
+{% block title %} QR Checkin List {% endblock %}
+{% block head_include %}
+<style>
+  body {
+    padding: 35px;
+  }
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css" />
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+{% endblock %}
+
+{%- block content -%}
+<div class="col-md-12"> <div class="col-md-4"></div> <div class="col-md-4"></div>{{ data }}</div>
+
+
+{% endblock %}

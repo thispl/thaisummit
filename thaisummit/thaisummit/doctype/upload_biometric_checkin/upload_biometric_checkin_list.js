@@ -1,5 +1,5 @@
 frappe.listview_settings['Upload Biometric Checkin'] = {
     onload() {
-		frappe.breadcrumbs.add('HR');
+		frappe.breadcrumbs.add('Upload biometric Checkin','Home');
 	},
 };

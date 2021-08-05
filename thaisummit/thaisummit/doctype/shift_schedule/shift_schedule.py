@@ -3,33 +3,311 @@
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
+from time import gmtime
 import frappe
 from frappe.utils import cstr, add_days, date_diff, getdate
 from frappe import _
 from frappe.utils.csvutils import UnicodeWriter, read_csv_content
 from frappe.utils.file_manager import get_file
 from frappe.model.document import Document
+from frappe.utils.background_jobs import enqueue
+from frappe.utils import get_first_day, get_last_day, format_datetime,get_url_to_form, format_date
 
 class ShiftSchedule(Document):
-	def date_diff(self):
-		if self.from_date and self.to_date:
-			diff = date_diff(self.to_date,self.from_date)
-			if diff > 5:
-				frappe.throw("Shift Schedule can't be raised for more than 6 days")
-
+	@frappe.whitelist()
 	def on_submit(self):
-		sas = frappe.get_all("Shift Assignment",{'shift_schedule':self.name,'docstatus':'0'})
-		for sa in sas:
-			doc = frappe.get_doc('Shift Assignment',sa.name)
-			doc.submit()
-			frappe.db.commit()
-		frappe.msgprint('Shift Schedule Approved Successfully')
+		if self.workflow_state == "Approved":
+			sas = frappe.get_all("Shift Assignment",{'shift_schedule':self.name,'docstatus':'0'})
+			for sa in sas:
+				doc = frappe.get_doc('Shift Assignment',sa.name)
+				doc.submit()
+				frappe.db.commit()
+			frappe.msgprint('Shift Schedule Approved Successfully')
+		elif self.workflow_state == "Rejected":
+			sas = frappe.get_all("Shift Assignment",{'shift_schedule':self.name,'docstatus':'0'})
+			for sa in sas:
+				frappe.delete_doc('Shift Assignment',sa.name)
+			frappe.msgprint('Shift Schedule Rejected Successfully')
 
+	def after_insert(self):
+		if self.workflow_state == 'Pending for HOD':
+			link = get_url_to_form("Shift Schedule", self.name)
+			filepath = get_file(self.upload)
+			pps = read_csv_content(filepath[1])
+			data = ''
+			# wc1,wc2,wc3,wcpp1,wcpp2,bc1,bc2,bc3,bcpp1,bcpp2,ft1,ft2,ft3,ftpp1,ftpp2,nt1,nt2,nt3,ntpp1,ntpp2,cl1,cl2,cl3,clpp1,clpp2 =0
+			wc1 = 0
+			wc2 = 0
+			wc3 = 0
+			wcpp1 = 0
+			wcpp2 = 0
+			bc1 = 0
+			bc2 = 0
+			bc3 = 0
+			bcpp1 = 0
+			bcpp2 = 0
+			ft1 = 0
+			ft2 = 0
+			ft3 = 0
+			ftpp1 = 0
+			ftpp2 = 0
+			nt1 = 0
+			nt2 = 0
+			nt3 = 0
+			ntpp1 = 0
+			ntpp2 = 0
+			cl1 = 0
+			cl2 = 0
+			cl3 = 0
+			clpp1 = 0
+			clpp2 =0
+			for pp in pps:
+				if pp[4] == 'WC':
+					if pp[5] == "1":
+						wc1 +=1
+					elif pp[5] == "2":
+						wc2 +=1
+					elif pp[5] == "3":
+						wc3 +=1
+					elif pp[5] == "PP1":
+						wcpp1 +=1
+					elif pp[5] == "PP2":
+						wcpp2 +=1
+				if pp[4] == 'BC':
+					if pp[5] == "1":
+						bc1 +=1
+					elif pp[5] == "2":
+						bc2 +=1
+					elif pp[5] == "3":
+						bc3 +=1
+					elif pp[5] == "PP1":
+						bcpp1 +=1
+					elif pp[5] == "PP2":
+						bcpp2 +=1
+				if pp[4] == 'FT':
+					if pp[5] == "1":
+						ft1 +=1
+					elif pp[5] == "2":
+						ft2 +=1
+					elif pp[5] == "3":
+						ft3 +=1
+					elif pp[5] == "PP1":
+						ftpp1 +=1
+					elif pp[5] == "PP2":
+						ftpp2 +=1
+				if pp[4] == 'NT':
+					if pp[5] == "1":
+						nt1 +=1
+					elif pp[5] == "2":
+						nt2 +=1
+					elif pp[5] == "3":
+						nt3 +=1
+					elif pp[5] == "PP1":
+						ntpp1 +=1
+					elif pp[5] == "PP2":
+						ntpp2 +=1
+				if pp[4] == 'CL':
+					if pp[5] == "1":
+						cl1 +=1
+					elif pp[5] == "2":
+						cl2 +=1
+					elif pp[5] == "3":
+						cl3 +=1
+					elif pp[5] == "PP1":
+						clpp1 +=1
+					elif pp[5] == "PP2":
+						clpp2 +=1
+			total = wc1+wc2+wc3+wcpp1+wcpp2+bc1+bc2+bc3+bcpp1+bcpp2+ft1+ft2+ft3+ftpp1+ftpp2+nt1+nt2+nt3+ntpp1+ntpp2+cl1+cl2+cl3+clpp1+clpp2
+			data += """ <table class=table table-bordered>
+				<tr><th colspan='7' style = 'border: 1px solid black;background-color:#ffedcc;'><center>Shift Schedule Summary</center></th><tr>
+				<tr><td style="background-color:#f0b27a; border: 1px solid black">Shift</td><td style="background-color:#f0b27a ; border: 1px solid black">1</td><td style="background-color:#f0b27a; border: 1px solid black">2</td><td style="background-color:#f0b27a; border: 1px solid black">3</td><td style="background-color:#f0b27a; border: 1px solid black">PP1</td><td style="background-color:#f0b27a; border: 1px solid black">PP2</td><td style="background-color:#f0b27a ; border: 1px solid black">Total</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>WC</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d ; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>BC</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d ; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>FT</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>NT</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>CL</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<td style="background-color:#58d68d; border: 1px solid black">Total</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
+				</tr></table>"""%(wc1,wc2,wc3,wcpp1,wcpp2,(wc1+wc2+wc3+wcpp1+wcpp2),bc1,bc2,bc3,bcpp1,bcpp2,(bc1+bc2+bc3+bcpp1+bcpp2),ft1,ft2,ft3,ftpp1,ftpp2,(ft1+ft2+ft3+ftpp1+ftpp2),nt1,nt2,nt3,ntpp1,ntpp2,(nt1+nt2+nt3+ntpp1+ntpp2),cl1,cl2,cl3,clpp1,clpp2,(cl1+cl2+cl3+clpp1+clpp2),(wc1+bc1+ft1+nt1+cl1),(wc2+bc2+ft2+nt2+cl2),(wc3+bc3+ft3+nt3+cl3),(wcpp1+bcpp1+ftpp1+ntpp1+clpp1),(wcpp2+bcpp2+ftpp2+ntpp2+clpp2),total)
+
+			content="""<p>Dear Sir,</p>
+			Kindly find the below Shift Schedule Request<br>"""
+			table = """<table class=table table-bordered><tr><th colspan='4' style = 'border: 1px solid black;background-color:#ffedcc;'><center>Shift Schedule</center></th><tr>
+			<tr><th colspan='2' style = 'border: 1px solid black'>Department</th><td colspan='2' style = 'border: 1px solid black'>%s</td></tr>
+			<tr><th style = 'border: 1px solid black'>From Date</th><td style = 'border: 1px solid black'>%s</td><th style = 'border: 1px solid black'>To Date</th><td style = 'border: 1px solid black'>%s</td></tr>
+			<tr><th colspan='4' style = 'border: 1px solid black;background-color:#ffedcc;'><center><a href='%s'>VIEW</a></center></th></tr>
+			</table><br>"""%(self.department,format_date(self.from_date),format_date(self.to_date),link)
+			regards = "Thanks & Regards,<br>hrPRO"
+			hod = frappe.db.get_value('Department',self.department,"hod")
+			# frappe.msgprint(content+table+data)
+			frappe.sendmail(
+				recipients=[hod,"subash.p@groupteampro.com",'mohan.pan@thaisummit.co.in'],
+				subject='Reg.Shift Schedule Approval',
+				message = content+table+data+regards)
+
+	def validate(self):
+		if self.workflow_state == 'Pending for GM':
+			link = get_url_to_form("Shift Schedule", self.name)
+			filepath = get_file(self.upload)
+			pps = read_csv_content(filepath[1])
+			data = ''
+			# wc1,wc2,wc3,wcpp1,wcpp2,bc1,bc2,bc3,bcpp1,bcpp2,ft1,ft2,ft3,ftpp1,ftpp2,nt1,nt2,nt3,ntpp1,ntpp2,cl1,cl2,cl3,clpp1,clpp2 =0
+			wc1 = 0
+			wc2 = 0
+			wc3 = 0
+			wcpp1 = 0
+			wcpp2 = 0
+			bc1 = 0
+			bc2 = 0
+			bc3 = 0
+			bcpp1 = 0
+			bcpp2 = 0
+			ft1 = 0
+			ft2 = 0
+			ft3 = 0
+			ftpp1 = 0
+			ftpp2 = 0
+			nt1 = 0
+			nt2 = 0
+			nt3 = 0
+			ntpp1 = 0
+			ntpp2 = 0
+			cl1 = 0
+			cl2 = 0
+			cl3 = 0
+			clpp1 = 0
+			clpp2 =0
+			for pp in pps:
+				if pp[4] == 'WC':
+					if pp[5] == "1":
+						wc1 +=1
+					elif pp[5] == "2":
+						wc2 +=1
+					elif pp[5] == "3":
+						wc3 +=1
+					elif pp[5] == "PP1":
+						wcpp1 +=1
+					elif pp[5] == "PP2":
+						wcpp2 +=1
+				if pp[4] == 'BC':
+					if pp[5] == "1":
+						bc1 +=1
+					elif pp[5] == "2":
+						bc2 +=1
+					elif pp[5] == "3":
+						bc3 +=1
+					elif pp[5] == "PP1":
+						bcpp1 +=1
+					elif pp[5] == "PP2":
+						bcpp2 +=1
+				if pp[4] == 'FT':
+					if pp[5] == "1":
+						ft1 +=1
+					elif pp[5] == "2":
+						ft2 +=1
+					elif pp[5] == "3":
+						ft3 +=1
+					elif pp[5] == "PP1":
+						ftpp1 +=1
+					elif pp[5] == "PP2":
+						ftpp2 +=1
+				if pp[4] == 'NT':
+					if pp[5] == "1":
+						nt1 +=1
+					elif pp[5] == "2":
+						nt2 +=1
+					elif pp[5] == "3":
+						nt3 +=1
+					elif pp[5] == "PP1":
+						ntpp1 +=1
+					elif pp[5] == "PP2":
+						ntpp2 +=1
+				if pp[4] == 'CL':
+					if pp[5] == "1":
+						cl1 +=1
+					elif pp[5] == "2":
+						cl2 +=1
+					elif pp[5] == "3":
+						cl3 +=1
+					elif pp[5] == "PP1":
+						clpp1 +=1
+					elif pp[5] == "PP2":
+						clpp2 +=1
+			total = wc1+wc2+wc3+wcpp1+wcpp2+bc1+bc2+bc3+bcpp1+bcpp2+ft1+ft2+ft3+ftpp1+ftpp2+nt1+nt2+nt3+ntpp1+ntpp2+cl1+cl2+cl3+clpp1+clpp2
+			data += """ <table class=table table-bordered>
+				<tr><th colspan='7' style = 'border: 1px solid black;background-color:#ffedcc;'><center>Shift Schedule Summary</center></th><tr>
+				<tr><td style="background-color:#f0b27a; border: 1px solid black">Shift</td><td style="background-color:#f0b27a ; border: 1px solid black">1</td><td style="background-color:#f0b27a; border: 1px solid black">2</td><td style="background-color:#f0b27a; border: 1px solid black">3</td><td style="background-color:#f0b27a; border: 1px solid black">PP1</td><td style="background-color:#f0b27a; border: 1px solid black">PP2</td><td style="background-color:#f0b27a ; border: 1px solid black">Total</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>WC</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d ; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>BC</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d ; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>FT</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>NT</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<th style = 'border: 1px solid black'>CL</th><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
+				</tr>
+				<tr>
+					<td style="background-color:#58d68d; border: 1px solid black">Total</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td><td style="background-color:#58d68d; border: 1px solid black">%s</td>
+				</tr></table>"""%(wc1,wc2,wc3,wcpp1,wcpp2,(wc1+wc2+wc3+wcpp1+wcpp2),bc1,bc2,bc3,bcpp1,bcpp2,(bc1+bc2+bc3+bcpp1+bcpp2),ft1,ft2,ft3,ftpp1,ftpp2,(ft1+ft2+ft3+ftpp1+ftpp2),nt1,nt2,nt3,ntpp1,ntpp2,(nt1+nt2+nt3+ntpp1+ntpp2),cl1,cl2,cl3,clpp1,clpp2,(cl1+cl2+cl3+clpp1+clpp2),(wc1+bc1+ft1+nt1+cl1),(wc2+bc2+ft2+nt2+cl2),(wc3+bc3+ft3+nt3+cl3),(wcpp1+bcpp1+ftpp1+ntpp1+clpp1),(wcpp2+bcpp2+ftpp2+ntpp2+clpp2),total)
+
+			content="""<p>Dear Sir,</p>
+			Kindly find the below Shift Schedule Request<br>"""
+			table = """<table class=table table-bordered><tr><th colspan='4' style = 'border: 1px solid black;background-color:#ffedcc;'><center>Shift Schedule</center></th><tr>
+			<tr><th colspan='2' style = 'border: 1px solid black'>Department</th><td colspan='2' style = 'border: 1px solid black'>%s</td></tr>
+			<tr><th style = 'border: 1px solid black'>From Date</th><td style = 'border: 1px solid black'>%s</td><th style = 'border: 1px solid black'>To Date</th><td style = 'border: 1px solid black'>%s</td></tr>
+			<tr><th colspan='4' style = 'border: 1px solid black;background-color:#ffedcc;'><center><a href='%s'>VIEW</a></center></th></tr>
+			</table><br>"""%(self.department,format_date(self.from_date),format_date(self.to_date),link)
+			regards = "Thanks & Regards,<br>hrPRO"
+			gm = frappe.db.get_value('Department',self.department,"gm")
+			# frappe.msgprint(content+table+data)
+			frappe.sendmail(
+				recipients=[gm,"subash.p@groupteampro.com",'mohan.pan@thaisummit.co.in'],
+				subject='Reg.Shift Schedule Approval',
+				message = content+table+data+regards)
+
+
+	@frappe.whitelist()
 	def validate_employees(self):
+		shift_assignment = frappe.db.sql("""select name from `tabShift Assignment` where department = '%s' and start_date between '%s' and '%s' """%(self.department,self.from_date,self.to_date),as_dict=True)
+		if shift_assignment:
+			frappe.throw('Shift Schedule already submitted for the selected date')
 		filepath = get_file(self.upload)
 		pps = read_csv_content(filepath[1])
 		dates = self.get_dates()
 		err_list = ""
+		emp_list = []
+		for pp in pps:
+			if pp[0] != 'ID':
+				emp_list.append(pp[0])
+		limit = frappe.db.get_value('Department',self.department,"limit")
+		if limit != 0:
+			if limit < len(emp_list):
+				err_list += '<li> Maximum manpower limit for <b>%s</b> is <font color="red"> %s</font>. </li>'%(self.department,limit)
+				if err_list:
+					return err_list
+		for pp in pps:
+			if emp_list.count(pp[0]) > 1:
+				err_list += '<li> Employee ID - <font color="red"> %s</font> appears multiple times in the list. </li>'%pp[0]
+		if err_list:
+			return err_list
 		for pp in pps:
 			if pp[0] != 'ID':
 				if pp[0]:
@@ -73,6 +351,7 @@ class ShiftSchedule(Document):
 		dates = [add_days(self.from_date, i) for i in range(0, no_of_days)]
 		return dates
 
+	@frappe.whitelist()
 	def show_csv_data(self):
 		filepath = get_file(self.upload)
 		pps = read_csv_content(filepath[1])
@@ -85,11 +364,11 @@ class ShiftSchedule(Document):
 
 		return data_list
 
+	@frappe.whitelist()
 	def show_summary(self):
 		filepath = get_file(self.upload)
 		pps = read_csv_content(filepath[1])
 		data = ''
-		# wc1,wc2,wc3,wcpp1,wcpp2,bc1,bc2,bc3,bcpp1,bcpp2,ft1,ft2,ft3,ftpp1,ftpp2,nt1,nt2,nt3,ntpp1,ntpp2,cl1,cl2,cl3,clpp1,clpp2 =0
 		wc1 = 0
 		wc2 = 0
 		wc3 = 0
@@ -133,7 +412,7 @@ class ShiftSchedule(Document):
 				elif pp[5] == "2":
 					bc2 +=1
 				elif pp[5] == "3":
-					wc3 +=1
+					bc3 +=1
 				elif pp[5] == "PP1":
 					bcpp1 +=1
 				elif pp[5] == "PP2":
@@ -144,18 +423,18 @@ class ShiftSchedule(Document):
 				elif pp[5] == "2":
 					ft2 +=1
 				elif pp[5] == "3":
-					wc3 +=1
+					ft3 +=1
 				elif pp[5] == "PP1":
 					ftpp1 +=1
 				elif pp[5] == "PP2":
 					ftpp2 +=1
-			if pp[4] == 'nt':
+			if pp[4] == 'NT':
 				if pp[5] == "1":
 					nt1 +=1
 				elif pp[5] == "2":
 					nt2 +=1
 				elif pp[5] == "3":
-					wc3 +=1
+					nt3 +=1
 				elif pp[5] == "PP1":
 					ntpp1 +=1
 				elif pp[5] == "PP2":
@@ -166,7 +445,7 @@ class ShiftSchedule(Document):
 				elif pp[5] == "2":
 					cl2 +=1
 				elif pp[5] == "3":
-					wc3 +=1
+					cl3 +=1
 				elif pp[5] == "PP1":
 					clpp1 +=1
 				elif pp[5] == "PP2":
@@ -196,7 +475,10 @@ class ShiftSchedule(Document):
 
 		return data
 
-
+@frappe.whitelist()
+def enqueue_shift_assignment(file,from_date,to_date,name):
+    enqueue(create_shift_assignment, queue='default', timeout=6000, event='create_shift_assignment',
+                    file=file,from_date=from_date,to_date=to_date,name=name)
 @frappe.whitelist()
 def create_shift_assignment(file,from_date,to_date,name):
 	filepath = get_file(file)
@@ -240,43 +522,45 @@ def get_template():
 	frappe.response['type'] = 'csv'
 	frappe.response['doctype'] = "Shift Assignment"
 
+@frappe.whitelist()
 def add_header(w):
 	w.writerow(["ID", "Name", "Department", "Department Code", "Type", "Shift","Route No","Boarding Point"])
 	return w
 
+@frappe.whitelist()
 def add_data(w, args):
 	data = get_data(args)
 	writedata(w, data)
 	return w
 
+@frappe.whitelist()
 def get_data(args):
 	employees = get_active_employees(args)
 	data = []
 	for employee in employees:
 		row = [
-			employee.name, employee.employee_name, employee.department,frappe.db.get_value("Department",employee.department,"department_code"),employee.employee_type,employee.default_shift,employee.route_no or 'NB',employee.boarding_point or 'NB'
+			employee.name, employee.employee_name, employee.department,frappe.db.get_value("Department",employee.department,"cost_centre"),employee.employee_type,employee.default_shift,employee.route_no or 'NB',employee.boarding_point or 'NB'
 		]
 		data.append(row)
 	return data
 
 
-
+@frappe.whitelist()
 def writedata(w, data):
 	for row in data:
 		w.writerow(row)
 
-
+@frappe.whitelist()
 def get_active_employees(args):
 	employees = frappe.db.get_all('Employee',
 		fields=['name', 'employee_name', 'department', 'date_of_joining', 'company', 'relieving_date','employee_type','boarding_point','default_shift','route_no'],
 		filters={
 			'docstatus': ['<', 2],
 			'status': 'Active',
-			'department': (args["department"]).replace("1","&")
+			'department': (args["department"]).replace("5","&")
 		}
 	)
 	return employees
-
 
 @frappe.whitelist()
 def shift_wise_count(doc):
@@ -288,11 +572,11 @@ def shift_wise_count(doc):
 		s3 = 0
 		spp1 = 0
 		spp2 = 0
-		shift1 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '1' and docstatus != 2 and start_date = '%s' and employee_type = '%s' "%(doc.from_date,emp_type),as_dict=True)
-		shift2 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '2' and docstatus != 2 and start_date = '%s' and employee_type = '%s' "%(doc.from_date,emp_type),as_dict=True)
-		shift3 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '3' and docstatus != 2 and start_date = '%s' and employee_type = '%s' "%(doc.from_date,emp_type),as_dict=True)
-		shiftpp1 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = 'PP1' and docstatus != 2 and start_date = '%s' and employee_type = '%s' "%(doc.from_date,emp_type),as_dict=True)
-		shiftpp2 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = 'PP2' and docstatus != 2 and start_date = '%s' and employee_type = '%s' "%(doc.from_date,emp_type),as_dict=True)
+		shift1 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '1' and docstatus != 2 and start_date = '%s' and employee_type = '%s' and department = '%s' "%(doc.from_date,emp_type,doc.department),as_dict=True)
+		shift2 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '2' and docstatus != 2 and start_date = '%s' and employee_type = '%s' and department = '%s' "%(doc.from_date,emp_type,doc.department),as_dict=True)
+		shift3 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '3' and docstatus != 2 and start_date = '%s' and employee_type = '%s' and department = '%s' "%(doc.from_date,emp_type,doc.department),as_dict=True)
+		shiftpp1 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = 'PP1' and docstatus != 2 and start_date = '%s' and employee_type = '%s' and department = '%s' "%(doc.from_date,emp_type,doc.department),as_dict=True)
+		shiftpp2 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = 'PP2' and docstatus != 2 and start_date = '%s' and employee_type = '%s' and department = '%s' "%(doc.from_date,emp_type,doc.department),as_dict=True)
 		if shift1:
 			s1 = shift1[0].count
 		if shift2:
@@ -305,11 +589,11 @@ def shift_wise_count(doc):
 			spp2 = shiftpp2[0].count
 		total = s1+s2+s3+spp1+spp2
 		data += '<tr><td style="background-color:#58d68d">%s</td><td>%s</td><td style="background-color:#58d68d">%s</td><td>%s</td><td style="background-color:#58d68d">%s</td><td>%s</td><td style="background-color:#58d68d">%s</td><td>%s</td><td style="background-color:#58d68d">%s</td><td>%s</td><td style="background-color:#58d68d">%s</td><td>%s</td></tr>'%(emp_type,s1,emp_type,s2,emp_type,s3,emp_type,spp1,emp_type,spp2,emp_type,total)
-	sf1 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '1' and docstatus != 2 and start_date = '%s' "%(doc.from_date),as_dict=True)
-	sf2 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '2' and docstatus != 2 and start_date = '%s' "%(doc.from_date),as_dict=True)
-	sf3 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '3' and docstatus != 2 and start_date = '%s' "%(doc.from_date),as_dict=True)
-	sfpp1 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = 'PP1' and docstatus != 2 and start_date = '%s' "%(doc.from_date),as_dict=True)
-	sfpp2 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = 'PP2' and docstatus != 2 and start_date = '%s' "%(doc.from_date),as_dict=True)
+	sf1 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '1' and docstatus != 2 and start_date = '%s' and department = '%s' "%(doc.from_date,doc.department),as_dict=True)
+	sf2 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '2' and docstatus != 2 and start_date = '%s' and department = '%s' "%(doc.from_date,doc.department),as_dict=True)
+	sf3 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = '3' and docstatus != 2 and start_date = '%s' and department = '%s' "%(doc.from_date,doc.department),as_dict=True)
+	sfpp1 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = 'PP1' and docstatus != 2 and start_date = '%s' and department = '%s' "%(doc.from_date,doc.department),as_dict=True)
+	sfpp2 = frappe.db.sql("select count(*) as count from `tabShift Assignment` where shift_type = 'PP2' and docstatus != 2 and start_date = '%s' and department = '%s' "%(doc.from_date,doc.department),as_dict=True)
 
 	data += '<tr><td style="background-color:#f0b27a">Total</td><td>%s</td><td style="background-color:#f0b27a">Total</td><td>%s</td><td style="background-color:#f0b27a">Total</td><td>%s</td><td style="background-color:#f0b27a">Total</td><td>%s</td><td style="background-color:#f0b27a">Total</td><td>%s</td><td style="background-color:#f0b27a">Total</td><td>%s</td></tr>'%(sf1[0].count,sf2[0].count,sf3[0].count,sfpp1[0].count,sfpp2[0].count,sf1[0].count+sf2[0].count+sf3[0].count+sfpp1[0].count+sfpp2[0].count)
 	data = data + '</table>' 
@@ -318,7 +602,7 @@ def shift_wise_count(doc):
 
 @frappe.whitelist()
 def shift_employees(doc,shift):
-	shift_emp = frappe.db.sql("select employee,employee_name from `tabShift Assignment` where shift_type = '%s' and docstatus != 2 and start_date = '%s' "%(shift,doc.from_date),as_dict=True)
+	shift_emp = frappe.db.sql("select employee,employee_name from `tabShift Assignment` where shift_type = '%s' and docstatus != 2 and start_date = '%s' and department = '%s' "%(shift,doc.from_date,doc.department),as_dict=True)
 	data = "<table class='table table-bordered'><tr><td style='background-color:#f0b27a'><center>S.No</center></td><td colspan='2' style='background-color:#f0b27a'><center>Shift %s</center></td></tr>"%(shift)
 	if shift_emp:
 		i = 1
@@ -330,3 +614,22 @@ def shift_employees(doc,shift):
 	data = data + '</table>'
 	return data
 
+# @frappe.whitelist()
+# def mail_alerts(workflow_state,department,name,from_date,to_date):
+# 	frappe.errprint(workflow_state)
+	# if(workflow_state == "Pending for HOD"):
+    #     hod = frappe.db.get_value('Department',department,"hod")
+    #     frappe.errprint(hod)
+#         frappe.sendmail(
+#             recipients=["sarumathy.d@groupteampro.com"],
+#             subject='Regarding On Duty Application',
+#             message="""<p>Dear Sir,</p>
+#             <p> The Employee %s has given On duty Application between %s and %s, Kind reminder for approval </p> """%(name,from_date,to_date))
+# 	if(workflow_state == "Pending for GM"):
+#         hod = frappe.db.get_value('Department',department,"gm")
+#         frappe.errprint(gm)
+#         frappe.sendmail(
+#             recipients=["sarumathy.d@groupteampro.com"],
+#             subject='Regarding On Duty Application',
+#             message="""<p>Dear Sir,</p>
+#             <p> The Employee %s has given On duty Application between %s and %s, Kind reminder for approval </p> """%(name,from_date,to_date))

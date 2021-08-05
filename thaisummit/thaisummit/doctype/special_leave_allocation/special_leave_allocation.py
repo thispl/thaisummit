@@ -7,6 +7,7 @@ import frappe
 from frappe.model.document import Document
 
 class SpecialLeaveAllocation(Document):
+	@frappe.whitelist()
 	def update_leave_allocation(self,allocation):
 		lle = frappe.db.sql("select name from `tabLeave Ledger Entry` where employee = %s and '%s' between from_date and to_date and leave_type = 'Earned Leave' "%(self.employee_id,self.date),as_dict=True)
 		frappe.db.set_value('Leave Ledger Entry',lle[0].name,'leaves','2')

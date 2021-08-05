@@ -14,6 +14,23 @@ bc_status_map = {
 	"Half Day": "HD",
 	"Holiday": "HH",
 	"Weekly Off": "WW",
+	"1H": "1H",
+	"2H": "2H",
+	"3H": "3H",
+	"1W": "1W",
+	"2W": "2W",
+	"3W": "3W",
+	"PP1W": "PP1W",
+	"PP2W": "PP2W",
+	"1LH": "1LH",
+	"2LH": "2LH",
+	"3LH": "3LH",
+	"1LW": "1LW",
+	"2LW": "2LW",
+	"3LW": "3LW",
+	"PP1LW": "PP1LW",
+	"PP2LW": "PP2LW",
+	"MW": "MW",
 	"On Leave": "L",
 	"Present": "P",
 	"Work From Home": "WFH",
@@ -23,11 +40,21 @@ bc_status_map = {
 	"33": "33",
 	"PP1PP1": "P1P1",
 	"PP2PP2": "P2P2",
+	"1L1": "1L1",
+	"2L2": "2L2",
+	"3L3": "3L3",
+	"PP1LPP1": "P1LP1",
+	"PP2LPP2": "P2LP2",
 	"1M": "1M",
 	"2M": "2M",
 	"3M": "3M",
+	"M1": "M1",
+	"M2": "M2",
+	"M3": "M3",
 	"PP1M": "P1M",
 	"PP2M": "P2M",
+	"MPP1": "MP1",
+	"MPP2": "MP2",
 	"11": "11",
 	"12": "12",
 	"13": "13",
@@ -71,6 +98,8 @@ wc_status_map = {
 	"1W": "1W",
 	"2W": "2W",
 	"3W": "3W",
+	"PP1W": "PP1W",
+	"PP2W": "PP2W",
 	"PP1H": "P1H",
 	"PP2H": "P2H",
 	"Weekly Off": "WW",
@@ -85,8 +114,32 @@ wc_status_map = {
 	"1": "11",
 	"2": "22",
 	"3": "33",
-	" ": "MM"
-	
+	" ": "MM",
+	"PP1": "P1P1",
+	"PP2": "P2P2",
+	"1L": "1L1",
+	"2L": "2L2",
+	"3L": "3L3",
+	"PP1L": "P1LP1",
+	"PP2L": "P2LP2",
+	"1LH": "1LH",
+	"2LH": "2LH",
+	"3LH": "3LH",
+	"1LW": "1LW",
+	"2LW": "2LW",
+	"3LW": "3LW",
+	"PP1LW": "PP1LW",
+	"PP2LW": "PP2LW",
+	"1M": "1M",
+	"2M": "2M",
+	"3M": "3M",
+	"M1": "M1",
+	"M2": "M2",
+	"M3": "M3",
+	"PP1M": "P1M",
+	"PP2M": "P2M",
+	"MPP1": "MP1",
+	"MPP2": "MP2",
 	}
 
 day_abbr = [
@@ -184,17 +237,33 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 				if emp_holiday_list in holiday_map:
 					for idx, ele in enumerate(sorted(holiday_map[emp_holiday_list])):
 						if filtered_date == holiday_map[emp_holiday_list][idx][0]:
-							if frappe.db.exists('Attendance',{'attendance_date':filterdate,'employee':emp}):
-								shift = frappe.get_value('Attendance',{'attendance_date':filterdate,'employee':emp },['shift']) or ''
+							if frappe.db.exists('Attendance',{'attendance_date':filterdate,'employee':emp,'status':('!=','Absent')}):
+								shift = frappe.get_value('Attendance',{'attendance_date':filterdate,'employee':emp },['employee_type','shift','qr_shift','late_entry']) or ''
+								late = ''
+								if shift[3] == 1:
+									late = 'L'
 								if holiday_map[emp_holiday_list][idx][1]:
-									status = shift + "W"
+									if shift[0] == 'WC':
+										if shift[1]:
+											status = shift[1] + late + "W"
+										else:
+											status = "MW"
+									else:
+										if shift[2]:
+											status = shift[2] + late + "W"
+										else:
+											status = "MW"
 								else:
-									status = shift + "H"
+									if shift[0] == 'WC':
+										if shift[1]:
+											status = shift[1] + late+ "H"
+									else:
+										if shift[2]:
+											status = shift[2] + late + "H"
 							else:
 								if holiday_map[emp_holiday_list][idx][1]:
 									status = "Weekly Off"
 								else:
-									
 									status = "Holiday"
 							total_h += 1
 						
@@ -320,10 +389,10 @@ def get_columns(filters):
 
 def get_attendance_list(conditions, filters):
 
-	query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,qr_shift,leave_type,attendance_request from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.company)
-	# query = """ select employee, day(attendance_date) as day_of_month,status,shift,qr_shift,leave_type,attendance_request from tabAttendance where docstatus = 1  and attendance_date between '2021-03-01' and '2021-03-31' order by employee, attendance_date"""
+	query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,qr_shift,late_entry,leave_type,on_duty_application,in_time,out_time from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.company)
+	# query = """ select employee, day(attendance_date) as day_of_month,status,shift,qr_shift,leave_type,on_duty_application from tabAttendance where docstatus = 1  and attendance_date between '2021-03-01' and '2021-03-31' order by employee, attendance_date"""
 	if filters.employee:
-		query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,qr_shift,leave_type,attendance_request from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and employee='%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.employee,filters.company)
+		query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,late_entry,qr_shift,leave_type,on_duty_application,in_time,out_time from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and employee='%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.employee,filters.company)
 
 	attendance_list = frappe.db.sql(query,as_dict=1)
 
@@ -333,33 +402,43 @@ def get_attendance_list(conditions, filters):
 	att_map = {}
 	for d in attendance_list:
 		att_map.setdefault(d.employee, frappe._dict()).setdefault(d.day_of_month, "")
-		# att_map[d.employee][d.day_of_month] = d.status
+		att_map[d.employee][d.day_of_month] = d.status
+		late = ''
+		if d.late_entry:
+			late = 'L'
 		if filters.employee_type != "WC":
-			if d.shift and d.qr_shift:
-				att_map[d.employee][d.day_of_month] = str(d.shift) + str(d.qr_shift)
-			elif d.shift and not d.qr_shift:
-				att_map[d.employee][d.day_of_month] = str(d.shift) + "M"
-			elif d.qr_shift and not d.shift:
-				att_map[d.employee][d.day_of_month] = "M" + str(d.qr_shift)
-			elif not d.qr_shift and not d.shift:
-				att_map[d.employee][d.day_of_month] = "AA"
+			if not d.in_time or not d.out_time:
+				if d.qr_shift:
+					att_map[d.employee][d.day_of_month] = "M" + str(d.qr_shift)
+				else:
+					att_map[d.employee][d.day_of_month] = "AA"
+			if d.in_time and d.out_time:
+				if not d.qr_shift:
+					att_map[d.employee][d.day_of_month] = str(d.shift) + late + "M"
+				else:
+					att_map[d.employee][d.day_of_month] = str(d.shift) + late + str(d.qr_shift)
+				
 			if d.status == 'On Leave':
 				att_map[d.employee][d.day_of_month] = d.leave_type
-			if d.attendance_request:
+			if d.on_duty_application:
 				att_map[d.employee][d.day_of_month] = "OD"
 		else:
-			att_map[d.employee][d.day_of_month] = d.status
 			if d.status == 'On Leave':
 				att_map[d.employee][d.day_of_month] = d.leave_type
-			if d.attendance_request:
+			if d.on_duty_application:
 				att_map[d.employee][d.day_of_month] = "OD"
 			if d.shift:
-				att_map[d.employee][d.day_of_month] = str(d.shift)
-			if d.status == "HH":
-				att_map[d.employee][d.day_of_month] = str(d.shift) + 'H'
-			if d.status == "WW":
-				att_map[d.employee][d.day_of_month] = str(d.shift) + 'W'
-
+				if d.in_time and d.out_time:
+					att_map[d.employee][d.day_of_month] = str(d.shift) + late
+				if not d.out_time:
+					att_map[d.employee][d.day_of_month] = str(d.shift) + 'M'
+			else:
+				# if not d.in_time:
+				att_map[d.employee][d.day_of_month] = 'AA'
+			# if d.status == "HH":
+			# 	att_map[d.employee][d.day_of_month] = str(d.shift) + 'H'
+			# if d.status == "WW":
+			# 	att_map[d.employee][d.day_of_month] = str(d.shift) + 'W'
 
 	return att_map
 

@@ -19,6 +19,7 @@
   "section_break_9",
   "qr_scan_time",
   "column_break_11",
+  "qr_scanned_by",
   "attendance"
  ],
  "fields": [
@@ -53,12 +54,14 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "QR Shift",
-   "options": "Shift Type"
+   "options": "Shift Type",
+   "read_only": 1
   },
   {
    "fieldname": "qr_scan_time",
    "fieldtype": "Datetime",
-   "label": "QR Scan Time"
+   "label": "QR Scan Time",
+   "read_only": 1
   },
   {
    "fieldname": "attendance",
@@ -70,12 +73,14 @@
   {
    "fieldname": "created_date",
    "fieldtype": "Date",
-   "label": "Created Date"
+   "label": "Created Date",
+   "read_only": 1
   },
   {
    "fieldname": "shift_date",
    "fieldtype": "Date",
-   "label": "Shift Date"
+   "label": "Shift Date",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_9",
@@ -95,7 +100,8 @@
    "default": "0",
    "fieldname": "ot",
    "fieldtype": "Check",
-   "label": "OT"
+   "label": "OT",
+   "read_only": 1
   },
   {
    "fieldname": "overtime_request",
@@ -103,11 +109,17 @@
    "label": "Overtime Request",
    "options": "Overtime Request",
    "read_only": 1
+  },
+  {
+   "fieldname": "qr_scanned_by",
+   "fieldtype": "Data",
+   "label": "QR Scanned By",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-06-09 09:04:18.153287",
+ "modified": "2021-07-27 10:40:28.316002",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "QR Checkin",

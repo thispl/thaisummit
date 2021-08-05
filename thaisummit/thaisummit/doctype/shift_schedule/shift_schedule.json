@@ -43,6 +43,7 @@
    "in_list_view": 1,
    "label": "Department",
    "options": "Department",
+   "read_only_depends_on": "eval:doc.department",
    "reqd": 1
   },
   {
@@ -84,16 +85,19 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "error_preview",
    "fieldtype": "HTML",
    "label": "Error Preview"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "csv_preview",
    "fieldtype": "HTML",
    "label": "CSV Preview"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "summary",
    "fieldtype": "HTML",
    "label": "Summary"
@@ -111,7 +115,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-05-20 16:49:56.265058",
+ "modified": "2021-06-21 09:55:04.669381",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Shift Schedule",
