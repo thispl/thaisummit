@@ -87,7 +87,8 @@ override_doctype_class = {
 	"Salary Slip": "thaisummit.overrides.CustomSalarySlip",
 	"Payroll Entry": "thaisummit.overrides.CustomPayrollEntry",
 	"Shift Assignment": "thaisummit.overrides.CustomShiftAssignment",
-	"Leave Application": "thaisummit.overrides.CustomLeaveApplication"
+	"Leave Application": "thaisummit.overrides.CustomLeaveApplication",
+	"Compensatory Leave Request": "thaisummit.overrides.CustomCompensatoryLeaveRequest"
 }
 
 jenv = {
@@ -112,13 +113,13 @@ jenv = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Attendance": {
+		# "on_update": "thaisummit.mark_attendance.mark_shift_status",
+		# "on_cancel": "method",
+		# "on_trash": "method"
+	}
+}
 
 # Scheduled Tasks
 # ---------------

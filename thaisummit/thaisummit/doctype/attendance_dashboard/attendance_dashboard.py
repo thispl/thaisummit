@@ -36,43 +36,47 @@ def get_shift(emp,month,year):
     i = 1
     for date in date_list:
         if frappe.db.exists('Attendance',{'employee':emp,'attendance_date':date,'docstatus':['!=','2']}):
-            att = frappe.get_doc('Attendance',{'employee':emp,'attendance_date':date,'docstatus':['!=','2']})
-            status = ''
-            if att.employee_type != "WC":
-                if not att.in_time or not att.out_time:
-                    if att.qr_shift:
-                        status = "M" + str(att.qr_shift)
-                    else:
-                        status = "AA"
-                if att.in_time and att.out_time:
-                    if not att.qr_shift:
-                        status = str(att.shift) + "M"
-                    elif att.late_entry == '1':
-                        status = str(att.shift) + 'L' + "M"
-                    else:
-                        status = str(att.shift) + str(att.qr_shift)
-                if att.status == 'On Leave':
-                    status = att.leave_type
-                if att.on_duty_application:
-                    status = "OD"
+            # att = frappe.get_doc('Attendance',{'employee':emp,'attendance_date':date,'docstatus':['!=','2']})
+            shift_status = frappe.db.get_value('Attendance',{'employee':emp,'attendance_date':date,'docstatus':['!=','2']},['shift_status','employee_type'])
+            if shift_status[1] == "WC":
+                status = wc_status_map.get(shift_status[0], "")
             else:
-                if att.status == 'On Leave':
-                    status = att.leave_type
-                if att.on_duty_application:
-                    status = "OD"
-                if att.shift:
-                    if att.late_entry == '1':
-                        status = str(att.shift) + 'L' + str(att.shift)
-                    elif att.in_time:
-                        if not att.out_time:
-                            status = str(att.shift) + 'M'
-                        else:
-                            status = str(att.shift) + str(att.shift)
-                    elif att.out_time:
-                        if not att.in_time:
-                            status =  'M' + str(att.shift)
-                        else:    
-                            status = str(att.shift) + str(att.shift)
+                status = bc_status_map.get(shift_status[0], "")
+            # if att.employee_type != "WC":
+            #     if not att.in_time or not att.out_time:
+            #         if att.qr_shift:
+            #             status = "M" + str(att.qr_shift)
+            #         else:
+            #             status = "AA"
+            #     if att.in_time and att.out_time:
+            #         if not att.qr_shift:
+            #             status = str(att.shift) + "M"
+            #         elif att.late_entry == '1':
+            #             status = str(att.shift) + 'L' + "M"
+            #         else:
+            #             status = str(att.shift) + str(att.qr_shift)
+            #     if att.status == 'On Leave':
+            #         status = att.leave_type
+            #     if att.on_duty_application:
+            #         status = "OD"
+            # else:
+            #     if att.status == 'On Leave':
+            #         status = att.leave_type
+            #     if att.on_duty_application:
+            #         status = "OD"
+            #     if att.shift:
+            #         if att.late_entry == '1':
+            #             status = str(att.shift) + 'L' + str(att.shift)
+            #         elif att.in_time:
+            #             if not att.out_time:
+            #                 status = str(att.shift) + 'M'
+            #             else:
+            #                 status = str(att.shift) + str(att.shift)
+            #         elif att.out_time:
+            #             if not att.in_time:
+            #                 status =  'M' + str(att.shift)
+            #             else:    
+            #                 status = str(att.shift) + str(att.shift)
 
             if i <= 10:
                 rh1 += """<th style = 'border: 1px solid black;background-color:#ffedcc;'><center>%s</center></th>"""%((datetime.strptime(date, '%Y-%m-%d').date()).strftime("%d-%b"))
@@ -205,3 +209,168 @@ def get_dates(previous_month,current_month):
     return dates
 
 
+bc_status_map = {
+    "Absent": "AA",
+    "AA":"AA",
+    "Half Day": "HD",
+    "Holiday": "HH",
+    "Weekly Off": "WW",
+    "1H": "1H",
+    "2H": "2H",
+    "3H": "3H",
+    "1W": "1W",
+    "2W": "2W",
+    "3W": "3W",
+    "PP1W": "PP1W",
+    "PP2W": "PP2W",
+    "1LH": "1LH",
+    "2LH": "2LH",
+    "3LH": "3LH",
+    "1LW": "1LW",
+    "2LW": "2LW",
+    "3LW": "3LW",
+    "PP1LW": "PP1LW",
+    "PP2LW": "PP2LW",
+    "MW": "MW",
+    "On Leave": "L",
+    "Present": "P",
+    "Work From Home": "WFH",
+    "MM": "AA",
+    "11": "11",
+    "22": "22",
+    "33": "33",
+    "PP1PP1": "P1P1",
+    "PP2PP2": "P2P2",
+    "1L1": "1L1",
+    "2L2": "2L2",
+    "3L3": "3L3",
+    "2L3": "AA",
+    "1L2": "AA",
+    "3L1": "AA",
+    "1LM": "1LM",
+    "2LM": "2LM",
+    "3LM": "3LM",
+    "PP1LPP1": "P1LP1",
+    "PP2LPP2": "P2LP2",
+    "1M": "1M",
+    "2M": "2M",
+    "3M": "3M",
+    "M1": "M1",
+    "M2": "M2",
+    "M3": "M3",
+    "PP1M": "P1M",
+    "PP2M": "P2M",
+    "MPP1": "MP1",
+    "MPP2": "MP2",
+    "11": "11",
+    "12": "12",
+    "13": "13",
+    "1PP1": "1P1",
+    "1PP2": "1P2",
+    "21": "21",
+    "22": "22",
+    "23": "23",
+    "2PP1": "2P1",
+    "2PP2": "2P2",
+    "31": "31",
+    "32": "32",
+    "33": "33",
+    "3PP1": "3P1",
+    "3PP2": "3P2",
+    "PP11": "P11",
+    "PP12": "P12",
+    "PP13": "P13",
+    "PP1PP1": "P1P1",
+    "PP1PP2": "P1P2",
+    "PP21": "P2P1",
+    "PP22": "P2P2",
+    "PP23": "P2P3",
+    "PP2PP1": "P2P1",
+    "PP2PP2": "P2P2",
+    "Earned Leave": "EL",
+    "Casual Leave": "CL",
+    "Sick Leave": "SL",
+    "OD": "OD",
+    "Compensatory Off": "CO",
+    "Leave Without Pay": "LL",
+    "0.5Earned Leave": "0.5EL",
+    "0.5Casual Leave": "0.5CL",
+    "0.5Sick Leave": "0.5SL",
+    "0.5Compensatory Off": "0.5CO",
+    "0.5Leave Without Pay": "0.5LL",
+    "LEarned Leave/2": "0.5SL",
+	"LCasual Leave/2": "0.5LCL",
+	"LSick Leave/2": "0.5LSL",
+	"LSpecial Leave/2": "0.5LSPL",
+	"LCompensatory Off/2": "0.5LCO",
+	"LLeave Without Pay/2": "0.5LLL",
+    "0.5Special Leave": "0.5SPL",
+    }
+
+wc_status_map = {
+    "Absent": "AA",
+    "AA": "AA",
+    "Half Day": "HD",
+    "Holiday": "HH",
+    "1H": "1H",
+    "2H": "2H",
+    "3H": "3H",
+    "1W": "1W",
+    "2W": "2W",
+    "3W": "3W",
+    "PP1W": "PP1W",
+    "PP2W": "PP2W",
+    "PP1H": "P1H",
+    "PP2H": "P2H",
+    "Weekly Off": "WW",
+    "On Leave": "L",
+    # "Present": "11",
+    "Work From Home": "WFH",
+    "OD": "OD",
+    "Earned Leave": "EL",
+    "Casual Leave": "CL",
+    "Sick Leave": "SL",
+    "Compensatory Off": "CO",
+    "Leave Without Pay": "LL",
+    "1": "11",
+    "2": "22",
+    "3": "33",
+    " ": "MM",
+    "PP1": "P1P1",
+    "PP2": "P2P2",
+    "1L": "1L1",
+    "2L": "2L2",
+    "3L": "3L3",
+    "PP1L": "P1LP1",
+    "PP2L": "P2LP2",
+    "1LH": "1LH",
+    "2LH": "2LH",
+    "3LH": "3LH",
+    "1LW": "1LW",
+    "2LW": "2LW",
+    "3LW": "3LW",
+    "PP1LW": "PP1LW",
+    "PP2LW": "PP2LW",
+    "1M": "1M",
+    "2M": "2M",
+    "3M": "3M",
+    "M1": "M1",
+    "M2": "M2",
+    "M3": "M3",
+    "PP1M": "P1M",
+    "PP2M": "P2M",
+    "MPP1": "MP1",
+    "MPP2": "MP2",
+    "0.5Earned Leave": "0.5EL",
+    "0.5Casual Leave": "0.5CL",
+    "0.5Sick Leave": "0.5SL",
+    "0.5Compensatory Off": "0.5CO",
+    "0.5Leave Without Pay": "0.5LL",
+    "LEarned Leave/2": "0.5SL",
+	"LCasual Leave/2": "0.5LCL",
+	"LSick Leave/2": "0.5LSL",
+	"LSpecial Leave/2": "0.5LSPL",
+	"LCompensatory Off/2": "0.5LCO",
+	"LLeave Without Pay/2": "0.5LLL",
+    "0.5Special Leave": "0.5SPL",
+    }

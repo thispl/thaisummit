@@ -39,19 +39,35 @@ frappe.ui.form.on('Permission Request', {
 		}
 	},
 	attendance_date(frm){
+		if (!frappe.user.has_role('System Manager')) {
 		if(frm.doc.attendance_date){
-			frappe.call({
-				method : 'thaisummit.custom.application_allowed_from',
-				args:{
-					date : frm.doc.attendance_date
-				},
-				callback(r){
-					if (r.message == 'NO'){
-						frm.set_value('attendance_date','')
-					}
-				}
-			})
+		var date = frappe.datetime.add_days(frm.doc.attendance_date,4 )
+		if(frappe.datetime.nowdate() > date){
+			frappe.throw("Permission should be applied within 4 days")
 		}
+	}
+}
+		// if(frm.doc.attendance_date){
+		// 	frappe.call({
+		// 		method : 'thaisummit.custom.application_allowed_from',
+		// 		args:{
+		// 			date : frm.doc.attendance_date
+		// 		},
+		// 		callback(r){
+		// 			if (r.message == 'NO'){
+		// 				frm.set_value('attendance_date','')
+		// 			}
+		// 		}
+		// 	})
+		// }
+	},
+	validate(frm){
+		if(frm.doc.attendance_date){
+		var date = frappe.datetime.add_days(frm.doc.attendance_date,4 )
+		if(frappe.datetime.nowdate() > date){
+			frappe.throw("Permission should be applied within 4 days")
+		}
+	}
 	},
 	shift(frm){
 		if(frm.doc.shift){

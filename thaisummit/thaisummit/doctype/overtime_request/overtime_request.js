@@ -39,6 +39,12 @@ frappe.ui.form.on('Overtime Request', {
 		frm.call('send_for_approval')
 	},
 	validate(frm) {
+		var date = frappe.datetime.add_days(frm.doc.ot_date, 4)
+		if (!frappe.user.has_role('System Manager')) {
+		if (frappe.datetime.nowdate() > date) {
+			frappe.throw("Overtime should be applied within 4 days")
+		}
+	}
 		if (!frm.doc.employee) {
 			frappe.throw("Please enter Employee ID")
 		}
@@ -91,7 +97,7 @@ frappe.ui.form.on('Overtime Request', {
 				// 		}
 				// 	}
 				// })
-			} 
+			}
 			// else {
 			// 	frm.set_value('approver_id', '')
 			// 	frm.set_value('approver_name', '')
@@ -101,13 +107,13 @@ frappe.ui.form.on('Overtime Request', {
 	shift(frm) {
 		if (frm.doc.ot_date) {
 			if (frm.doc.shift) {
-				if(frm.doc.shift == '1'){
-					frm.call('check_holiday').then(r=>{
-						if(r.message == 'NO'){
+				if (frm.doc.shift == '1') {
+					frm.call('check_holiday').then(r => {
+						if (r.message == 'NO') {
 							frappe.msgprint("Overtime Request for Shift 1 can be applied only on Sunday or Holiday")
-							frm.set_value('from_time','')
+							frm.set_value('from_time', '')
 						}
-						else{
+						else {
 							frappe.db.get_value('Shift Type', frm.doc.shift, 'start_time', (r) => {
 								frm.set_value('from_time', r.start_time)
 								frm.set_value('to_time', '')
@@ -117,7 +123,7 @@ frappe.ui.form.on('Overtime Request', {
 						}
 					})
 				}
-				else{
+				else {
 					frappe.db.get_value('Shift Type', frm.doc.shift, 'start_time', (r) => {
 						frm.set_value('from_time', r.start_time)
 						frm.set_value('to_time', '')
@@ -125,11 +131,11 @@ frappe.ui.form.on('Overtime Request', {
 						frm.set_value('total_hours', '')
 					})
 				}
-				
+
 			}
-			
+
 		}
-		else{
+		else {
 			frappe.throw("Please enter Shift")
 		}
 	},
@@ -150,16 +156,16 @@ frappe.ui.form.on('Overtime Request', {
 		}
 		frm.trigger('to_time')
 	},
-	to_time(frm){
-		if(frm.doc.to_time){
+	to_time(frm) {
+		if (frm.doc.to_time) {
 			frappe.call({
-				method:'thaisummit.custom.roundoff_time',
-				args:{
-					time : frm.doc.to_time
+				method: 'thaisummit.custom.roundoff_time',
+				args: {
+					time: frm.doc.to_time
 				},
-				callback(r){
-					if(r.message){
-						frm.set_value('to_time',r.message)
+				callback(r) {
+					if (r.message) {
+						frm.set_value('to_time', r.message)
 					}
 				}
 			})
@@ -181,7 +187,13 @@ frappe.ui.form.on('Overtime Request', {
 		}
 	},
 	ot_date(frm) {
-		if(frm.doc.shift){
+		var date = frappe.datetime.add_days(frm.doc.ot_date, 4)
+		if (!frappe.user.has_role('System Manager')) {
+			if (frappe.datetime.nowdate() > date) {
+				frappe.throw("Overtime should be applied within 4 days")
+			}
+		}
+		if (frm.doc.shift) {
 			frm.trigger('shift')
 		}
 		if (frm.doc.ot_date) {

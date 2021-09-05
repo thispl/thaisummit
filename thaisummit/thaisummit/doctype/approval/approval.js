@@ -123,8 +123,6 @@ frappe.ui.form.on('Approval', {
 				function () {
 					$.each(frm.doc.pr_approval, function (i, d) {
 						if (d.__checked == 1) {
-							console.log(d.permission_request)
-							console.log(d.workflow_state)
 							if (d.workflow_state == 'Pending for HOD') {
 								// frappe.db.set_value('Permission Request', d.permission_request, 'workflow_state', 'Approved')
 								frm.call('submit_doc', {
@@ -207,7 +205,6 @@ frappe.ui.form.on('Approval', {
 					$.each(frm.doc.ot_approval, function (i, d) {
 						if (d.__checked == 1) {
 							if (d.workflow_state == 'Pending for HOD') {
-								console.log(d.overtime_request)
 								// frappe.db.set_value('Overtime Request', d.overtime_request, 'workflow_state', 'Approved')
 								frm.call('submit_doc', {
 									doctype: "Overtime Request",
@@ -292,7 +289,8 @@ frappe.ui.form.on('Approval', {
 				"doctype": "On Duty Application",
 				"filters": {
 					'workflow_state': ['in', workflow_state]
-				}
+				},
+				limit_page_length: 500
 			},
 			callback(r) {
 				$.each(r.message, function (i, d) {
@@ -337,7 +335,8 @@ frappe.ui.form.on('Approval', {
 				"doctype": "Permission Request",
 				"filters": {
 					'workflow_state': 'Pending for HOD'
-				}
+				},
+				limit_page_length: 500
 			},
 			callback(r) {
 				$.each(r.message, function (i, d) {
@@ -385,7 +384,8 @@ frappe.ui.form.on('Approval', {
 				"doctype": "Leave Application",
 				"filters": {
 					'workflow_state': 'Pending for HOD'
-				}
+				},
+				limit_page_length: 500
 			},
 			callback(r) {
 				$.each(r.message, function (i, d) {
@@ -433,7 +433,8 @@ frappe.ui.form.on('Approval', {
 				"doctype": "Overtime Request",
 				"filters": {
 					'workflow_state': 'Pending for HOD'
-				}
+				},
+				limit_page_length: 500
 			},
 			callback(r) {
 				$.each(r.message, function (i, d) {
@@ -481,7 +482,8 @@ frappe.ui.form.on('Approval', {
 				"doctype": "Miss Punch Application",
 				"filters": {
 					'workflow_state': ['in', ['Pending for HOD','Pending for HR GM']]
-				}
+				},
+				limit_page_length: 500
 			},
 			callback(r) {
 				console.log(r.message)

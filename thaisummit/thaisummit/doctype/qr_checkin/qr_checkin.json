@@ -67,8 +67,7 @@
    "fieldname": "attendance",
    "fieldtype": "Link",
    "label": "Attendance",
-   "options": "Attendance",
-   "read_only": 1
+   "options": "Attendance"
   },
   {
    "fieldname": "created_date",
@@ -119,7 +118,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-07-27 10:40:28.316002",
+ "modified": "2021-08-28 01:49:18.049520",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "QR Checkin",

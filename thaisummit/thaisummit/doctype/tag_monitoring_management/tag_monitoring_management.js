@@ -15,7 +15,7 @@ frappe.ui.form.on('TAG Monitoring Management', {
 			callback: function (r) {
 				if (r.message) {
 					console.log(r.message)
-					// frappe.msgprint(__(r.message))
+					frappe.msgprint(__(r.message))
 				}
 			}
 		});

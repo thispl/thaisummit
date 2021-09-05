@@ -36,6 +36,7 @@ frappe.ui.form.on('Shift Schedule', {
 					// 	}
 					// }
 				})
+				frm.call("on_submit")
 			})
 		}
 	},
@@ -76,9 +77,7 @@ frappe.ui.form.on('Shift Schedule', {
 			else if (frm.doc.to_date > frappe.datetime.add_days(frm.doc.from_date, 5)) {
 				frappe.msgprint("To Date should be within 6 days from From Date")
 				frm.set_value('to_date', '')
-
 			}
-
 		}
 	},
 	upload(frm) {
@@ -90,6 +89,7 @@ frappe.ui.form.on('Shift Schedule', {
 				if (r.message) {
 					frm.fields_dict.error_preview.$wrapper.empty().append("<h2>Error Preview</h2><ul>" + r.message + "</ul>")
 					frappe.throw(r.message)
+					frm.reload_doc()
 				}
 			})
 

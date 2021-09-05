@@ -175,6 +175,16 @@ frappe.ui.form.on('Bulk OT', {
 	},
 	ot_date(frm, cdt, cdn) {
 		var child = locals[cdt][cdn]
+		if (!frappe.user.has_role('System Manager')) {
+		if (child.ot_date){
+			var date = frappe.datetime.add_days(child.ot_date,4 )
+			if(frappe.datetime.nowdate() > date){
+				frappe.throw("Overtime should be applied within 4 days")
+				child.ot_date = ''
+				frm.refresh_field('employees')
+			}
+		}
+	}
 		if (child.ot_date) {
 			frappe.call({
 				method: 'thaisummit.custom.application_allowed_from',

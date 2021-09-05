@@ -38,7 +38,16 @@ frappe.ui.form.on('Manual Attendance Correction Request', {
 	},
 	from_date: function (frm) {
 		if (frm.doc.from_date) {
-			frm.trigger('get_att')
+			if (!frappe.user.has_role('System Manager')){
+				var date = frappe.datetime.add_days(frm.doc.from_date,4 )
+				if(frappe.datetime.nowdate() > date){
+					frappe.throw("Manual Attendance correction should be applied within 4 days")
+			}
+			else{
+				frm.trigger('get_att')
+			}
+		}
+		frm.trigger('get_att')
 		}
 	},
 	employee: function (frm) {
@@ -52,6 +61,7 @@ frappe.ui.form.on('Manual Attendance Correction Request', {
 			.then((att_list) => {
 				$.each(att_list.message, function (i, d) {
 					var c_list = [d.in_time, d.out_time, d.qr_shift]
+					console.log(c_list)
 					if (c_list.includes(null)) {
 						frm.add_child('mp_child', {
 							'employee': d.employee,

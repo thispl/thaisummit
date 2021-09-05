@@ -19,7 +19,7 @@ from openpyxl import Workbook
 import openpyxl
 import xlrd
 import re
-from openpyxl.styles import Font, Alignment
+from openpyxl.styles import Font, Alignment, Border, Side
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import GradientFill, PatternFill
@@ -27,10 +27,6 @@ from six import BytesIO, string_types
 
 class ShiftScheduleSummaryReport(Document):
     pass
-
-@frappe.whitelist()
-def enqueue_download():
-    enqueue(download, queue='default', timeout=6000, event='download')
 
 @frappe.whitelist()
 def download():
@@ -147,6 +143,17 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
     for rows in ws.iter_rows(min_row=iym+re+ford+support+7, max_row=iym+re+ford+support+7, min_col=2, max_col=(len(contractors)*5)+42):
         for cell in rows:
             cell.fill = PatternFill(fgColor="FFA07A", fill_type = "solid")
+    
+    border = Border(left=Side(border_style='thin', color='000000'),
+                right=Side(border_style='thin', color='000000'),
+                top=Side(border_style='thin', color='000000'),
+                bottom=Side(border_style='thin', color='000000'))
+         
+    for rows in ws.iter_rows(min_row=1, max_row=iym+re+ford+support+7, min_col=1, max_col=(len(contractors)*5)+42):
+        for cell in rows:
+            cell.border = border
+
+    ws.sheet_view.zoomScale = 70
 
     xlsx_file = BytesIO()
     wb.save(xlsx_file)

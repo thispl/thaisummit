@@ -58,9 +58,8 @@ frappe.query_reports["Monthly Attendance Register"] = {
 			"fieldname": "employee_type",
 			"label": __("Employee Type"),
 			"fieldtype": "Select",
-			"reqd": 1,
-			"options": ["WC", "BC", "FT", "NT", "CL"],
-			// "default": "WC"
+			"reqd": 0,
+			"options": ["","WC", "BC", "FT", "NT", "CL","TH"],
 		},
 		{
 			"fieldname": "department",

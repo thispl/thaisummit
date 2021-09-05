@@ -1,6 +1,8 @@
+from os import truncate
 import frappe
 import json
 import datetime
+from frappe import permissions
 from frappe.utils.csvutils import read_csv_content
 from frappe.utils.data import format_date, get_url_to_list
 from six.moves import range
@@ -9,7 +11,7 @@ from frappe.utils import (getdate, cint, add_months, date_diff, add_days,
     nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime, format_date)
 from datetime import datetime
 from calendar import IllegalMonthError, month, monthrange
-from frappe import _, msgprint
+from frappe import _, get_value, msgprint
 from frappe.utils import flt,get_url_to_list
 from frappe.utils import cstr, cint, getdate,get_first_day, get_last_day, today
 import requests
@@ -249,23 +251,32 @@ def create_user(employee_number,employee_name):
 @frappe.whitelist()
 def get_sap_qty():
     parts = frappe.get_all('Part Master',['mat_no','name'])
-    for part in parts:
-        url = "http://182.156.241.14/StockDetail/Service1.svc/GetFGQuantity"
-        payload = json.dumps({
-        "ItemCode": part['mat_no']
-        })
-        headers = {
-        'Content-Type': 'application/json'
-        }
-        response = requests.request("POST", url, headers=headers, data=payload)
-        qty = json.loads(response.text)
-        if qty:
-            avl_qty = qty[0]['Qty']
-            frappe.set_value("Part Master",part['name'],"sap_available_quantity",avl_qty)
-            frappe.set_value("Part Master",part['name'],"sap_quantity_updated_on",datetime.now())
-            frappe.set_value("Part Master",part['name'],"temp_avl_qty",avl_qty)
-            frappe.set_value("Part Master",part['name'],"temp_qty_updated_on",datetime.now())
-    return "Successfully Updated"
+    url = "http://182.156.241.14/StockDetail/Service1.svc/GetFGQuantity"
+    headers = {
+    'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers)
+    frappe.errprint(response.status_code)
+    if response.status_code == 200:
+        for part in parts:
+            url = "http://182.156.241.14/StockDetail/Service1.svc/GetFGQuantity"
+            payload = json.dumps({
+            "ItemCode": part['mat_no']
+            })
+            headers = {
+            'Content-Type': 'application/json'
+            }
+            response = requests.request("POST", url, headers=headers, data=payload)
+            qty = json.loads(response.text)
+            if qty:
+                avl_qty = qty[0]['Qty']
+                frappe.set_value("Part Master",part['name'],"sap_available_quantity",avl_qty)
+                frappe.set_value("Part Master",part['name'],"sap_quantity_updated_on",datetime.now())
+                frappe.set_value("Part Master",part['name'],"temp_avl_qty",avl_qty)
+                frappe.set_value("Part Master",part['name'],"temp_qty_updated_on",datetime.now())
+        return "Successfully Updated"
+    else:
+        return "Server Error"
 
 @frappe.whitelist()
 def deductions():
@@ -565,20 +576,26 @@ def get_employee_code(user):
     emp_id = frappe.db.get_value('Employee',{'user_id':user},"name")
     return emp_id
 
-@frappe.whitelist()
-def get_ceo(department):
-    ceo = frappe.db.get_value('Department',department,"ceo")
-    return ceo
+# @frappe.whitelist()
+# def get_ceo(department):
+#     ceo = frappe.db.get_value('Department',department,"ceo")
+#     return ceo
+
+# @frappe.whitelist()
+# def get_gm(department):
+#     gm = frappe.db.get_value('Department',department,"gm")
+#     return gm
 
 @frappe.whitelist()
-def get_gm(department):
-    gm = frappe.db.get_value('Department',department,"gm")
-    return gm
-
-@frappe.whitelist()
-def get_hod(department):
-    hod = frappe.db.get_value('Department',department,"hod")
-    return hod
+def get_approver(department,employee):
+    user = frappe.db.get_value('Employee',employee,'user_id')
+    roles = frappe.get_roles(user)
+    if 'GM' in roles:
+        return frappe.db.get_value('Department',department,"ceo")
+    elif 'HOD' in roles:
+        return frappe.db.get_value('Department',department,"gm")
+    else:
+        return frappe.db.get_value('Department',department,"hod")
 
 @frappe.whitelist()
 def update_user_permission(user,department):
@@ -598,6 +615,16 @@ def update_user_permission(user,department):
             doc.for_value = department
             doc.is_default = 1
             doc.save(ignore_permissions=True)
+
+@frappe.whitelist()
+def check_leave_balance(employee,leave_type):
+    from erpnext.hr.doctype.leave_application.leave_application import get_leave_details
+    leave_balance = get_leave_details(employee,nowdate())
+    if leave_type != 'Special Leave':
+        balance = leave_balance['leave_allocation'][leave_type]['remaining_leaves']
+        la = frappe.db.count('Leave Application',{'employee':employee,'docstatus':0})
+        if la > balance:
+            frappe.throw('There is not enough leave balance for Leave Type %s'%(leave_type))
 
 @frappe.whitelist()
 def application_allowed_from(date):
@@ -921,15 +948,99 @@ def bulk_mail_alerts():
             print(d.name)
             if hod:
                 frappe.sendmail(
-                recipients=[hod,"subash.p@groupteampro.com",'mohan.pan@thaisummit.co.in'],
+                recipients=[hod,'mohan.pan@thaisummit.co.in'],
                 subject='Reg.List of pending Approvals',
                 message = header+content+view+regards)
 
-# @frappe.whitelist()
-# def update_approver(dept,hod,gm,ceo,hr_gm):
-#     leave_application = frappe.db.get_all("Leave Application",{"department":dept,"docstatus":0},["name",])
-#     for lev_app in leave_application:
-#         frappe.db.set_value('Leave Application',lev_app.name,'leave_approver',leave_approver)
+@frappe.whitelist()
+def update_approver(dept,hod,gm,ceo):
+    ots = frappe.db.get_all("Overtime Request",{"department":dept,"docstatus":0},["name","employee"])
+    for ot in ots:
+        user = frappe.db.get_value('Employee',ot.employee,'user_id')
+        roles = frappe.get_roles(user)
+        if 'GM' in roles:
+            approver_id = frappe.db.get_value("User",ceo,'username')
+            approver_name = frappe.db.get_value("User",ceo,'full_name')
+            frappe.db.set_value('Overtime Request',ot.name,'approver',ceo)
+            frappe.db.set_value('Overtime Request',ot.name,'approver_id',approver_id)
+            frappe.db.set_value('Overtime Request',ot.name,'approver_name',approver_name)
+        
+        elif 'HOD' in roles:
+            approver_id = frappe.db.get_value("User",gm,'username')
+            approver_name = frappe.db.get_value("User",gm,'full_name')
+            frappe.db.set_value('Overtime Request',ot.name,'approver',gm)
+            frappe.db.set_value('Overtime Request',ot.name,'approver_id',approver_id)
+            frappe.db.set_value('Overtime Request',ot.name,'approver_name',approver_name)
+        else:
+            approver_id = frappe.db.get_value("User",hod,'username')
+            approver_name = frappe.db.get_value("User",hod,'full_name')
+            frappe.db.set_value('Overtime Request',ot.name,'approver',hod)
+            frappe.db.set_value('Overtime Request',ot.name,'approver_id',approver_id)
+            frappe.db.set_value('Overtime Request',ot.name,'approver_name',approver_name)
+
+    leave_apps = frappe.db.get_all("Leave Application",{"department":dept,"docstatus":0},["name","employee"])
+    for la in leave_apps:
+        user = frappe.db.get_value('Employee',la.employee,'user_id')
+        roles = frappe.get_roles(user)
+        if 'GM' in roles:
+            approver_name = frappe.db.get_value("User",ceo,'full_name')
+            frappe.db.set_value('Leave Application',la.name,'leave_approver',ceo)
+            frappe.db.set_value('Leave Application',la.name,'leave_approver_name',approver_name)
+        
+        elif 'HOD' in roles:
+            approver_name = frappe.db.get_value("User",gm,'full_name')
+            frappe.db.set_value('Leave Application',la.name,'leave_approver',gm)
+            frappe.db.set_value('Leave Application',la.name,'leave_approver_name',approver_name)
+        else:
+            approver_name = frappe.db.get_value("User",hod,'full_name')
+            frappe.db.set_value('Leave Application',la.name,'leave_approver',hod)
+            frappe.db.set_value('Leave Application',la.name,'leave_approver_name',approver_name)
+
+    permissions = frappe.db.get_all("Permission Request",{"department":dept,"docstatus":0},["name","employee"])
+    for p in permissions:
+        user = frappe.db.get_value('Employee',p.employee,'user_id')
+        roles = frappe.get_roles(user)
+        if 'GM' in roles:
+            approver_name = frappe.db.get_value("User",ceo,'full_name')
+            frappe.db.set_value('Permission Request',p.name,'permission_approver',ceo)
+            frappe.db.set_value('Permission Request',p.name,'permission_approver_name',approver_name)
+        
+        elif 'HOD' in roles:
+            approver_name = frappe.db.get_value("User",gm,'full_name')
+            frappe.db.set_value('Permission Request',p.name,'permission_approver',gm)
+            frappe.db.set_value('Permission Request',p.name,'permission_approver_name',approver_name)
+        else:
+            approver_name = frappe.db.get_value("User",hod,'full_name')
+            frappe.db.set_value('Permission Request',p.name,'permission_approver',hod)
+            frappe.db.set_value('Permission Request',p.name,'permission_approver_name',approver_name)
+        
+    ods = frappe.db.get_all("On Duty Application",{"department":dept,"docstatus":0},["name","employee"])
+    for od in ods:
+        user = frappe.db.get_value('Employee',od.employee,'user_id')
+        roles = frappe.get_roles(user)
+        if 'GM' in roles:
+            approver_name = frappe.db.get_value("User",ceo,'full_name')
+            frappe.db.set_value('On Duty Application',od.name,'approver',ceo)
+            frappe.db.set_value('On Duty Application',od.name,'approver_name',approver_name)
+        
+        elif 'HOD' in roles:
+            approver_name = frappe.db.get_value("User",gm,'full_name')
+            frappe.db.set_value('On Duty Application',od.name,'approver',gm)
+            frappe.db.set_value('On Duty Application',od.name,'approver_name',approver_name)
+        else:
+            approver_name = frappe.db.get_value("User",hod,'full_name')
+            frappe.db.set_value('On Duty Application',od.name,'approver',hod)
+            frappe.db.set_value('On Duty Application',od.name,'approver_name',approver_name)
+    return 'ok'
+
+@frappe.whitelist()
+def check_qr(from_date,to_date,employee):
+    emp_type = frappe.db.get_value("Employee",employee,'employee_type')
+    if emp_type != 'WC':
+        qr = frappe.db.sql("select name from `tabQR Checkin` where employee = '%s' and shift_date between '%s' and '%s' "%(employee,from_date,to_date),as_dict=True)
+        if qr:
+            return qr
+
 
 # @frappe.whitelist()
 # def change_permission_approver(employee,permission_approver):
@@ -942,3 +1053,63 @@ def bulk_mail_alerts():
 #     od_application = frappe.db.get_all("On Duty Application",{"employee":employee,"docstatus":0},["name"])
 #     for od_app in od_application:
 #         frappe.db.set_value('On Duty Application',od_app.name,'approver',od_approver)
+
+# def update():
+#     frappe.db.set_value('E','EMP-CKIN-07-2021-064271','attendance','')
+
+# def get_la():
+#     frappe.db.set_value('Attendance','HR-ATT-2021-217554','leave_type','Earned Leave')
+#     a = frappe.db.set_value('Attendance','HR-ATT-2021-217554','leave_application','HR-LAP-2021-01557')
+
+def create_ss():
+    emps = frappe.get_all('Employee',{'status':'Active'},['*'])
+    for emp in emps:
+        structure = ''
+        if not frappe.db.exists('Salary Structure Assignment',{'employee':emp.name}):
+            if emp.employee_type == 'WC':
+                structure = 'WC'
+            elif emp.employee_type == 'BC':
+                structure = 'BC Salary Structure'
+            elif  emp.employee_type == 'CL':
+                structure = 'CL Structure'
+            if structure:
+                try:
+                    doc = frappe.new_doc('Salary Structure Assignment')
+                    doc.employee = emp.name
+                    doc.salary_structure = structure
+                    doc.from_date = '2021-07-24'
+                    doc.save(ignore_permissions=True)
+                    doc.submit()
+                    frappe.db.commit()
+                except:
+                    doc = frappe.new_doc('Salary Structure Assignment')
+                    doc.employee = emp.name
+                    doc.salary_structure = structure
+                    doc.from_date = frappe.db.get_value('Employee',emp.name,'date_of_joining')
+                    doc.save(ignore_permissions=True)
+                    doc.submit()
+                    frappe.db.commit()
+
+# def create_od():
+#     ods = frappe.db.sql("select `tabOn Duty Application`.name as name, `tabOn Duty Application`.from_date as from_date,`tabMulti Employee`.employee as employee from `tabOn Duty Application` left join `tabMulti Employee` on `tabOn Duty Application`.name = `tabMulti Employee`.parent where `tabMulti Employee`.employee = 'TSAI0266' ",as_dict=True)
+#     # print(ods)
+#     for od in ods:
+#         att = frappe.db.exists("Attendance",{"attendance_date":od.from_date,"employee":od.employee,"docstatus":["!=","2"]})
+#         if not att:
+#             doc = frappe.new_doc("Attendance")
+#             doc.employee = od.employee
+#             doc.attendance_date = od.from_date
+#             doc.status = 'Present'
+#             doc.on_duty_application = od.name
+#             doc.save(ignore_permissions=True)
+#             doc.submit()
+#             frappe.db.commit()
+
+# def method():
+#     atts = frappe.get_all('Attendance',{'attendance_date':('between',('2021-07-26','2021-08-25')),'status':'Half Day','leave_type':''},['*'])
+#     print(len(atts))
+#     for att in atts:
+#         frappe.db.set_value('Attendance',att.name,'status','Present')
+
+def method():
+    frappe.db.set_value('Salary Structure','CL Structure','docstatus',1)

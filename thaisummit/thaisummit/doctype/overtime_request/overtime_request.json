@@ -10,6 +10,7 @@
   "employee",
   "employee_name",
   "department",
+  "on_duty",
   "column_break_8",
   "ot_date",
   "shift",
@@ -178,12 +179,19 @@
    "fieldtype": "Time",
    "label": "Total Hours",
    "read_only": 1
+  },
+  {
+   "fieldname": "on_duty",
+   "fieldtype": "Link",
+   "label": "On Duty",
+   "options": "On Duty Application",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-07-23 12:12:07.517884",
+ "modified": "2021-08-16 18:31:20.762174",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Overtime Request",

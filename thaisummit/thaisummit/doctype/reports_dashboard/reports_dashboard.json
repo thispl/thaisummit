@@ -11,7 +11,8 @@
   "date",
   "employee",
   "from_date",
-  "to_date"
+  "to_date",
+  "shift"
  ],
  "fields": [
   {
@@ -28,7 +29,7 @@
    "fieldname": "report",
    "fieldtype": "Select",
    "label": "Report",
-   "options": "Shift Schedule Summary Report\nMonthly Manpower Report\nMonthly Individual Attendance Report"
+   "options": "Manpower Plan vs Actual Live Report (Shift Wise)\nShift Schedule Summary Report\nMonthly Manpower Report\nMonthly Individual Attendance Report\nMonthly Overtime Person Report\nMonthly Overtime Amount Report\nCL Manpower Shortage Deduction Summary Report"
   },
   {
    "fieldname": "column_break_3",
@@ -49,13 +50,19 @@
    "fieldname": "to_date",
    "fieldtype": "Date",
    "label": "To Date"
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Select",
+   "label": "Shift",
+   "options": "1\n2\n3\nPP1\nPP2\nFull Day"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-08-04 18:11:04.017691",
+ "modified": "2021-08-14 10:53:20.751180",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Reports Dashboard",

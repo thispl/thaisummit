@@ -9,7 +9,7 @@ frappe.ui.form.on('Delete Shift Schedule', {
 	delete_shift(frm) {
 		if (frm.doc.department != 'All Departments') {
 			frappe.call({
-				method: "thaisummit.thaisummit.doctype.delete_shift_schedule.delete_shift_schedule.delete_shift",
+				method: "thaisummit.thaisummit.doctype.delete_shift_schedule.delete_shift_schedule.enqueue_delete_shift",
 				args: {
 					department: frm.doc.department,
 					from_date: frm.doc.from_date,
@@ -17,16 +17,18 @@ frappe.ui.form.on('Delete Shift Schedule', {
 				freeze: true,
 				freeze_message: "Deleting Shift Schedule"
 			});
+			frappe.msgprint('Deleting Shift Schedule. Please check after few mins.')
 		}
 		else{
 			frappe.call({
-				method: "thaisummit.thaisummit.doctype.delete_shift_schedule.delete_shift_schedule.delete_all_shift",
+				method: "thaisummit.thaisummit.doctype.delete_shift_schedule.delete_shift_schedule.enqueue_delete_all_shift",
 				args: {
 					from_date: frm.doc.from_date,
 				},
 				freeze: true,
 				freeze_message: "Deleting Shift Schedule"
 			});
+			frappe.msgprint('Deleting Shift Schedule. Please check after few mins.')
 		}
 	},
 	// to_date(frm) {

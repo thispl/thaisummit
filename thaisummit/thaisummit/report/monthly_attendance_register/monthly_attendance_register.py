@@ -14,6 +14,7 @@ bc_status_map = {
 	"Half Day": "HD",
 	"Holiday": "HH",
 	"Weekly Off": "WW",
+	"WW":"WW",
 	"1H": "1H",
 	"2H": "2H",
 	"3H": "3H",
@@ -43,6 +44,12 @@ bc_status_map = {
 	"1L1": "1L1",
 	"2L2": "2L2",
 	"3L3": "3L3",
+	"2L3": "2L3",
+	"1L2": "1L2",
+	"3L1": "3L1",
+	"1LM": "1LM",
+	"2LM": "2LM",
+	"3LM": "3LM",
 	"PP1LPP1": "P1LP1",
 	"PP2LPP2": "P2LP2",
 	"1M": "1M",
@@ -83,8 +90,22 @@ bc_status_map = {
 	"Earned Leave": "EL",
 	"Casual Leave": "CL",
 	"Sick Leave": "SL",
+	"Special Leave": "SPL",
 	"OD": "OD",
-	"Compensatory Off": "CO"
+	"Compensatory Off": "CO",
+	"Leave Without Pay": "LL",
+	"0.5Earned Leave": "0.5EL",
+	"0.5Casual Leave": "0.5CL",
+	"0.5Sick Leave": "0.5SL",
+	"0.5Special Leave": "0.5SPL",
+	"0.5Compensatory Off": "0.5CO",
+	"0.5Leave Without Pay": "0.5LL",
+	"LEarned Leave/2": "0.5SL",
+	"LCasual Leave/2": "0.5LCL",
+	"LSick Leave/2": "0.5LSL",
+	"LSpecial Leave/2": "0.5LSPL",
+	"LCompensatory Off/2": "0.5LCO",
+	"LLeave Without Pay/2": "0.5LLL",
 	}
 
 wc_status_map = {
@@ -92,6 +113,7 @@ wc_status_map = {
 	"AA": "AA",
 	"Half Day": "HD",
 	"Holiday": "HH",
+	"WW":"WW",
 	"1H": "1H",
 	"2H": "2H",
 	"3H": "3H",
@@ -110,7 +132,9 @@ wc_status_map = {
 	"Earned Leave": "EL",
 	"Casual Leave": "CL",
 	"Sick Leave": "SL",
+	"Special Leave": "SPL",
 	"Compensatory Off": "CO",
+	"Leave Without Pay": "LL",
 	"1": "11",
 	"2": "22",
 	"3": "33",
@@ -140,6 +164,18 @@ wc_status_map = {
 	"PP2M": "P2M",
 	"MPP1": "MP1",
 	"MPP2": "MP2",
+	"0.5Earned Leave": "0.5EL",
+	"0.5Casual Leave": "0.5CL",
+	"0.5Sick Leave": "0.5SL",
+	"0.5Special Leave": "0.5SPL",
+	"0.5Compensatory Off": "0.5CO",
+	"0.5Leave Without Pay": "0.5LL",
+	"LEarned Leave/2": "0.5SL",
+	"LCasual Leave/2": "0.5LCL",
+	"LSick Leave/2": "0.5LSL",
+	"LSpecial Leave/2": "0.5LSPL",
+	"LCompensatory Off/2": "0.5LCO",
+	"LLeave Without Pay/2": "0.5LLL"
 	}
 
 day_abbr = [
@@ -247,12 +283,12 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 										if shift[1]:
 											status = shift[1] + late + "W"
 										else:
-											status = "MW"
+											status = "WW"
 									else:
 										if shift[2]:
 											status = shift[2] + late + "W"
 										else:
-											status = "MW"
+											status = "WW"
 								else:
 									if shift[0] == 'WC':
 										if shift[1]:
@@ -267,7 +303,7 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 									status = "Holiday"
 							total_h += 1
 						
-			if filters.employee_type == "WC":
+			if emp_det.employee_type == "WC":
 				abbr = wc_status_map.get(status, "")
 			else:
 				abbr = bc_status_map.get(status, "")
@@ -324,32 +360,56 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 					row.append("0.0")
 
 			row.extend([time_default_counts[0][0],time_default_counts[0][1]])
-		total_worked_days = total_holidays = total_cl = total_el = total_sl = total_lop = total_wrong_shifts = total_payable_days = 0
+		total_worked_days = total_weekoffs = total_holidays = total_cl = total_el = total_sl = total_co = total_spl = total_la = total_lop = total_wrong_shifts = total_payable_days = 0
 		
-		actual_shifts = ['11','22','33','PP2']
-		holidays = ['WW','HH','1W','1H','2W','2H','3W','3H']
-		lops = ['AA','1M','MM','M1','']
-		wrong_shifts = ['12','13','21','23','31','32','2P2']
+		actual_shifts = ['11','22','33','P2P2','P1P1','12','13','23','21','32','OD','1L1','1L2','1L3','2L1','2L2','2L3','3L1','3L2','3L3']
+		holidays = ['HH','1H','2H','3H']
+		weekoffs = ['WW','1W','2W','3W']
+		lops = ['AA','1M','MM','M1','','LL']
+		wrong_shifts = ['12','13','21','23','31','32','2P2','1L2','1L3','2L1','2L3','3L1','3L2']
+		half_days = ["0.5EL","0.5CL","0.5SL","0.5CO","0.5SPL","0.5LL","LEL/2","LCL/2","LSL/2","LCO/2","LLL/2","LA/2"]
 
 		for r in row:
 			if r in actual_shifts:
 				total_worked_days += 1
+			if r in half_days:
+				total_worked_days += 0.5
+			if r == 'LA/2':
+				total_worked_days += 0.5
 			if r in holidays:
 				total_holidays += 1
+			if r in weekoffs:
+				total_weekoffs += 1
 			if r == 'CL':
 				total_cl += 1
 			if r == 'EL':
 				total_el += 1
 			if r == 'SL':
 				total_sl += 1
+			if r == 'CO':
+				total_co += 1
+			if r == 'SPL':
+				total_spl += 1
+			if r == '0.5CL':
+				total_cl += 0.5
+			if r == '0.5EL':
+				total_el += 0.5
+			if r == '0.5SL':
+				total_sl += 0.5
+			if r == '0.5CO':
+				total_co += 0.5
+			if r == '0.5SPL':
+				total_spl += 0.5
 			if r in lops:
 				total_lop += 1
 			if r in wrong_shifts:
 				total_wrong_shifts += 1
+			if r == 'LA/2':
+				total_la += 0.5
 
-		total_payable_days = total_worked_days + total_holidays + total_cl + total_el + total_sl
+		total_payable_days = total_worked_days + total_holidays + total_cl + total_el + total_sl + total_co + total_spl
 		calendar_days = filters['total_days_in_month']
-		row.extend([calendar_days,total_worked_days,total_holidays,total_cl ,total_el,total_sl,total_lop,total_wrong_shifts,total_payable_days])
+		row.extend([calendar_days,total_worked_days,total_weekoffs,total_holidays,total_cl ,total_el,total_sl,total_spl,total_la,total_lop,total_wrong_shifts,total_payable_days])
 		emp_att_map[emp] = emp_status_map
 		record.append(row)
 
@@ -381,18 +441,18 @@ def get_columns(filters):
 		columns += days 
 
 	# if filters.summarized_view:
-		columns += [_("Calendar Days") + ":Float:120", _("Worked Days") + ":Float:120",  
-		_("WW/HH") + ":Float:120", _("CL") + ":Float:120", _("SL") + ":Float:120", _("EL") + ":Float:120", _("LOP") + ":Float:120", 
-		_("Wrong Shift")+ ":Float:120",_("Payable Days")+ ":Float:120", ]
+		columns += [_("Calendar Days") + ":Int:120", _("Worked Days") + ":Int:120",  
+		_("WW") + ":Int:60",_("HH") + ":Int:60", _("CL") + ":Int:120", _("EL") + ":Int:120", _("SL") + ":Int:120", _("SPL") + ":Int:120", _("LA") + ":Int:120", _("LOP") + ":Int:120", 
+		_("Wrong Shift")+ ":Int:120",_("Payable Days")+ ":Int:120", ]
 	
 	return columns, days
 
 def get_attendance_list(conditions, filters):
 
-	query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,qr_shift,late_entry,leave_type,on_duty_application,in_time,out_time from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.company)
-	# query = """ select employee, day(attendance_date) as day_of_month,status,shift,qr_shift,leave_type,on_duty_application from tabAttendance where docstatus = 1  and attendance_date between '2021-03-01' and '2021-03-31' order by employee, attendance_date"""
+	query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,qr_shift,shift_status,late_entry,leave_type,on_duty_application,in_time,out_time,employee_type from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.company)
+	# query = """ select employee, day(attendance_date) as day_of_month,status,shift,qr_shift,leave_type,shift_status,on_duty_application from tabAttendance where docstatus = 1  and attendance_date between '2021-03-01' and '2021-03-31' order by employee, attendance_date"""
 	if filters.employee:
-		query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,late_entry,qr_shift,leave_type,on_duty_application,in_time,out_time from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and employee='%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.employee,filters.company)
+		query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,shift_status,late_entry,qr_shift,leave_type,on_duty_application,in_time,out_time,employee_type from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and employee='%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.employee,filters.company)
 
 	attendance_list = frappe.db.sql(query,as_dict=1)
 
@@ -402,43 +462,51 @@ def get_attendance_list(conditions, filters):
 	att_map = {}
 	for d in attendance_list:
 		att_map.setdefault(d.employee, frappe._dict()).setdefault(d.day_of_month, "")
-		att_map[d.employee][d.day_of_month] = d.status
-		late = ''
-		if d.late_entry:
-			late = 'L'
-		if filters.employee_type != "WC":
-			if not d.in_time or not d.out_time:
-				if d.qr_shift:
-					att_map[d.employee][d.day_of_month] = "M" + str(d.qr_shift)
-				else:
-					att_map[d.employee][d.day_of_month] = "AA"
-			if d.in_time and d.out_time:
-				if not d.qr_shift:
-					att_map[d.employee][d.day_of_month] = str(d.shift) + late + "M"
-				else:
-					att_map[d.employee][d.day_of_month] = str(d.shift) + late + str(d.qr_shift)
+		att_map[d.employee][d.day_of_month] = d.shift_status
+		# late = ''
+		# if d.late_entry:
+		# 	late = 'L'
+		# if filters.employee_type != "WC":
+		# 	if not d.in_time or not d.out_time:
+		# 		if d.qr_shift:
+		# 			att_map[d.employee][d.day_of_month] = "M" + str(d.qr_shift)
+		# 		else:
+		# 			att_map[d.employee][d.day_of_month] = "AA"
+		# 	if d.in_time and d.out_time:
+		# 		if not d.qr_shift:
+		# 			att_map[d.employee][d.day_of_month] = str(d.shift) + late + "M"
+		# 		else:
+		# 			att_map[d.employee][d.day_of_month] = str(d.shift) + late + str(d.qr_shift)
 				
-			if d.status == 'On Leave':
-				att_map[d.employee][d.day_of_month] = d.leave_type
-			if d.on_duty_application:
-				att_map[d.employee][d.day_of_month] = "OD"
-		else:
-			if d.status == 'On Leave':
-				att_map[d.employee][d.day_of_month] = d.leave_type
-			if d.on_duty_application:
-				att_map[d.employee][d.day_of_month] = "OD"
-			if d.shift:
-				if d.in_time and d.out_time:
-					att_map[d.employee][d.day_of_month] = str(d.shift) + late
-				if not d.out_time:
-					att_map[d.employee][d.day_of_month] = str(d.shift) + 'M'
-			else:
-				# if not d.in_time:
-				att_map[d.employee][d.day_of_month] = 'AA'
-			# if d.status == "HH":
-			# 	att_map[d.employee][d.day_of_month] = str(d.shift) + 'H'
-			# if d.status == "WW":
-			# 	att_map[d.employee][d.day_of_month] = str(d.shift) + 'W'
+		# 	if d.status == 'Half Day':
+		# 		if d.leave_type:
+		# 			if not late:
+		# 				att_map[d.employee][d.day_of_month] = str(0.5) + d.leave_type
+		# 			else:
+		# 				att_map[d.employee][d.day_of_month] = late + str(d.leave_type) + str('/2')
+		# 	if d.status == 'On Leave':
+		# 		att_map[d.employee][d.day_of_month] = d.leave_type
+		# 	if d.on_duty_application:
+		# 		att_map[d.employee][d.day_of_month] = "OD"
+		# else:
+		# 	if d.status == 'Half Day':
+		# 		if d.leave_type:
+		# 			if not late:
+		# 				att_map[d.employee][d.day_of_month] = str(0.5) + d.leave_type
+		# 			else:
+		# 				att_map[d.employee][d.day_of_month] = late + str(d.leave_type) + str('/2')
+		# 	if d.status == 'On Leave':
+		# 		att_map[d.employee][d.day_of_month] = d.leave_type
+		# 	elif d.on_duty_application:
+		# 		att_map[d.employee][d.day_of_month] = "OD"
+		# 	elif d.shift:
+		# 		if d.in_time and d.out_time:
+		# 			att_map[d.employee][d.day_of_month] = str(d.shift) + late
+						
+		# 		if not d.out_time:
+		# 			att_map[d.employee][d.day_of_month] = str(d.shift) + 'M'
+		# 	else:
+		# 		att_map[d.employee][d.day_of_month] = 'AA'
 
 	return att_map
 
@@ -466,8 +534,12 @@ def get_conditions(filters):
 
 def get_employee_details(employee_type,department,group_by, company):
 	emp_map = {}
-	query = """select name, employee_name, designation, department, branch, company,
-	holiday_list from `tabEmployee` where company = %s and employee_type = '%s' and vacant = '0' """ % (frappe.db.escape(company),employee_type)
+	if employee_type:
+		query = """select name, employee_name, designation, department, branch, company, employee_type,
+		holiday_list from `tabEmployee` where company = %s and employee_type = '%s' and vacant = '0' """ % (frappe.db.escape(company),employee_type)
+	else:
+		query = """select name, employee_name, designation, department, branch, company, employee_type,
+		holiday_list from `tabEmployee` where company = %s and vacant = '0' """ % (frappe.db.escape(company))
 
 	if group_by:
 		group_by = group_by.lower()

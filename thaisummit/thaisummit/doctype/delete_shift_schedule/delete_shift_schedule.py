@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
+from frappe.utils.background_jobs import enqueue
 
 class DeleteShiftSchedule(Document):
 	pass
@@ -15,6 +16,7 @@ def delete_shift(department,from_date):
 	if sa_list:
 		for sa in sa_list:
 			doc = frappe.get_doc("Shift Assignment",sa.name)
+			frappe.errprint(doc)
 			if doc.docstatus == 1:
 				doc.cancel()
 				frappe.delete_doc("Shift Assignment",doc.name)
@@ -25,6 +27,20 @@ def delete_shift(department,from_date):
 		frappe.msgprint('Shift Schedule Deleted Successfully')
 	else:
 		frappe.msgprint('No Shift Schedule found')
+
+
+@frappe.whitelist()
+def enqueue_delete_all_shift(from_date):
+	enqueue(delete_all_shift, queue='default', timeout=6000, event='delete_all_shift',from_date=from_date)
+
+@frappe.whitelist()
+def enqueue_delete_shift(department,from_date):
+	sa_list = frappe.db.sql("select name from `tabShift Assignment` where start_date = '%s' and department = '%s' "%(from_date,department),as_dict=True)
+	if sa_list:
+		enqueue(delete_shift, queue='default', timeout=6000, event='delete_shift',department=department,from_date=from_date)
+	else:
+		frappe.msgprint('No Shift Schedule found')
+
 
 @frappe.whitelist()
 def delete_all_shift(from_date):

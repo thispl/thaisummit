@@ -1,14 +1,14 @@
 // dom ready
 document.addEventListener("DOMContentLoaded", (event)=>{
     // navbar and anchor element
-    let page_actions = document.querySelector(".page-actions");
-    if (page_actions){
-        let anc = document.createElement('a');
-    anc.href = "/app/attendance-dashboard/Attendance%20Dashboard"
-    anc.innerHTML = '<div><i class="fa fa-address-card"></i> &nbsp;<b>Attendance Dashboard</b></div>'
-    page_actions.prepend(anc)
+    // let page_actions = document.querySelector(".page-actions");
+    // if (page_actions){
+    //     let anc = document.createElement('a');
+    // anc.href = "/app/attendance-dashboard/Attendance%20Dashboard"
+    // anc.innerHTML = '<div><i class="fa fa-address-card"></i> &nbsp;<b>Attendance Dashboard</b></div>'
+    // page_actions.prepend(anc)
 
-    }
+    // }
 
     let std_actions = document.querySelector(".standard-actions");
     std_actions.classList.add('hide');

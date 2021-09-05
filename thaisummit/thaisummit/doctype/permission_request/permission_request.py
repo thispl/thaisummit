@@ -70,6 +70,6 @@ class PermissionRequest(Document):
 			</table><br>"""%(self.employee,self.department,self.employee_name,self.designation,format_datetime(self.attendance_date),self.session,self.shift,self.from_time,self.reason,self.to_time,self.hours,link)
 			regards = "Thanks & Regards,<br>hrPRO"
 			frappe.sendmail(
-			recipients=[self.permission_approver,"subash.p@groupteampro.com",'mohan.pan@thaisummit.co.in'],
+			recipients=[self.permission_approver,'mohan.pan@thaisummit.co.in'],
 			subject='Reg.Permission Request Approval' ,
 			message = content+table+regards)
