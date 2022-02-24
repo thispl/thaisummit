@@ -1,0 +1,209 @@
+{
+ "actions": [],
+ "autoname": "IYM-.###",
+ "creation": "2021-08-21 12:56:48.923291",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "assy_line_type",
+  "assy_line",
+  "column_break_4",
+  "assy_plan_date",
+  "model_code",
+  "parts_qty",
+  "welding_section",
+  "weld_plan_qty",
+  "column_break_9",
+  "weld_recv_status",
+  "aced_section",
+  "aced_plan_qty",
+  "column_break_13",
+  "aced_recv_status",
+  "fuel_tank_section",
+  "fuel_plan_qty",
+  "column_break_17",
+  "fuel_recv_status",
+  "assy_ckd_section",
+  "assy_plan_qty",
+  "column_break_21",
+  "assy_recv_status",
+  "section_break_24",
+  "upload_ref"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assy_line_type",
+   "fieldtype": "Select",
+   "label": "Assy Line Type",
+   "options": "\nA\nB",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assy_line",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Assy Line",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "assy_plan_date",
+   "fieldtype": "Date",
+   "label": "Assy Plan Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "model_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Model Code",
+   "options": "Model Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "parts_qty",
+   "fieldtype": "Int",
+   "label": "Parts OMP / BOP",
+   "read_only": 1
+  },
+  {
+   "fieldname": "welding_section",
+   "fieldtype": "Section Break",
+   "label": "WELDING"
+  },
+  {
+   "fieldname": "weld_plan_qty",
+   "fieldtype": "Int",
+   "label": "WELDING Plan Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "weld_recv_status",
+   "fieldtype": "Select",
+   "label": "WELDING Receiving Status",
+   "options": "\nPending\nCompleted\nNot Required",
+   "read_only": 1
+  },
+  {
+   "fieldname": "aced_section",
+   "fieldtype": "Section Break",
+   "label": "ACED"
+  },
+  {
+   "fieldname": "aced_plan_qty",
+   "fieldtype": "Int",
+   "label": "ACED Plan Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "aced_recv_status",
+   "fieldtype": "Select",
+   "label": "ACED Receiving Status",
+   "options": "\nPending\nCompleted\nNot Required",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fuel_tank_section",
+   "fieldtype": "Section Break",
+   "label": "FUEL TANK"
+  },
+  {
+   "fieldname": "fuel_plan_qty",
+   "fieldtype": "Int",
+   "label": "FUEL TANK Plan Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_17",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "fuel_recv_status",
+   "fieldtype": "Select",
+   "label": "FUEL TANK Receiving Status",
+   "options": "\nPending\nCompleted\nNot Required",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assy_ckd_section",
+   "fieldtype": "Section Break",
+   "label": "ASSY & CKD"
+  },
+  {
+   "fieldname": "assy_plan_qty",
+   "fieldtype": "Int",
+   "label": "ASSY & CKD Plan Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "assy_recv_status",
+   "fieldtype": "Select",
+   "label": "ASSY & CKD Receiving Status",
+   "options": "\nPending\nCompleted\nNot Required",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_24",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "upload_ref",
+   "fieldtype": "Link",
+   "label": "Upload Ref",
+   "options": "IYM Sequence Plan Upload",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-01-31 10:08:28.072385",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "IYM Sequence Plan",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_seen": 1
+}

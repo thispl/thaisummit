@@ -5,6 +5,7 @@
 
 frappe.ui.form.on('Other Allowance', {
 	refresh: function(frm) {
+		frappe.breadcrumbs.add("Home", "Other Allowance");
 		if (frm.doc.__islocal){
 		frm.set_value('allowance_date',frappe.datetime.nowdate())
 		}

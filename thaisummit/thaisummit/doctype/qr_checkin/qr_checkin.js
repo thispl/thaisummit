@@ -6,7 +6,6 @@ frappe.ui.form.on('QR Checkin', {
 		frappe.breadcrumbs.add('Home','QR Checkin');
 		// frm.call('scan_qr'
 	// 	// if (frappe.is_mobile()) {
-	//     //     console.log("hi")
 	//     // let qr_code = frm.get_field('qr_code');
 	//     // frappe.barcode.scan_barcode().then(barcode => {
 	// 	// 					qr_code.set_value(barcode);

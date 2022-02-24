@@ -1,0 +1,139 @@
+{
+ "actions": [],
+ "autoname": "PO-.####",
+ "creation": "2021-12-10 18:57:24.057409",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "mat_no",
+  "parts_no",
+  "column_break_3",
+  "parts_name",
+  "po_no",
+  "section_break_6",
+  "po_date",
+  "column_break_8",
+  "delivery_date",
+  "section_break_10",
+  "supplier_code",
+  "supplier_name",
+  "uom",
+  "column_break_14",
+  "po_status",
+  "po_qty",
+  "unit_price"
+ ],
+ "fields": [
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "MAT No"
+  },
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Parts No"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "label": "Parts Name"
+  },
+  {
+   "fieldname": "po_no",
+   "fieldtype": "Int",
+   "label": "PO No"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "po_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "PO Date"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Delivery Date"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "label": "Supplier Name"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Data",
+   "label": "UOM"
+  },
+  {
+   "fieldname": "unit_price",
+   "fieldtype": "Float",
+   "label": "Unit Price",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_14",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "po_qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "PO Qty"
+  },
+  {
+   "fieldname": "supplier_code",
+   "fieldtype": "Link",
+   "label": "Supplier Code",
+   "options": "TSAI Supplier"
+  },
+  {
+   "fieldname": "po_status",
+   "fieldtype": "Data",
+   "label": "PO Status"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-12-23 10:28:57.513496",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TSAI PO",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

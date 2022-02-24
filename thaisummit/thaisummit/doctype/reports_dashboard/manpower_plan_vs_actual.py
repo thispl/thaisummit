@@ -420,9 +420,9 @@ def get_data(args):
                     if emp_type != 'TT':
                         if emp_type == 'WC':
                             if args.shift == 'Full Day':
-                                count = frappe.db.count("Attendance",{'department':dept.name,'attendance_date': args.date,'employee_type':emp_type})
+                                count = frappe.db.count("Attendance",{'department':dept.name,'attendance_date': args.date,'employee_type':emp_type,'status':('in',('Present','Half Day'))})
                             else:
-                                count = frappe.db.count("Attendance",{'department':dept.name,'attendance_date': args.date,'employee_type':emp_type,'shift':args.shift})
+                                count = frappe.db.count("Attendance",{'department':dept.name,'attendance_date': args.date,'employee_type':emp_type,'shift':args.shift,'status':('in',('Present','Half Day'))})
                         else:
                             if args.shift == 'Full Day':
                                 count = frappe.db.count("QR Checkin",{'department':dept.name,'shift_date': args.date,'employee_type':emp_type,'ot':0})
@@ -434,7 +434,10 @@ def get_data(args):
                             row.append(count)
                         total_count += count
                     else:
-                        row.append(total_count)
+                        if total_count == 0:
+                            row.append('')
+                        else:
+                            row.append(total_count)
                 if args.shift == 'Full Day':
                     plan = frappe.db.count("Shift Assignment",{'department':dept.name,'start_date':args.date,'employee_type':('in',('BC','FT','NT','CL'))})
                     actual = frappe.db.count("QR Checkin",{'department':dept.name,'shift_date':args.date,'employee_type':('in',('BC','FT','NT','CL')),'ot':0})
@@ -448,15 +451,34 @@ def get_data(args):
                     percent = round((diff/plan),2)
                 except:
                     percent = 0
-                row.append(plan)
-                row.append(actual)
-                row.append(diff)
-                row.append(percent)
-                row.append(actual_ot)
+                
+                if plan == 0:
+                    row.append('')
+                else:
+                    row.append(plan)
+                if actual == 0:
+                    row.append('')
+                else:
+                    row.append(actual)
+                if diff == 0:
+                    row.append('')
+                else:
+                    row.append(diff)
+                if percent == 0:
+                    row.append('')
+                else:
+                    row.append(percent)
+                if actual_ot == 0:
+                    row.append('')
+                else:
+                    row.append(actual_ot)
 
                 diffs = get_diff_count(args,dept.name)
                 for d in diffs:
-                    row.append(d)
+                    if d == 0:
+                        row.append('')
+                    else:
+                        row.append(d)
 
                 data.append(row)
             if i == 0:
@@ -472,20 +494,20 @@ def get_data(args):
                         if args.shift == 'Full Day':
                             count = frappe.db.sql("""select count(*) as count from `tabAttendance` 
                             left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name 
-                            where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' """%(args.date,emp_type,dg,i),as_dict=True)
+                            where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' """%(args.date,emp_type,dg,i),as_dict=True)
                         else:
                             count = frappe.db.sql("""select count(*) as count from `tabAttendance` 
                             left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name 
-                            where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabAttendance`.shift = '%s' """%(args.date,emp_type,dg,i,args.shift),as_dict=True)
+                            where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabAttendance`.shift = '%s' """%(args.date,emp_type,dg,i,args.shift),as_dict=True)
                     else:
                         if args.shift == 'Full Day':
                             count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` 
                             left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name 
-                            where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' """%(args.date,emp_type,dg,i),as_dict=True)
+                            where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabQR Checkin`.ot = 0 """%(args.date,emp_type,dg,i),as_dict=True)
                         else:
                             count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` 
                             left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name 
-                            where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabQR Checkin`.qr_shift = %s """%(args.date,emp_type,dg,i,args.shift),as_dict=True)
+                            where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabQR Checkin`.qr_shift = %s and `tabQR Checkin`.ot = 0 """%(args.date,emp_type,dg,i,args.shift),as_dict=True)
                     if count:
                         count = count[0].count
                     else:
@@ -508,10 +530,10 @@ def get_data(args):
                 plan = 0
             if args.shift == 'Full Day':
                 actual = frappe.db.sql("""select count(*) as count from `tabQR Checkin`
-                left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type in ('BC','FT','NT','CL') and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' """%(args.date,dg,i),as_dict=True)
+                left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type in ('BC','FT','NT','CL') and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabQR Checkin`.ot = 0 """%(args.date,dg,i),as_dict=True)
             else:
                 actual = frappe.db.sql("""select count(*) as count from `tabQR Checkin`
-                left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type in ('BC','FT','NT','CL') and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabQR Checkin`.qr_shift = %s """%(args.date,dg,i,args.shift),as_dict=True)
+                left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type in ('BC','FT','NT','CL') and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabQR Checkin`.qr_shift = %s and `tabQR Checkin`.ot = 0 """%(args.date,dg,i,args.shift),as_dict=True)
             if actual:
                 actual = actual[0].count
             else:
@@ -539,7 +561,7 @@ def get_data(args):
             sub_total.append(percent)
             sub_total.append(actual_ot)
 
-            diffs = get_sub_total_diff_count(args,dg)
+            diffs = get_sub_total_diff_count(args,dg,i)
             for d in diffs:
                 sub_total.append(d)
             data.append(sub_total)
@@ -547,26 +569,27 @@ def get_data(args):
 
         total_row = ['GRAND TOTAL - ' +dg]
         total_count = 0
+        employee_type = ['WC','BC','FT','NT','CL','TT']
         for emp_type in employee_type:
             if emp_type != 'TT':
                 if emp_type == 'WC':
                     if args.shift == 'Full Day':
-                        count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department =  '%s' """%(args.date,emp_type,dg),as_dict=True)
+                        count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department =  '%s' """%(args.date,emp_type,dg),as_dict=True)
                     else:
-                        count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department =  '%s' and `tabAttendance`.shift = %s """%(args.date,emp_type,dg,args.shift),as_dict=True)
+                        count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department =  '%s' and `tabAttendance`.shift = %s """%(args.date,emp_type,dg,args.shift),as_dict=True)
                 else:
                     if args.shift == 'Full Day':
-                        count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department =  '%s' and 'ot = 0 """%(args.date,emp_type,dg),as_dict=True)
+                        count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department =  '%s' and `tabQR Checkin`.ot = 0 """%(args.date,emp_type,dg),as_dict=True)
                     else:
-                        count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department =  '%s' and `tabQR Checkin`.qr_shift = %s and ot = 0 """%(args.date,emp_type,dg,args.shift),as_dict=True)
+                        count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department =  '%s' and `tabQR Checkin`.qr_shift = %s and `tabQR Checkin`.ot = 0 """%(args.date,emp_type,dg,args.shift),as_dict=True)
                 if count:
                     count = count[0].count
                 else:
                     count = 0
                 if count == 0:
-                    row.append('')
+                    total_row.append('')
                 else:
-                    row.append(count)
+                    total_row.append(count)
                 total_count += count
             else:
                 total_row.append(total_count)
@@ -608,9 +631,32 @@ def get_support_depts(args):
         row = [dept.name]
         employee_type = ['WC','BC','FT','NT','CL','TT']
         total_count = 0
+        # for emp_type in employee_type:
+        #     if emp_type != 'TT':
+        #         count = frappe.db.count("Shift Assignment",{'department':dept.name,'start_date':args.date,'employee_type':emp_type})
+        #         if count == 0:
+        #             row.append('')
+        #         else:
+        #             row.append(count)
+        #         total_count += count
+        #     else:
+        #         row.append(total_count)
         for emp_type in employee_type:
             if emp_type != 'TT':
-                count = frappe.db.count("Shift Assignment",{'department':dept.name,'start_date':args.date,'employee_type':emp_type})
+                if emp_type == 'WC':
+                    if args.shift == 'Full Day':
+                        count = frappe.db.sql("""select count(*) as count from `tabAttendance` where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and department = '%s' """%(args.date,emp_type,dept.name),as_dict=True)
+                    else:
+                        count = frappe.db.sql("""select count(*) as count from `tabAttendance` where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and `tabAttendance`.shift = %s and department = '%s' """%(args.date,emp_type,args.shift,dept.name),as_dict=True)
+                else:
+                    if args.shift == 'Full Day':
+                        count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabQR Checkin`.ot = 0 and department = '%s' """%(args.date,emp_type,dept.name),as_dict=True)
+                    else:
+                        count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabQR Checkin`.qr_shift = %s and `tabQR Checkin`.ot = 0 and department = '%s' """%(args.date,emp_type,args.shift,dept.name),as_dict=True)
+                if count:
+                    count = count[0].count
+                else:
+                    count = 0
                 if count == 0:
                     row.append('')
                 else:
@@ -647,14 +693,37 @@ def get_support_depts(args):
     total_count = 0
     for emp_type in employee_type:
         if emp_type != 'TT':
-            if args.shift == 'Full Day':
-                count = frappe.db.count("Shift Assignment",{'department':('in',dept_list),'start_date':args.date,'employee_type':emp_type})
+            if emp_type == 'WC':
+                if args.shift == 'Full Day':
+                    count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department =  'SUPPORT' """%(args.date,emp_type),as_dict=True)
+                else:
+                    count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department =  'SUPPORT' and `tabAttendance`.shift = %s """%(args.date,emp_type,args.shift),as_dict=True)
             else:
-                count = frappe.db.count("Shift Assignment",{'department':('in',dept_list),'start_date':args.date,'employee_type':emp_type,'shift_type':args.shift})
-            sub_total.append(count)
+                if args.shift == 'Full Day':
+                    count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department =  'SUPPORT' and `tabQR Checkin`.ot = 0 """%(args.date,emp_type),as_dict=True)
+                else:
+                    count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department =  'SUPPORT' and `tabQR Checkin`.qr_shift = %s and `tabQR Checkin`.ot = 0 """%(args.date,emp_type,args.shift),as_dict=True)
+            if count:
+                count = count[0].count
+            else:
+                count = 0
+            if count == 0:
+                sub_total.append('')
+            else:
+                sub_total.append(count)
             total_count += count
         else:
             sub_total.append(total_count)
+    # for emp_type in employee_type:
+    #     if emp_type != 'TT':
+    #         if args.shift == 'Full Day':
+    #             count = frappe.db.count("Shift Assignment",{'department':('in',dept_list),'start_date':args.date,'employee_type':emp_type})
+    #         else:
+    #             count = frappe.db.count("Shift Assignment",{'department':('in',dept_list),'start_date':args.date,'employee_type':emp_type,'shift_type':args.shift})
+    #         sub_total.append(count)
+    #         total_count += count
+    #     else:
+    #         sub_total.append(total_count)
     if args.shift == 'Full Day':
         plan = frappe.db.count("Shift Assignment",{'department':('in',dept_list),'start_date':args.date,'employee_type':('in',('BC','FT','NT','CL'))})
         actual = frappe.db.count("QR Checkin",{'department':('in',dept_list),'shift_date':args.date,'employee_type':('in',('BC','FT','NT','CL')),'ot':0})
@@ -674,7 +743,7 @@ def get_support_depts(args):
     sub_total.append(percent)
     sub_total.append(actual_ot)
 
-    diffs = get_sub_total_diff_count(args,'SUPPORT')
+    diffs = get_sub_total_diff_count(args,'SUPPORT','0')
     for d in diffs:
         sub_total.append(d)
     data.append(sub_total)
@@ -685,20 +754,22 @@ def get_support_depts(args):
         if emp_type != 'TT':
             if emp_type == 'WC':
                 if args.shift == 'Full Day':
-                    count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department in ('IYM','RE','FORD','SUPPORT') """%(args.date,emp_type),as_dict=True)
+                    count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department in ('IYM','RE','FORD','SUPPORT') """%(args.date,emp_type),as_dict=True)
                 else:
-                    count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department in ('IYM','RE','FORD','SUPPORT') and `tabAttendance`.shift = %s """%(args.date,emp_type,args.shift),as_dict=True)
+                    count = frappe.db.sql("""select count(*) as count from `tabAttendance` left join `tabDepartment` on `tabAttendance`.department = `tabDepartment`.name where `tabAttendance`.attendance_date = '%s' and `tabAttendance`.status in ('Present','Half Day') and `tabAttendance`.employee_type = '%s' and `tabDepartment`.parent_department in ('IYM','RE','FORD','SUPPORT') and `tabAttendance`.shift = %s """%(args.date,emp_type,args.shift),as_dict=True)
             else:
                 if args.shift == 'Full Day':
-                    count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department in ('IYM','RE','FORD','SUPPORT') """%(args.date,emp_type),as_dict=True)
+                    count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and ot = 0 """%(args.date,emp_type),as_dict=True)
                 else:
-                    count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department in ('IYM','RE','FORD','SUPPORT') and `tabQR Checkin`.qr_shift = %s """%(args.date,emp_type,args.shift),as_dict=True)
+                    count = frappe.db.sql("""select count(*) as count from `tabQR Checkin` where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabQR Checkin`.qr_shift = %s and ot = 0"""%(args.date,emp_type,args.shift),as_dict=True)
             if count:
                 count = count[0].count
             else:
                 count = 0
             if count == 0:
-                row.append(count)
+                total_row.append('')
+            else:
+                total_row.append(count)
             total_count += count
         else:
             total_row.append(total_count)
@@ -750,28 +821,28 @@ def get_diff_count(args,dept):
         row.append(percent)
     return row
 
-def get_sub_total_diff_count(args,dg):
+def get_sub_total_diff_count(args,dg,i):
     emp_types = ['BC','NT','FT','CL']
     row = []
     for emp_type in emp_types:
         if args.shift == 'Full Day':
             plan = frappe.db.sql("""select count(*) as count from `tabShift Assignment` 
                 left join `tabDepartment` on `tabShift Assignment`.department = `tabDepartment`.name 
-                where `tabShift Assignment`.start_date = '%s' and `tabShift Assignment`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' """%(args.date,emp_type,dg),as_dict=True)
+                where `tabShift Assignment`.start_date = '%s' and `tabShift Assignment`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' """%(args.date,emp_type,dg,i),as_dict=True)
         else:
             plan = frappe.db.sql("""select count(*) as count from `tabShift Assignment` 
                 left join `tabDepartment` on `tabShift Assignment`.department = `tabDepartment`.name 
-                where `tabShift Assignment`.start_date = '%s' and `tabShift Assignment`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabShift Assignment`.shift_type = %s """%(args.date,emp_type,dg,args.shift),as_dict=True)
+                where `tabShift Assignment`.start_date = '%s' and `tabShift Assignment`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabShift Assignment`.shift_type = %s and `tabDepartment`.direct = '%s' """%(args.date,emp_type,dg,args.shift,i),as_dict=True)
         if plan:
             plan = plan[0].count
         else:
             plan = 0
         if args.shift == 'Full Day':
             actual = frappe.db.sql("""select count(*) as count from `tabQR Checkin`
-                left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' """%(args.date,emp_type,dg),as_dict=True)
+                left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabQR Checkin`.ot = 0 """%(args.date,emp_type,dg,i),as_dict=True)
         else:
             actual = frappe.db.sql("""select count(*) as count from `tabQR Checkin`
-                left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabQR Checkin`.qr_shift = %s """%(args.date,emp_type,dg,args.shift),as_dict=True)
+                left join `tabDepartment` on `tabQR Checkin`.department = `tabDepartment`.name where `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = '%s' and `tabDepartment`.parent_department = '%s' and `tabDepartment`.direct = '%s' and `tabQR Checkin`.qr_shift = %s and `tabQR Checkin`.ot = 0"""%(args.date,emp_type,dg,i,args.shift),as_dict=True)
         if actual:
             actual = actual[0].count
         else:

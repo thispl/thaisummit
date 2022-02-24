@@ -1,0 +1,23 @@
+{
+ "content": null,
+ "creation": "2021-10-29 12:10:50.202543",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2021-10-29 12:10:57.159029",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "sales-reports",
+ "owner": "Administrator",
+ "page_name": "Sales Reports",
+ "roles": [
+  {
+   "role": "Tag Manager"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Sales Report"
+}

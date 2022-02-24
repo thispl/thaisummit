@@ -45,7 +45,6 @@ frappe.query_reports["Monthly Attendance Actual"] = {
 		// from_date.set_input(frappe.datetime.add_days(d,25))
 	},
 	// from_date: function(report){
-	// 	console.log('hi')
 	// 	var filters = report.get_values();
 	// 	var to_date = frappe.query_report.get_filter('to_date');
 	// 	to_date.refresh();

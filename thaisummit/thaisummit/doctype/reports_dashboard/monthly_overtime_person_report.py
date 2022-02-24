@@ -166,7 +166,6 @@ def add_day(args):
         dt = datetime.strptime(date,'%Y-%m-%d')
         day_format = datetime.date(dt).strftime('%a')
         data.append(day_format)
-    
     return data
     
 @frappe.whitelist()
@@ -202,7 +201,6 @@ def get_data(args):
             row = [dg,dept.name]
             dates = get_dates(args)
             avg =0
-            # value=[]
             for date in dates:
                 person = frappe.db.count("Overtime Request",{'department':dept.name,"ot_date":date,"workflow_state":"Approved"})
                 row.append(person)

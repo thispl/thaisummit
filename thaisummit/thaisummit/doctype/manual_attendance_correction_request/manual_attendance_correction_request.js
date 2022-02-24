@@ -9,7 +9,31 @@ frappe.ui.form.on('Manual Attendance Correction Request', {
 		$('*[data-fieldname="mp_child"]').find('.grid-remove-all-rows').hide();
 		$('*[data-fieldname="mp_child"]').find('.grid-add-row').remove()
 		frm.disable_save()
-		// frm.set_value("from_date", frappe.datetime.nowdate());
+		// frappe.call({
+		// 	"method": "frappe.client.get_list",
+		// 	"args": {
+		// 		"doctype": "Employee",
+		// 		"fieldname": ["employee", "employee_name"]
+		// 	},
+		// 	callback(r) {
+		// 		if (r.message) {
+		// 			var emp_list = []
+		// 			$.each(r.message,function(i,v){
+		// 				emp_list.push(v.name)
+		// 			})
+		// 			frm.set_df_property("employee", "options", emp_list)
+		// 		}
+		// 	}
+		// })
+		// frappe.call({
+		// 	method: "thaisummit.thaisummit.doctype.manual_attendance_correction_request.manual_attendance_correction_request.get_employees",
+		// 	args:{
+		// 		user:frappe.session.user
+		// 	},
+		// 	callback: function(r) {
+		// 		frm.set_df_property("employee", "options", r.message)
+		// 	}
+		// });
 		frappe.call({
 			"method": "frappe.client.get_value",
 			"args": {
@@ -26,6 +50,7 @@ frappe.ui.form.on('Manual Attendance Correction Request', {
 				}
 			}
 		})
+
 		// }
 	},
 	mp_child_on_form_rendered: function (frm, cdt, cdn) {
@@ -38,21 +63,38 @@ frappe.ui.form.on('Manual Attendance Correction Request', {
 	},
 	from_date: function (frm) {
 		if (frm.doc.from_date) {
-			if (!frappe.user.has_role('System Manager')){
-				var date = frappe.datetime.add_days(frm.doc.from_date,4 )
-				if(frappe.datetime.nowdate() > date){
-					frappe.throw("Manual Attendance correction should be applied within 4 days")
-			}
-			else{
-				frm.trigger('get_att')
-			}
-		}
+		// 	if (!frappe.user.has_role('System Manager')){
+		// 		var date = frappe.datetime.add_days(frm.doc.from_date,4 )
+		// 		if(frappe.datetime.nowdate() > date){
+		// 			frappe.throw("Manual Attendance correction should be applied within 4 days")
+		// 	}
+		// 	else{
+		// 		frm.trigger('get_att')
+		// 	}
+		// }
 		frm.trigger('get_att')
 		}
 	},
 	employee: function (frm) {
 		if (frm.doc.from_date) {
 			frm.trigger('get_att')
+		}
+		if(frm.doc.employee){
+			frappe.call({
+				"method": "frappe.client.get_value",
+				"args": {
+					"doctype": "Employee",
+					"filters": {
+						"name": frm.doc.employee
+					},
+					"fieldname": ["employee_name"]
+				},
+				callback(r) {
+					if (r.message) {
+						frm.set_value("employee_name", r.message.employee_name)
+					}
+				}
+			})
 		}
 	},
 	get_att(frm) {
@@ -61,7 +103,6 @@ frappe.ui.form.on('Manual Attendance Correction Request', {
 			.then((att_list) => {
 				$.each(att_list.message, function (i, d) {
 					var c_list = [d.in_time, d.out_time, d.qr_shift]
-					console.log(c_list)
 					if (c_list.includes(null)) {
 						frm.add_child('mp_child', {
 							'employee': d.employee,

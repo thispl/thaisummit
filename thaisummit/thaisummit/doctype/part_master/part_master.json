@@ -1,21 +1,42 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:parts_no",
+ "autoname": "format:{model_number}-{parts_no}-{tag_type}",
  "creation": "2021-04-26 18:19:41.164184",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "model_no",
+  "model_number",
   "parts_name",
   "parts_no",
+  "tsai_model_code",
+  "usage",
   "sp_purchase_price",
   "column_break_3",
   "group",
   "tag_type",
   "customer",
   "mat_no",
+  "section_break_12",
+  "production_line",
+  "model",
+  "cus",
+  "column_break_16",
+  "mrp_sales_price",
+  "mrp_purchase_price",
+  "kanban_group",
+  "mat_type",
+  "section_break_16",
+  "manpower_std",
+  "packing_std",
+  "cycle_time",
+  "uph",
+  "column_break_21",
+  "min_day",
+  "max_day",
+  "parts_weight",
+  "scrap_weight",
   "section_break_7",
   "sap_available_quantity",
   "temp_avl_qty",
@@ -28,8 +49,7 @@
    "fieldname": "parts_no",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Part No",
-   "unique": 1
+   "label": "Part No"
   },
   {
    "fieldname": "parts_name",
@@ -42,12 +62,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "model_no",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Model No"
-  },
-  {
    "fieldname": "mat_no",
    "fieldtype": "Data",
    "label": "Mat No"
@@ -55,7 +69,8 @@
   {
    "fieldname": "tag_type",
    "fieldtype": "Link",
-   "label": "Tag Type",
+   "in_standard_filter": 1,
+   "label": "IYM Shop",
    "options": "Tag Type"
   },
   {
@@ -81,8 +96,7 @@
   {
    "fieldname": "temp_avl_qty",
    "fieldtype": "Data",
-   "label": "Temp Available Quantity",
-   "read_only": 1
+   "label": "Temp Available Quantity"
   },
   {
    "fieldname": "temp_qty_updated_on",
@@ -102,15 +116,142 @@
    "options": "Customer"
   },
   {
+   "fieldname": "model_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Model Number"
+  },
+  {
+   "fieldname": "tsai_model_code",
+   "fieldtype": "Data",
+   "label": "TSAI Model Code"
+  },
+  {
+   "fieldname": "usage",
+   "fieldtype": "Int",
+   "label": "Usage"
+  },
+  {
    "fieldname": "sp_purchase_price",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Part Price"
+  },
+  {
+   "fieldname": "model_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Model Number"
+  },
+  {
+   "fieldname": "usage",
+   "fieldtype": "Int",
+   "label": "Usage"
+  },
+  {
+   "fieldname": "tsai_model_code",
+   "fieldtype": "Data",
+   "label": "TSAI Model Code"
+  },
+  {
+   "fieldname": "mrp_sales_price",
+   "fieldtype": "Currency",
+   "label": "MRP Sales Price"
+  },
+  {
+   "fieldname": "mrp_purchase_price",
+   "fieldtype": "Currency",
+   "label": "MRP Purchase Price"
+  },
+  {
+   "fieldname": "kanban_group",
+   "fieldtype": "Data",
+   "label": "Kanban Group"
+  },
+  {
+   "fieldname": "mat_type",
+   "fieldtype": "Data",
+   "label": "Mat Type"
+  },
+  {
+   "fieldname": "section_break_16",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "manpower_std",
+   "fieldtype": "Float",
+   "label": "Manpower Std"
+  },
+  {
+   "fieldname": "packing_std",
+   "fieldtype": "Int",
+   "label": "Packing Std"
+  },
+  {
+   "fieldname": "cycle_time",
+   "fieldtype": "Int",
+   "label": "Cycle Time"
+  },
+  {
+   "fieldname": "uph",
+   "fieldtype": "Int",
+   "label": "UPH"
+  },
+  {
+   "fieldname": "min_day",
+   "fieldtype": "Float",
+   "label": "Min Day"
+  },
+  {
+   "fieldname": "max_day",
+   "fieldtype": "Float",
+   "label": "Max Day"
+  },
+  {
+   "fieldname": "parts_weight",
+   "fieldtype": "Float",
+   "label": "Parts Weight",
+   "precision": "3"
+  },
+  {
+   "fieldname": "scrap_weight",
+   "fieldtype": "Float",
+   "label": "Scrap Weight",
+   "precision": "3"
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_12",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "production_line",
+   "fieldtype": "Data",
+   "label": "Production Line"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "cus",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-06-25 16:01:28.047190",
+ "modified": "2021-11-09 11:55:01.307957",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Part Master",
@@ -129,8 +270,9 @@
    "write": 1
   }
  ],
+ "search_fields": "parts_no",
  "sort_field": "modified",
  "sort_order": "DESC",
- "title_field": "model_no",
- "track_changes": 1
+ "track_changes": 1,
+ "track_seen": 1
 }

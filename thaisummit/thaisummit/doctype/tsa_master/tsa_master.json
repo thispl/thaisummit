@@ -1,22 +1,88 @@
 {
  "actions": [],
- "autoname": "TSAM.-####",
- "creation": "2021-08-24 16:58:35.882046",
+ "autoname": "TSAM.####",
+ "creation": "2021-08-24 17:45:20.459267",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "data_1"
+  "iym_model_code",
+  "section",
+  "tsai_model_code",
+  "mat_no",
+  "part_no",
+  "part_name",
+  "usage",
+  "quantity",
+  "date",
+  "amended_from"
  ],
  "fields": [
   {
-   "fieldname": "data_1",
-   "fieldtype": "Data"
+   "fieldname": "iym_model_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "IYM Model Code"
+  },
+  {
+   "fieldname": "section",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tag Type"
+  },
+  {
+   "fieldname": "tsai_model_code",
+   "fieldtype": "Data",
+   "label": "TSAI Model Code"
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "MAT NO"
+  },
+  {
+   "fieldname": "part_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "PART NO"
+  },
+  {
+   "fieldname": "part_name",
+   "fieldtype": "Data",
+   "label": "Part Name"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Data",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "TSA Master",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "usage",
+   "fieldtype": "Int",
+   "label": "Usage"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2021-08-24 16:58:35.882046",
+ "modified": "2021-10-22 21:46:29.726684",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSA Master",
@@ -37,5 +103,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "track_changes": 1
+ "track_changes": 1,
+ "track_seen": 1
 }

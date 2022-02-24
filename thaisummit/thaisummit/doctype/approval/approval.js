@@ -56,9 +56,9 @@ frappe.ui.form.on('Approval', {
 										name: d.on_duty_application,
 										workflow_state: 'Approved'
 									})
-									.then(r => {
-										frm.get_field("od_approval").grid.grid_rows[d.idx - 1].remove();
-									})
+										.then(r => {
+											frm.get_field("od_approval").grid.grid_rows[d.idx - 1].remove();
+										})
 								}
 								// else if (d.workflow_state == 'Pending for HR') {
 								// 	// frappe.db.set_value('On Duty Application', d.on_duty_application, 'workflow_state', 'Approved')
@@ -194,7 +194,7 @@ frappe.ui.form.on('Approval', {
 							}).then(r => {
 								frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
 							})
-							
+
 							// frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
 						}
 					})
@@ -282,14 +282,16 @@ frappe.ui.form.on('Approval', {
 		else if (frappe.user.has_role('HR')) {
 			workflow_state = ['Pending for HR']
 		}
+		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
 
 		frappe.call({
 			"method": "frappe.client.get_list",
 			"args": {
 				"doctype": "On Duty Application",
-				"filters": {
-					'workflow_state': ['in', workflow_state]
-				},
+				"filters": [
+					['workflow_state', 'in', workflow_state],
+					['employee', '!=', r.name,]
+				],
 				limit_page_length: 500
 			},
 			callback(r) {
@@ -325,195 +327,260 @@ frappe.ui.form.on('Approval', {
 				})
 			}
 		})
+	})
 		/* OD fetch end*/
 
 		/* PR fetch start*/
 		// if (frappe.user.has_role(['HOD', 'GM'])) {
-		frappe.call({
-			"method": "frappe.client.get_list",
-			"args": {
-				"doctype": "Permission Request",
-				"filters": {
-					'workflow_state': 'Pending for HOD'
+		// frappe.call({
+		// 	"method": "frappe.client.get_value",
+		// 	"args": {
+		// 		"doctype": "Employee",
+		// 		"filters": {
+		// 			'user_id': frappe.session.user
+		// 		},
+		// 		"fieldname": 'name'
+		// 	},
+		// 	callback(r){
+		// 		var emp = r.message.name
+		// 	}
+		// })
+		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
+
+			frappe.call({
+				"method": "frappe.client.get_list",
+				"args": {
+					"doctype": "Permission Request",
+					"filters": [
+						['workflow_state', '=', 'Pending for HOD'],
+						['employee', '!=', r.name,]
+					],
+					limit_page_length: 500
 				},
-				limit_page_length: 500
-			},
-			callback(r) {
-				$.each(r.message, function (i, d) {
-					frappe.call({
-						"method": "frappe.client.get",
-						"args": {
-							"doctype": "Permission Request",
-							"name": d.name
-						},
-						callback(r) {
-							frm.add_child('pr_approval', {
-								'permission_request': r.message.name,
-								'employee': r.message.employee,
-								'employee_name': r.message.employee_name,
-								'workflow_state': r.message.workflow_state,
-								'requested_date': r.message.requested_date,
-								'department': r.message.department,
-								'designation': r.message.designation,
-								'permission_approver': r.message.permission_approver,
-								'permission_approver_name': r.message.permission_approver_name,
-								'attendance_date': r.message.attendance_date,
-								'shift': r.message.shift,
-								'reason': r.message.reason,
-								'session': r.message.session,
-								'from_time': r.message.from_time,
-								'to_time': r.message.to_time,
-								'hours': r.message.hours
+				callback(r) {
+					$.each(r.message, function (i, d) {
+						frappe.call({
+							"method": "frappe.client.get",
+							"args": {
+								"doctype": "Permission Request",
+								"name": d.name
+							},
+							callback(r) {
+								frm.add_child('pr_approval', {
+									'permission_request': r.message.name,
+									'employee': r.message.employee,
+									'employee_name': r.message.employee_name,
+									'workflow_state': r.message.workflow_state,
+									'requested_date': r.message.requested_date,
+									'department': r.message.department,
+									'designation': r.message.designation,
+									'permission_approver': r.message.permission_approver,
+									'permission_approver_name': r.message.permission_approver_name,
+									'attendance_date': r.message.attendance_date,
+									'shift': r.message.shift,
+									'reason': r.message.reason,
+									'session': r.message.session,
+									'from_time': r.message.from_time,
+									'to_time': r.message.to_time,
+									'hours': r.message.hours
 
-							})
-							frm.refresh_field('pr_approval')
-						}
+								})
+								frm.refresh_field('pr_approval')
+							}
+						})
+
 					})
-
-				})
-			}
+				}
+			})
 		})
 		// }
 		/* PR fetch end*/
 
 		/* LA fetch start*/
 		// if (frappe.user.has_role(['HOD', 'GM'])) {
-		frappe.call({
-			"method": "frappe.client.get_list",
-			"args": {
-				"doctype": "Leave Application",
-				"filters": {
-					'workflow_state': 'Pending for HOD'
+		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
+			frappe.call({
+				"method": "frappe.client.get_list",
+				"args": {
+					"doctype": "Leave Application",
+					"filters": [
+						['workflow_state', '=', 'Pending for HOD'],
+						['employee', '!=', r.name,]
+					],
+					limit_page_length: 500
 				},
-				limit_page_length: 500
-			},
-			callback(r) {
-				$.each(r.message, function (i, d) {
-					frappe.call({
-						"method": "frappe.client.get",
-						"args": {
-							"doctype": "Leave Application",
-							"name": d.name
-						},
-						callback(r) {
-							frm.add_child('la_approval', {
-								'leave_application': r.message.name,
-								'employee': r.message.employee,
-								'employee_name': r.message.employee_name,
-								'workflow_state': r.message.workflow_state,
-								'request_date': r.message.request_date,
-								'department': r.message.department,
-								'leave_type': r.message.leave_type,
-								'leave_balance': r.message.leave_balance,
-								'from_date': r.message.from_date,
-								'from_date': r.message.from_date,
-								'half_day': r.message.half_day,
-								'half_day_date': r.message.half_day_date,
-								'total_leave_days': r.message.total_leave_days,
-								'session': r.message.session,
-								'description': r.message.to_time,
-								'leave_approver': r.message.leave_approver,
-								'leave_approver_name': r.message.leave_approver_name
-							})
-							frm.refresh_field('la_approval')
-						}
-					})
+				callback(r) {
+					$.each(r.message, function (i, d) {
+						frappe.call({
+							"method": "frappe.client.get",
+							"args": {
+								"doctype": "Leave Application",
+								"name": d.name
+							},
+							callback(r) {
+								frm.add_child('la_approval', {
+									'leave_application': r.message.name,
+									'employee': r.message.employee,
+									'employee_name': r.message.employee_name,
+									'workflow_state': r.message.workflow_state,
+									'request_date': r.message.request_date,
+									'department': r.message.department,
+									'leave_type': r.message.leave_type,
+									'leave_balance': r.message.leave_balance,
+									'from_date': r.message.from_date,
+									'from_date': r.message.from_date,
+									'half_day': r.message.half_day,
+									'half_day_date': r.message.half_day_date,
+									'total_leave_days': r.message.total_leave_days,
+									'session': r.message.session,
+									'description': r.message.to_time,
+									'leave_approver': r.message.leave_approver,
+									'leave_approver_name': r.message.leave_approver_name
+								})
+								frm.refresh_field('la_approval')
+							}
+						})
 
-				})
-			}
+					})
+				}
+			})
 		})
 		// }
 		/* LA fetch end*/
 
 		/* OT fetch start*/
 		// if (frappe.user.has_role(['HOD', 'GM'])) {
-		frappe.call({
-			"method": "frappe.client.get_list",
-			"args": {
-				"doctype": "Overtime Request",
-				"filters": {
-					'workflow_state': 'Pending for HOD'
+		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
+			frappe.call({
+				"method": "frappe.client.get_list",
+				"args": {
+					"doctype": "Overtime Request",
+					"filters": [
+						['workflow_state', '=', 'Pending for HOD'],
+						['employee', '!=', r.name]
+					],
+					limit_page_length: 500
 				},
-				limit_page_length: 500
-			},
-			callback(r) {
-				$.each(r.message, function (i, d) {
-					frappe.call({
-						"method": "frappe.client.get",
-						"args": {
-							"doctype": "Overtime Request",
-							"name": d.name
-						},
-						callback(r) {
-							frm.add_child('ot_approval', {
-								'overtime_request': r.message.name,
-								'employee': r.message.employee,
-								'employee_name': r.message.employee_name,
-								'workflow_state': r.message.workflow_state,
-								'ot_date': r.message.ot_date,
-								'department': r.message.department,
-								'shift': r.message.shift,
-								'from_time': r.message.from_time,
-								'to_time': r.message.to_time,
-								'total_hours': r.message.total_hours,
-								'ot_hours': r.message.ot_hours,
-								'bio_in': r.message.bio_in,
-								'bio_out': r.message.bio_out,
-								'total_wh': r.message.total_wh,
-								'approver': r.message.approver,
-								'approver_id': r.message.approver_id,
-								'approver_name': r.message.approver_name
-							})
-							frm.refresh_field('ot_approval')
-						}
-					})
+				callback(r) {
+					$.each(r.message, function (i, d) {
+						frappe.call({
+							"method": "frappe.client.get",
+							"args": {
+								"doctype": "Overtime Request",
+								"name": d.name
+							},
+							callback(r) {
+								frm.add_child('ot_approval', {
+									'overtime_request': r.message.name,
+									'employee': r.message.employee,
+									'employee_name': r.message.employee_name,
+									'workflow_state': r.message.workflow_state,
+									'ot_date': r.message.ot_date,
+									'department': r.message.department,
+									'shift': r.message.shift,
+									'from_time': r.message.from_time,
+									'to_time': r.message.to_time,
+									'total_hours': r.message.total_hours,
+									'ot_hours': r.message.ot_hours,
+									'bio_in': r.message.bio_in,
+									'bio_out': r.message.bio_out,
+									'total_wh': r.message.total_wh,
+									'approver': r.message.approver,
+									'approver_id': r.message.approver_id,
+									'approver_name': r.message.approver_name
+								})
+								frm.refresh_field('ot_approval')
+							}
+						})
 
-				})
-			}
+					})
+				}
+			})
 		})
 		// }
 		/* OT fetch end*/
 
 		/* MP fetch start*/
-
-		frappe.call({
-			"method": "frappe.client.get_list",
-			"args": {
-				"doctype": "Miss Punch Application",
-				"filters": {
-					'workflow_state': ['in', ['Pending for HOD','Pending for HR GM']]
+		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
+			frappe.call({
+				"method": "frappe.client.get_list",
+				"args": {
+					"doctype": "Miss Punch Application",
+					"filters": [
+						['workflow_state', 'in', ['Pending for HOD', 'Pending for HR GM']],
+						['employee', '!=', r.name]
+					],
+					limit_page_length: 500
 				},
-				limit_page_length: 500
-			},
-			callback(r) {
-				console.log(r.message)
-				$.each(r.message, function (i, d) {
-					frappe.call({
-						"method": "frappe.client.get",
-						"args": {
-							"doctype": "Miss Punch Application",
-							"name": d.name
-						},
-						callback(r) {
-							frm.add_child('mp_approval', {
-								'miss_punch_application': r.message.name,
-								'employee': r.message.employee,
-								'employee_name': r.message.employee_name,
-								'department': r.message.department,
-								'workflow_state': r.message.workflow_state,
-								'attendance_date': r.message.attendance_date,
-								'attendance': r.message.attendance,
-								'in_time': r.message.in_time,
-								'out_time': r.message.out_time,
-								'qr_shift': r.message.qr_shift
-							})
-							frm.refresh_field('mp_approval')
-						}
-					})
+				callback(r) {
+					$.each(r.message, function (i, d) {
+						frappe.call({
+							"method": "frappe.client.get",
+							"args": {
+								"doctype": "Miss Punch Application",
+								"name": d.name
+							},
+							callback(r) {
+								frm.add_child('mp_approval', {
+									'miss_punch_application': r.message.name,
+									'employee': r.message.employee,
+									'employee_name': r.message.employee_name,
+									'department': r.message.department,
+									'workflow_state': r.message.workflow_state,
+									'attendance_date': r.message.attendance_date,
+									'attendance': r.message.attendance,
+									'in_time': r.message.in_time,
+									'out_time': r.message.out_time,
+									'qr_shift': r.message.qr_shift
+								})
+								frm.refresh_field('mp_approval')
+							}
+						})
 
-				})
-			}
+					})
+				}
+			})
 		})
+		if (frappe.session.user == 'Administrator'){
+			frappe.call({
+				"method": "frappe.client.get_list",
+				"args": {
+					"doctype": "Miss Punch Application",
+					"filters": [
+						['workflow_state', 'in', ['Pending for HOD', 'Pending for HR GM']],
+						['employee', '!=', r.name]
+					],
+					limit_page_length: 500
+				},
+				callback(r) {
+					$.each(r.message, function (i, d) {
+						frappe.call({
+							"method": "frappe.client.get",
+							"args": {
+								"doctype": "Miss Punch Application",
+								"name": d.name
+							},
+							callback(r) {
+								frm.add_child('mp_approval', {
+									'miss_punch_application': r.message.name,
+									'employee': r.message.employee,
+									'employee_name': r.message.employee_name,
+									'department': r.message.department,
+									'workflow_state': r.message.workflow_state,
+									'attendance_date': r.message.attendance_date,
+									'attendance': r.message.attendance,
+									'in_time': r.message.in_time,
+									'out_time': r.message.out_time,
+									'qr_shift': r.message.qr_shift
+								})
+								frm.refresh_field('mp_approval')
+							}
+						})
+
+					})
+				}
+			})
+		}
 		/* MP fetch end*/
 	},
 	od_approval_on_form_rendered: function (frm, cdt, cdn) {

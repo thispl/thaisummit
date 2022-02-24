@@ -10,7 +10,11 @@
   "employee",
   "employee_name",
   "department",
+  "cost_centre",
+  "employee_type",
   "on_duty",
+  "ot_basic",
+  "ot_amount",
   "column_break_8",
   "ot_date",
   "shift",
@@ -87,13 +91,12 @@
    "label": "From Time"
   },
   {
-   "depends_on": "eval:doc.shift",
+   "depends_on": "eval:doc.shift || doc.on_duty",
    "fieldname": "to_time",
    "fieldtype": "Time",
    "label": "To Time"
   },
   {
-   "fetch_from": "approver.username",
    "fieldname": "approver_id",
    "fieldtype": "Data",
    "label": "Approver ID",
@@ -107,7 +110,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "department.hod",
    "fieldname": "approver",
    "fieldtype": "Link",
    "label": "Approver",
@@ -186,12 +188,38 @@
    "label": "On Duty",
    "options": "On Duty Application",
    "read_only": 1
+  },
+  {
+   "fieldname": "ot_basic",
+   "fieldtype": "Currency",
+   "label": "OT Amount Per Hour",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ot_amount",
+   "fieldtype": "Currency",
+   "label": "OT Amount",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.employee_type",
+   "fieldname": "employee_type",
+   "fieldtype": "Data",
+   "label": "Employee Type",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "department.cost_centre",
+   "fieldname": "cost_centre",
+   "fieldtype": "Data",
+   "label": "Cost Centre",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-08-16 18:31:20.762174",
+ "modified": "2022-01-31 13:13:02.367862",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Overtime Request",

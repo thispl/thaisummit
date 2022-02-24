@@ -363,11 +363,11 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 		total_worked_days = total_weekoffs = total_holidays = total_cl = total_el = total_sl = total_co = total_spl = total_la = total_lop = total_wrong_shifts = total_payable_days = 0
 		
 		actual_shifts = ['11','22','33','P2P2','P1P1','12','13','23','21','32','OD','1L1','1L2','1L3','2L1','2L2','2L3','3L1','3L2','3L3']
-		holidays = ['HH','1H','2H','3H']
-		weekoffs = ['WW','1W','2W','3W']
+		holidays = ['HH','1H','2H','3H','1LH','2LH','3LH',]
+		weekoffs = ['WW','1W','2W','3W','1LW','2LW','3LW']
 		lops = ['AA','1M','MM','M1','','LL']
 		wrong_shifts = ['12','13','21','23','31','32','2P2','1L2','1L3','2L1','2L3','3L1','3L2']
-		half_days = ["0.5EL","0.5CL","0.5SL","0.5CO","0.5SPL","0.5LL","LEL/2","LCL/2","LSL/2","LCO/2","LLL/2","LA/2"]
+		half_days = ["0.5EL","0.5CL","0.5SL","0.5CO","0.5SPL","0.5LL","LEL/2","LCL/2","LSL/2","LCO/2","LLL/2","LA/2","0.5LLL"]
 
 		for r in row:
 			if r in actual_shifts:
@@ -406,6 +406,33 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 				total_wrong_shifts += 1
 			if r == 'LA/2':
 				total_la += 0.5
+			if r == '0.5LLL':
+				total_la += 0.5
+
+		if datetime.strptime(filters.from_date, "%Y-%m-%d").date()  < emp_det.date_of_joining:
+			hds = frappe.db.sql_list('''select holiday_date from `tabHoliday`
+					where
+						weekly_off = 0 and
+						parent=%(holiday_list)s
+						and holiday_date >= %(start_date)s
+						and holiday_date < %(end_date)s''', {
+							"holiday_list": 'Holiday List - 2021',
+							"start_date": filters.from_date,
+							"end_date": emp_det.date_of_joining,
+						})
+			wof = frappe.db.sql_list('''select holiday_date from `tabHoliday`
+					where
+						weekly_off = 1 and
+						parent=%(holiday_list)s
+						and holiday_date >= %(start_date)s
+						and holiday_date < %(end_date)s''', {
+							"holiday_list": 'Holiday List - 2021',
+							"start_date": filters.from_date,
+							"end_date": emp_det.date_of_joining,
+						})
+
+			total_holidays = total_holidays - len(hds)
+			total_weekoffs = total_weekoffs - len(wof)
 
 		total_payable_days = total_worked_days + total_holidays + total_cl + total_el + total_sl + total_co + total_spl
 		calendar_days = filters['total_days_in_month']
@@ -441,9 +468,9 @@ def get_columns(filters):
 		columns += days 
 
 	# if filters.summarized_view:
-		columns += [_("Calendar Days") + ":Int:120", _("Worked Days") + ":Int:120",  
-		_("WW") + ":Int:60",_("HH") + ":Int:60", _("CL") + ":Int:120", _("EL") + ":Int:120", _("SL") + ":Int:120", _("SPL") + ":Int:120", _("LA") + ":Int:120", _("LOP") + ":Int:120", 
-		_("Wrong Shift")+ ":Int:120",_("Payable Days")+ ":Int:120", ]
+		columns += [_("Calendar Days") + ":Int:120", _("Worked Days") + ":Data:120",  
+		_("WW") + ":Data:60",_("HH") + ":Data:60", _("CL") + ":Data:120", _("EL") + ":Data:120", _("SL") + ":Data:120", _("SPL") + ":Data:120", _("LA") + ":Data:120", _("LOP") + ":Data:120", 
+		_("Wrong Shift")+ ":Data:120",_("Payable Days")+ ":Data:120", ]
 	
 	return columns, days
 
@@ -535,10 +562,10 @@ def get_conditions(filters):
 def get_employee_details(employee_type,department,group_by, company):
 	emp_map = {}
 	if employee_type:
-		query = """select name, employee_name, designation, department, branch, company, employee_type,
+		query = """select name, employee_name, designation, department, branch, company, employee_type, date_of_joining,
 		holiday_list from `tabEmployee` where company = %s and employee_type = '%s' and vacant = '0' """ % (frappe.db.escape(company),employee_type)
 	else:
-		query = """select name, employee_name, designation, department, branch, company, employee_type,
+		query = """select name, employee_name, designation, department, branch, company, employee_type, date_of_joining,
 		holiday_list from `tabEmployee` where company = %s and vacant = '0' """ % (frappe.db.escape(company))
 
 	if group_by:

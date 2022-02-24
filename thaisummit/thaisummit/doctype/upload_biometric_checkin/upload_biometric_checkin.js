@@ -10,6 +10,25 @@ frappe.ui.form.on('Upload Biometric Checkin', {
 		if(frm.doc.attach){
 		frm.trigger('error_preview')
 		}
+		frm.add_custom_button(__('Re-Check'), function (){
+			if(frm.doc.attach){
+				frappe.call({
+					method: "thaisummit.thaisummit.doctype.upload_biometric_checkin.upload_biometric_checkin.create_checkins",
+					args: {
+						"file": frm.doc.attach,
+						"name":frm.doc.name
+					},
+					freeze: true,
+					freeze_message: 'Uploading....',
+					callback(r) {
+						if(r){
+							frappe.msgprint('Biometric Checkins has been uploaded sucessfully')
+							frm.reload_doc()
+						}
+					}
+				})
+			}
+		})
 	},
 	attach(frm){
 		if(frm.doc.attach){
@@ -41,5 +60,5 @@ frappe.ui.form.on('Upload Biometric Checkin', {
 				}
 			})
 		}
-	}
+	},
 });

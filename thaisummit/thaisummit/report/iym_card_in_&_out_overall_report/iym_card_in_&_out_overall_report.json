@@ -20,10 +20,22 @@
    "width": 150
   },
   {
-   "fieldname": "model",
+   "fieldname": "model_number",
    "fieldtype": "Data",
-   "label": "Model",
+   "label": "Model Number",
    "width": 200
+  },
+  {
+   "fieldname": "vehicle_in",
+   "fieldtype": "Data",
+   "label": "Vehicle In",
+   "width": 0
+  },
+  {
+   "fieldname": "vehicle_out",
+   "fieldtype": "Data",
+   "label": "Vehicle Out",
+   "width": 0
   },
   {
    "fieldname": "tag_type",
@@ -116,13 +128,13 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "TS_logo",
- "modified": "2021-06-24 14:05:08.605433",
+ "modified": "2021-09-14 21:50:55.522419",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "IYM Card IN & OUT Overall Report",
  "owner": "Administrator",
  "prepared_report": 0,
- "query": "select\nROW_NUMBER() OVER(PARTITION BY `tabTAG Master`.name) AS sno,\n`tabTAG Master`.slot_no,\n`tabTAG Master`.mat_no,\n`tabTAG Master`.model,\n`tabTAG Master`.tag_type,\n`tabTAG Master`.parts_no,\n`tabTAG Master`.parts_name,\n`tabTAG Master`.required_quantity,\n`tabTAG Master`.sap_quantity,\n`tabTAG Master`.difference,\n`tabTAG Master`.recieved_time,\n`tabTAG Master`.date_and_time,\n`tabTAG Master`.delay_duration,\n`tabTAG Master`.reason_for_card_delay,\n`tabTAG Master`.sp_purchase_price*`tabTAG Master`.required_quantity  AS total_price\nfrom\n`tabTAG Master`\nwhere\nrecieved_time between %(from_datetime)s and %(to_datetime)s",
+ "query": "select\nROW_NUMBER() OVER(PARTITION BY `tabTAG Master`.name) AS sno,\n`tabTAG Master`.slot_no,\n`tabTAG Master`.mat_no,\n`tabTAG Master`.vehicle_in,\n`tabTAG Master`.vehicle_out,\n`tabTAG Master`.model_number,\n`tabTAG Master`.tag_type,\n`tabTAG Master`.parts_no,\n`tabTAG Master`.parts_name,\n`tabTAG Master`.required_quantity,\n`tabTAG Master`.sap_quantity,\n`tabTAG Master`.difference,\n`tabTAG Master`.recieved_time,\n`tabTAG Master`.date_and_time,\n`tabTAG Master`.delay_duration,\n`tabTAG Master`.reason_for_card_delay,\n`tabTAG Master`.sp_purchase_price*`tabTAG Master`.required_quantity  AS total_price\nfrom\n`tabTAG Master`\nwhere\nrecieved_time between %(from_datetime)s and %(to_datetime)s",
  "ref_doctype": "TAG Master",
  "report_name": "IYM Card IN & OUT Overall Report",
  "report_type": "Query Report",

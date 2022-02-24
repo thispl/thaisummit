@@ -19,6 +19,7 @@ frappe.ui.form.on('Shift Schedule', {
 		})
 			// frm.set_df_property('department', 'read_only', 0);
 			if (frappe.user.has_role('HR')) {
+				if (!frm.doc.__islocal){
 			frm.add_custom_button(__('Re-Check'), function (){
 				frappe.call({
 					"method": "thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.enqueue_shift_assignment",
@@ -39,6 +40,7 @@ frappe.ui.form.on('Shift Schedule', {
 				frm.call("on_submit")
 			})
 		}
+		}
 	},
 	get_template: function (frm) {
 		console.log(frappe.request.url)
@@ -56,8 +58,8 @@ frappe.ui.form.on('Shift Schedule', {
 				frappe.msgprint("From Date should not be a Past Date")
 				frm.set_value('from_date', '')
 			}
-			if (frm.doc.from_date > frappe.datetime.add_days(frappe.datetime.now_date(), 5)) {
-				frappe.msgprint("From Date should be within 5 days from Today")
+			if (frm.doc.from_date > frappe.datetime.add_days(frappe.datetime.now_date(), 7)) {
+				frappe.msgprint("From Date should be within 7 days from Today")
 				frm.set_value('from_date', '')
 			}
 			// frm.set_value("to_date",frappe.datetime.add_days(frm.doc.from_date, 5))
@@ -74,8 +76,8 @@ frappe.ui.form.on('Shift Schedule', {
 				frappe.msgprint("To Date should not be greater than From Date")
 				frm.set_value('to_date', '')
 			}
-			else if (frm.doc.to_date > frappe.datetime.add_days(frm.doc.from_date, 5)) {
-				frappe.msgprint("To Date should be within 6 days from From Date")
+			else if (frm.doc.to_date > frappe.datetime.add_days(frm.doc.from_date, 7)) {
+				frappe.msgprint("To Date should be within 8 days from From Date")
 				frm.set_value('to_date', '')
 			}
 		}
@@ -88,8 +90,13 @@ frappe.ui.form.on('Shift Schedule', {
 			frm.call('validate_employees').then(r => {
 				if (r.message) {
 					frm.fields_dict.error_preview.$wrapper.empty().append("<h2>Error Preview</h2><ul>" + r.message + "</ul>")
-					frappe.throw(r.message)
-					frm.reload_doc()
+					frappe.msgprint(r.message)
+					frm.disable_save()
+					frm.set_value('upload','')
+					frm.fields_dict.summary.$wrapper.empty()
+					frm.fields_dict.error_preview.$wrapper.empty()
+					frm.fields_dict.csv_preview.$wrapper.empty()
+
 				}
 			})
 

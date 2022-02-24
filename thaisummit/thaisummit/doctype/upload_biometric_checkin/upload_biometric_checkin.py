@@ -43,6 +43,7 @@ def enqueue_create_checkins(file,name):
 	for pp in pps:
 		if frappe.db.exists("Employee",pp[5]):
 			t = datetime.strptime(pp[1], '%d-%b-%Y %H:%M:%S')
+			t = t.replace(second=0)
 			if not frappe.db.exists("Employee Checkin",{'employee':pp[5],'time':t}):
 				doc = frappe.new_doc("Employee Checkin")
 				doc.employee = pp[5]

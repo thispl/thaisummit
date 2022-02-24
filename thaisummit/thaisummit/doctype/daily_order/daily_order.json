@@ -1,0 +1,172 @@
+{
+ "actions": [],
+ "autoname": "IT-.####",
+ "creation": "2021-11-16 18:36:23.635691",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item",
+  "parts_no",
+  "part_name",
+  "cus",
+  "column_break_5",
+  "model",
+  "prod_line",
+  "packing",
+  "section_break_8",
+  "date",
+  "quantity",
+  "total",
+  "column_break_13",
+  "day",
+  "daily_order",
+  "section_break_14",
+  "min_day",
+  "min_qty",
+  "column_break_19",
+  "max_day",
+  "max_qty",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "item",
+   "fieldtype": "Data",
+   "label": "Item"
+  },
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Data",
+   "label": "Parts No"
+  },
+  {
+   "fieldname": "part_name",
+   "fieldtype": "Data",
+   "label": "Part Name"
+  },
+  {
+   "fieldname": "cus",
+   "fieldtype": "Select",
+   "label": "Cus",
+   "options": "\nFORD\nHPS\nIYM\nRE"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "prod_line",
+   "fieldtype": "Data",
+   "label": "PROD Line"
+  },
+  {
+   "fieldname": "packing",
+   "fieldtype": "Int",
+   "label": "Packing"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total"
+  },
+  {
+   "fieldname": "day",
+   "fieldtype": "Int",
+   "label": "Day"
+  },
+  {
+   "fieldname": "daily_order",
+   "fieldtype": "Float",
+   "label": "Daily Order",
+   "precision": "2"
+  },
+  {
+   "fieldname": "min_day",
+   "fieldtype": "Float",
+   "label": "Min Day",
+   "precision": "2"
+  },
+  {
+   "fieldname": "min_qty",
+   "fieldtype": "Int",
+   "label": "Min Qty"
+  },
+  {
+   "fieldname": "max_day",
+   "fieldtype": "Float",
+   "label": "Max Day",
+   "precision": "2"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Daily Order",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "max_qty",
+   "fieldtype": "Int",
+   "label": "Max Qty"
+  },
+  {
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_14",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_19",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-11-16 19:27:43.816457",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Daily Order",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -4,7 +4,6 @@
 frappe.ui.form.on('TAG Master', {
     refresh: function(frm) {
         // frm.set_value("item_delivered" ,0)
-        if(frappe.user.has_role('Tag Manager')){
         if (!frm.doc.item_delivered){
         frm.add_custom_button(__("Delivered"), function(){
             frm.set_value("item_delivered" ,1)
@@ -16,7 +15,6 @@ frappe.ui.form.on('TAG Master', {
             })  
         })
     } 
-}
         // var qr_code = "[)>069KY0BP2GSWF211000080V3G563L3G56KJ0777Q00015910KY0B3G56100014544Z1237315"
         // console.log(qr_code.length)
         // // frm.call('parts')

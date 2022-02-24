@@ -1,0 +1,173 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:mat_no",
+ "creation": "2021-11-09 16:06:54.485967",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parts_name",
+  "parts_no",
+  "mat_no",
+  "production_line",
+  "model",
+  "customer",
+  "column_break_3",
+  "mrp_sales_price",
+  "mrp_purchase_price",
+  "kanban_group",
+  "mat_type",
+  "section_break_16",
+  "manpower_std",
+  "packing_std",
+  "cycle_time",
+  "uph",
+  "column_break_21",
+  "min_day",
+  "max_day",
+  "parts_weight",
+  "scrap_weight"
+ ],
+ "fields": [
+  {
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Part Name"
+  },
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Part No"
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "label": "Mat No",
+   "unique": 1
+  },
+  {
+   "fieldname": "production_line",
+   "fieldtype": "Data",
+   "label": "Production Line"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mrp_sales_price",
+   "fieldtype": "Currency",
+   "label": "MRP Sales Price",
+   "precision": "2"
+  },
+  {
+   "fieldname": "mrp_purchase_price",
+   "fieldtype": "Currency",
+   "label": "MRP Purchase Price",
+   "precision": "2"
+  },
+  {
+   "fieldname": "kanban_group",
+   "fieldtype": "Data",
+   "label": "Kanban Group"
+  },
+  {
+   "fieldname": "mat_type",
+   "fieldtype": "Data",
+   "label": "Mat Type"
+  },
+  {
+   "fieldname": "section_break_16",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "manpower_std",
+   "fieldtype": "Float",
+   "label": "Manpower Std",
+   "precision": "1"
+  },
+  {
+   "fieldname": "packing_std",
+   "fieldtype": "Int",
+   "label": "Packing Std"
+  },
+  {
+   "fieldname": "cycle_time",
+   "fieldtype": "Int",
+   "label": "Cycle Time"
+  },
+  {
+   "fieldname": "uph",
+   "fieldtype": "Int",
+   "label": "UPH"
+  },
+  {
+   "fieldname": "column_break_21",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "min_day",
+   "fieldtype": "Float",
+   "label": "Min Day",
+   "precision": "2"
+  },
+  {
+   "fieldname": "max_day",
+   "fieldtype": "Float",
+   "label": "Max Day",
+   "precision": "2"
+  },
+  {
+   "fieldname": "parts_weight",
+   "fieldtype": "Float",
+   "label": "Parts Weight",
+   "precision": "3"
+  },
+  {
+   "fieldname": "scrap_weight",
+   "fieldtype": "Float",
+   "label": "Scrap Weight",
+   "precision": "3"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-11-09 16:15:01.109461",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TSAI Part Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "parts_no",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_seen": 1
+}

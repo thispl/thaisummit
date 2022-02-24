@@ -14,6 +14,56 @@ app_license = "MIT"
 # Includes in <head>
 # ------------------
 
+# Scheduled Tasks
+# ---------------
+
+scheduler_events = {
+# 	"all": [
+# 		"thaisummit.tasks.all"
+# 	],
+	# "daily": [
+	# 	"thaisummit.custom.test_hook",
+	# 	"thaisummit.custom.send_mail_hr",
+	# 	"thaisummit.custom.create_leave_allocation",
+	# 	"thaisummit.custom.delete_shift_summary"
+	# ],
+	# "hourly": [
+	# 	"thaisummit.custom.test_hook"
+	# ],
+# 	"weekly": [
+# 		"thaisummit.tasks.weekly"
+# 	]
+# 	"monthly": [
+# 		"thaisummit.tasks.monthly"
+# 	]
+	# "weekly": [
+    #     "thaisummit.custom.mail_wc_get_trainee",
+    #     "thaisummit.custom.mail_wc_get_probation",
+    #     "thaisummit.custom.mail_wc_probation"
+	# ],
+	# "yearly": [
+	# 	"thaisummit.custom.el_leave_policy",
+	# 	"thaisummit.custom.el_leave_encashment"
+	# ],
+	"cron": {
+		"* * * * *": [
+            "thaisummit.custom.test_hook"
+        ],
+        # "0 1 * * *": [
+        #     "thaisummit.custom.fetch_sap_stock"
+        # ],
+		# "5 0 1 * *": [
+        #     "thaisummit.custom.mark_deductions"
+        # ],
+		# "0 9 * * *": [
+		# 	"thaisummit.custom.bulk_mail_alerts"
+		# ],
+		# "0 3 * * *":[
+		# 	"thaisummit.custom.update_shift_status"
+		# ]
+	}
+}
+
 # include js, css files in header of desk.html
 # app_include_css = "/assets/thaisummit/css/thaisummit.css"
 app_include_js = "/assets/thaisummit/js/thaisummit.js"
@@ -93,6 +143,7 @@ override_doctype_class = {
 
 jenv = {
 	"methods": [
+		"get_dispatch_data:thaisummit.custom.get_dispatch_data",
 		"manpower_attendance_report:thaisummit.thaisummit.doctype.manpower_attendance_report.manpower_attendance_report.manpower_attendance_report",
 		"manpower_attendance_report_total:thaisummit.thaisummit.doctype.manpower_attendance_report.manpower_attendance_report.manpower_attendance_report_total",
 		"shift_wise_count:thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.shift_wise_count",
@@ -114,52 +165,14 @@ jenv = {
 # Hook on document methods and events
 
 doc_events = {
-	"Attendance": {
-		# "on_update": "thaisummit.mark_attendance.mark_shift_status",
+	"Employee": {
+		"on_update": "thaisummit.custom.delete_left_att",
 		# "on_cancel": "method",
 		# "on_trash": "method"
-	}
-}
-
-# Scheduled Tasks
-# ---------------
-
-scheduler_events = {
-# 	"all": [
-# 		"thaisummit.tasks.all"
-# 	],
-	# "daily": [
-	# 	"thaisummit.custom.send_birthday_wish",
-	# 	"thaisummit.custom.send_mail_hr",
-	# 	"thaisummit.custom.create_leave_allocation",
-	# 	"thaisummit.custom.delete_shift_summary"
-	# ],
-# 	"hourly": [
-# 		"thaisummit.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"thaisummit.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"thaisummit.tasks.monthly"
-# 	]
-	"weekly": [
-        "thaisummit.custom.mail_wc_get_trainee",
-        "thaisummit.custom.mail_wc_get_probation",
-        "thaisummit.custom.mail_wc_probation"
-	],
-	"yearly": [
-		"thaisummit.custom.el_leave_policy",
-		"thaisummit.custom.el_leave_encashment"
-	],
-	"cron": {
-        "5 0 1 * *": [
-            "thaisummit.custom.mark_deductions"
-        ],
-		"0 9 * * *": [
-			"thaisummit.custom.bulk_mail_alerts"
-		]
-	}
+	},
+	"IYM Sequence Plan Upload":{
+		'on_submit': "thaisummit.thaisummit.doctype.tsa_master.tsa_master.enqueue_master_creation"
+	},
 }
 
 # Testing

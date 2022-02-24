@@ -20,9 +20,10 @@ frappe.ui.form.on('Bulk OT', {
 			frappe.db.get_value("Employee", { "name": child.employee }, "department", (r) => {
 				if (r.department) {
 					frappe.call({
-						method: 'thaisummit.custom.get_hod',
+						method: 'thaisummit.custom.get_approver',
 						args: {
-							department: r.department
+							department: r.department,
+							employee: child.employee
 						},
 						callback(r) {
 							if (r.message) {
@@ -177,12 +178,17 @@ frappe.ui.form.on('Bulk OT', {
 		var child = locals[cdt][cdn]
 		if (!frappe.user.has_role('System Manager')) {
 		if (child.ot_date){
-			var date = frappe.datetime.add_days(child.ot_date,4 )
-			if(frappe.datetime.nowdate() > date){
-				frappe.throw("Overtime should be applied within 4 days")
-				child.ot_date = ''
-				frm.refresh_field('employees')
-			}
+			var date = frappe.datetime.add_days(child.ot_date,3 )
+			frappe.call({
+			    "method":"thaisummit.utils.get_server_date" ,
+			    callback(r){
+				    if (r.message > date) {
+						frappe.throw("Overtime should be applied within 3 days")
+						child.ot_date = ''
+						frm.refresh_field('employees')
+					}
+			    }
+			})
 		}
 	}
 		if (child.ot_date) {

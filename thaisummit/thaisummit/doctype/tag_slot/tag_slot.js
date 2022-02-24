@@ -16,8 +16,26 @@ frappe.ui.form.on('TAG Slot', {
 			})
 
 		}
+		if(frm.doc.docstatus == 1){
+			frm.add_custom_button(__("Update Readiness"), function () {
+				frappe.route_options = {slot_no: frm.doc.name}
+				frappe.set_route("Form", "Tag Readiness", "Tag Readiness");
+			})
+
+			frm.add_custom_button(__("Download Readiness Document"), function () {
+				var f_name = frm.doc.name
+				var print_format ="Tag Readiness";
+				 window.open(frappe.urllib.get_full_url("/api/method/frappe.utils.print_format.download_pdf?"
+					+ "doctype=" + encodeURIComponent("TAG Slot")
+					+ "&name=" + encodeURIComponent(f_name)
+					+ "&trigger_print=1"
+					+ "&format=" + print_format
+					+ "&no_letterhead=0"
+				   ));
+			})
+
+		}
 		frm.add_custom_button(__("Download .xlsx"), function () {
-			console.log(frappe.request.url)
 			window.location.href = repl(frappe.request.url +
 				'?cmd=%(cmd)s&name=%(name)s', {
 				cmd: "thaisummit.thaisummit.doctype.tag_slot.tag_slot.download_excel",
@@ -34,15 +52,18 @@ frappe.ui.form.on('TAG Slot', {
 				+ "&format=" + print_format
 				+ "&no_letterhead=0"
 			   ));
-		
-
 		})
 		
 	
 	},
-	
+	download:function(frm) {
+		window.location.href = repl(frappe.request.url +
+			'?cmd=%(cmd)s&name=%(name)s', {
+			cmd: "thaisummit.thaisummit.doctype.tag_slot.tag_slot.download_excel",
+			name: frm.doc.name
+		});
+	},
 	// onload:function(frm){
-	// 	console.log("hi")
 	// 	cur_frm.fields_dict["tag_wise_list"].$wrapper.find('.grid-body .rows').find(".grid-row").each(function(i, item) {
 	// 		let d = locals[cur_frm.fields_dict["tag_wise_list"].grid.doctype][$(item).attr('data-name')];
 	// 		if(d["difference"] < 0){
@@ -66,7 +87,6 @@ frappe.ui.form.on('TAG Slot', {
 
 // 	var sel = format('div[data-fieldname="tag_wise_list"] > div.grid-row[data-idx="{0}"]', [child.idx]);
 // 		if(child.difference < 0){
-// 			console.log("hi")
 
 // 			$(sel).css('background-color', "#ff5858");
 // 		}

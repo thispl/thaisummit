@@ -1,0 +1,161 @@
+{
+ "add_total_row": 1,
+ "columns": [
+  {
+   "fieldname": "sno",
+   "fieldtype": "Data",
+   "label": "S.No",
+   "width": 0
+  },
+  {
+   "fieldname": "slot_no",
+   "fieldtype": "Data",
+   "label": "Slot No",
+   "width": 0
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "label": "Mat No",
+   "width": 150
+  },
+  {
+   "fieldname": "model_number",
+   "fieldtype": "Data",
+   "label": "Model Number",
+   "width": 200
+  },
+  {
+   "fieldname": "vehicle_in",
+   "fieldtype": "Data",
+   "label": "Vehicle In",
+   "width": 0
+  },
+  {
+   "fieldname": "vehicle_out",
+   "fieldtype": "Data",
+   "label": "Vehicle Out",
+   "width": 0
+  },
+  {
+   "fieldname": "tag_type",
+   "fieldtype": "Data",
+   "label": "Type",
+   "width": 0
+  },
+  {
+   "fieldname": "parts_no",
+   "fieldtype": "Data",
+   "label": "Parts No",
+   "width": 200
+  },
+  {
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "label": "Parts Name",
+   "width": 150
+  },
+  {
+   "fieldname": "required_quantity",
+   "fieldtype": "Data",
+   "label": "Required Quantity",
+   "width": 0
+  },
+  {
+   "fieldname": "sap_quantity",
+   "fieldtype": "Data",
+   "label": "SAP Quantity",
+   "width": 0
+  },
+  {
+   "fieldname": "difference",
+   "fieldtype": "Data",
+   "label": "Diff.",
+   "width": 0
+  },
+  {
+   "fieldname": "recieved_time",
+   "fieldtype": "Datetime",
+   "label": "IYM Card In Time",
+   "width": 200
+  },
+  {
+   "fieldname": "date_and_time",
+   "fieldtype": "Datetime",
+   "label": "IYM Card Out Time",
+   "width": 0
+  },
+  {
+   "fieldname": "delay_duration",
+   "fieldtype": "Time",
+   "label": "Delay Duration",
+   "width": 0
+  },
+  {
+   "fieldname": "sent",
+   "fieldtype": "Data",
+   "label": "Delivery Status",
+   "width": 0
+  },
+  {
+   "fieldname": "reason_for_card_delay",
+   "fieldtype": "Data",
+   "label": "Reason for Card Delay",
+   "width": 0
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "label": "Price",
+   "width": 0
+  }
+ ],
+ "creation": "2021-08-17 00:57:33.083936",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "from_datetime",
+   "fieldtype": "Datetime",
+   "label": "From Datetime",
+   "mandatory": 0,
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "to_datetime",
+   "fieldtype": "Datetime",
+   "label": "To Datetime",
+   "mandatory": 0,
+   "wildcard_filter": 0
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "TS_logo",
+ "modified": "2021-09-14 21:54:23.416613",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "IYM Card Failed Delivery Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select\nROW_NUMBER() OVER(PARTITION BY `tabTAG Master`.name) AS sno,\n`tabTAG Master`.slot_no,\n`tabTAG Master`.mat_no,\n`tabTAG Master`.vehicle_in,\n`tabTAG Master`.vehicle_out,\n`tabTAG Master`.model_number,\n`tabTAG Master`.tag_type,\n`tabTAG Master`.parts_no,\n`tabTAG Master`.parts_name,\n`tabTAG Master`.required_quantity,\n`tabTAG Master`.sap_quantity,\n`tabTAG Master`.difference,\n`tabTAG Master`.recieved_time,\n`tabTAG Master`.date_and_time,\n`tabTAG Master`.delay_duration,\n`tabTAG Master`.sent,\n`tabTAG Master`.reason_for_card_delay,\n`tabTAG Master`.sp_purchase_price*`tabTAG Master`.required_quantity  AS total_price\nfrom\n`tabTAG Master`\nwhere\nrecieved_time between %(from_datetime)s and %(to_datetime)s and\n`tabTAG Master`.sent = 'Delay'",
+ "ref_doctype": "TAG Master",
+ "report_name": "IYM Card Failed Delivery Report",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "Employee"
+  }
+ ]
+}

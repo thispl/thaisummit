@@ -13,18 +13,27 @@ def execute(filters=None):
 def get_columns(filters):
 	columns = []
 	columns += [
-		_("Employee ID") + ":Data/:150",_("Employee Name") + ":Data/:200",_("Department") + ":Data/:150",_("Employee Type") + ":Data/:150",_("Shift Type") + ":Data/:100",_("Shift Date") + ":Data/:150",_("Route No") + ":Data/:100",_("Boarding Point") + ":Data/:150"
+		_("Employee ID") + ":Data/:150",_("Employee Name") + ":Data/:200",_("Department") + ":Data/:150",_("Employee Type") + ":Data/:150",_("Shift Type") + ":Data/:100",_("Shift Date") + ":Data/:150",_("Route No") + ":Data/:100",_("Boarding Point") + ":Data/:150",_("Document Status") + ":Data/:200"
 	]
 	return columns
 
 def get_data(filters):
 	data = []
+	docstatus = ''
 	if filters.department:
-		shifts = frappe.db.sql("""select * from `tabShift Assignment` where start_date between '%s' and '%s' and department = '%s' and docstatus = '1' """%(filters.from_date,filters.to_date,filters.department),as_dict=True)
+		shifts = frappe.db.sql("""select * from `tabShift Assignment` where start_date between '%s' and '%s' and department = '%s' and docstatus != '2' """%(filters.from_date,filters.to_date,filters.department),as_dict=True)
 		for s in shifts:
-			data.append([s.employee,s.employee_name,s.department,s.employee_type,s.shift_type,formatdate(s.start_date),s.route_no,s.boarding_point])
+			if s.docstatus == 1:
+				docstatus = 'Submitted'
+			elif s.docstatus == 0:
+				docstatus = 'Draft'
+			data.append([s.employee,s.employee_name,s.department,s.employee_type,s.shift_type,formatdate(s.start_date),s.route_no,s.boarding_point,docstatus])
 	else:
-		shifts = frappe.db.sql("""select * from `tabShift Assignment` where start_date between '%s' and '%s' and docstatus = '1' """%(filters.from_date,filters.to_date),as_dict=True)
+		shifts = frappe.db.sql("""select * from `tabShift Assignment` where start_date between '%s' and '%s' and docstatus != '2' """%(filters.from_date,filters.to_date),as_dict=True)
 		for s in shifts:
-			data.append([s.employee,s.employee_name,s.department,s.employee_type,s.shift_type,formatdate(s.start_date),s.route_no,s.boarding_point])
+			if s.docstatus == 1:
+				docstatus = 'Submitted'
+			elif s.docstatus == 0:
+				docstatus = 'Draft'
+			data.append([s.employee,s.employee_name,s.department,s.employee_type,s.shift_type,formatdate(s.start_date),s.route_no,s.boarding_point,docstatus])
 	return data

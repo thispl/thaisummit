@@ -1,0 +1,140 @@
+{% extends "templates/web.html" %}
+{% block title %} Welfare Scan {% endblock %}
+{% block head_include %}
+<style>
+    hr {
+        margin-top: 32px;
+    }
+
+    input[type="file"] {
+        display: block;
+        margin-bottom: 16px;
+    }
+
+    div {
+        margin-bottom: 16px;
+    }
+
+    #flash-toggle {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+
+{%- block content -%}
+<center>
+    <h1>Scan from WebCam:</h1>
+</center>
+<div>
+    <br>
+    <center><video id="qr-video" width="300"></video></center>
+    <br>
+</div>
+
+
+<center><b>Detected ID: </b><span id="cam-qr-result">None</span></center>
+
+<br>
+<center><b>Last detected at: <span id="cam-qr-result-timestamp"></span></b></center>
+
+<br>
+
+<div class="row">
+
+    <div class="col-md-4 col-xs-1"></div>
+    <div class="col-md-2 col-xs-5">
+        <button id="back" type="button" class="btn btn-primary btn-lg">Back</button>
+    </div>
+    <div class="col-md-2 col-xs-1"></div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+
+
+<script type="module">
+
+
+    document.getElementById("back").onclick = function () {
+        location.href = "/app/employee-welfare-scan/Employee Welfare Scan";
+    };
+
+    import QrScanner from "../qr-scanner.min.js";
+    QrScanner.WORKER_PATH = '../qr-scanner-worker.min.js';
+
+    const video = document.getElementById('qr-video');
+    const camHasCamera = document.getElementById('cam-has-camera');
+    const camHasFlash = document.getElementById('cam-has-flash');
+    const flashToggle = document.getElementById('flash-toggle');
+    const flashState = document.getElementById('flash-state');
+    const camQrResult = document.getElementById('cam-qr-result');
+    const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
+    const fileSelector = document.getElementById('file-selector');
+    const fileQrResult = document.getElementById('file-qr-result');
+
+    function setResult(label, result) {
+        scanner.stop();
+        label.textContent = result;
+        camQrResultTimestamp.textContent = new Date().toString();
+        label.style.color = 'teal';
+        clearTimeout(label.highlightTimeout);
+        label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 100);
+
+        let opts = {
+            method: "thaisummit.thaisummit.doctype.employee_welfare.employee_welfare.create_employee_welfare",
+            args: {
+                employee: result
+            }
+        }
+        frappe.call(opts).then(r => {
+
+            if (r.message) {
+                var dialog = frappe.msgprint({
+                    message: __('<center><h3>' + r.message + '</h3></center>'),
+                    primary_action: {
+                        'label': 'Scan Next',
+                        action(values) {
+                                // scanner.stop()
+                                // scanner.start()
+                                dialog.hide();
+                                location.reload()
+
+
+                        }
+                    }
+                });
+                dialog.$wrapper.find('.modal-dialog').css({ "width": "400px" });
+            }
+        })
+    }
+
+    // ####### Web Cam Scanning #######
+
+    QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
+
+    const scanner = new QrScanner(video, result => setResult(camQrResult, result), error => {
+        camQrResult.textContent = error;
+        camQrResult.style.color = 'red';
+    });
+
+    scanner.start().then(() => {
+        scanner.hasFlash().then(hasFlash => {
+            camHasFlash.textContent = hasFlash;
+            if (hasFlash) {
+                flashToggle.style.display = 'inline-block';
+                flashToggle.addEventListener('click', () => {
+                    scanner.toggleFlash().then(() => flashState.textContent = scanner.isFlashOn() ? 'on' : 'off');
+                });
+            }
+        });
+    });
+
+    // for debugging
+    window.scanner = scanner;
+
+
+</script>
+{% endblock %}

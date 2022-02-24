@@ -7,6 +7,15 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "readiness_qty",
+  "readiness_diff",
+  "column_break_2",
+  "reason_for_card_delay",
+  "section_break_4",
+  "vehicle",
+  "vehicle_in",
+  "vehicle_out",
+  "model_number",
   "qr",
   "slot_no",
   "parts_no",
@@ -15,18 +24,15 @@
   "item_delivered",
   "sent",
   "delivery_status",
-  "reason_for_card_delay",
   "column_break_4",
   "required_quantity",
   "sap_quantity",
   "difference",
-  "model",
   "recieved_time",
   "date_and_time",
   "delay_duration",
   "tag_type",
-  "sp_purchase_price",
-  "vehicle"
+  "sp_purchase_price"
  ],
  "fields": [
   {
@@ -42,13 +48,6 @@
    "fieldname": "parts_name",
    "fieldtype": "Data",
    "label": "Part Name",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "parts_no.model_no",
-   "fieldname": "model",
-   "fieldtype": "Data",
-   "label": "Model",
    "read_only": 1
   },
   {
@@ -70,8 +69,7 @@
    "fieldname": "sent",
    "fieldtype": "Select",
    "label": "Sent",
-   "options": "\nOn Time Sent\nDelay",
-   "read_only": 1
+   "options": "\nOn Time Sent\nDelay"
   },
   {
    "default": "0",
@@ -135,11 +133,18 @@
    "read_only": 1
   },
   {
-   "fieldname": "slot_no",
+   "fieldname": "readiness_qty",
    "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Slot No",
-   "read_only": 1
+   "label": "Readiness Qty"
+  },
+  {
+   "fieldname": "readiness_diff",
+   "fieldtype": "Data",
+   "label": "Readiness Diff"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "reason_for_card_delay",
@@ -147,20 +152,66 @@
    "label": "Reason for Card Delay"
   },
   {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "model_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "readiness_qty",
+   "fieldtype": "Data",
+   "label": "Readiness Qty"
+  },
+  {
+   "fieldname": "readiness_diff",
+   "fieldtype": "Data",
+   "label": "Readiness Diff"
+  },
+  {
+   "fieldname": "slot_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Slot No",
+   "read_only": 1
+  },
+  {
    "fieldname": "sp_purchase_price",
    "fieldtype": "Currency",
    "label": "SP Purchase Price"
   },
   {
+   "fieldname": "vehicle_in",
+   "fieldtype": "Data",
+   "label": "Vehicle IN",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle_out",
+   "fieldtype": "Data",
+   "label": "Vehicle OUT"
+  },
+  {
    "fieldname": "vehicle",
    "fieldtype": "Data",
-   "label": "Vehicle",
-   "read_only": 1
+   "label": "Vehicle"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-07-01 20:19:05.591902",
+ "modified": "2021-09-14 21:43:43.704635",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TAG Master",
@@ -182,5 +233,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "title_field": "slot_no",
- "track_changes": 1
+ "track_changes": 1,
+ "track_seen": 1
 }

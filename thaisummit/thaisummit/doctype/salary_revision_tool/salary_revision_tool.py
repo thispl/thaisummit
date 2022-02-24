@@ -16,8 +16,8 @@ from frappe.utils.background_jobs import enqueue
 class SalaryRevisionTool(Document):
     @frappe.whitelist()
     def on_submit(self):
-        self.upload_salary()
-        # enqueue(self.upload_salary, queue='default', timeout=6000, event='upload_salary')
+        # self.upload_salary()
+        enqueue(self.upload_salary, queue='default', timeout=6000, event='upload_salary')
 
     @frappe.whitelist()
     def validate_file(self):
@@ -79,6 +79,8 @@ class SalaryRevisionTool(Document):
                         emp.children_hostel = pp[11]
                         emp.washing_allowance = pp[12]
                         emp.temp_allowance = pp[13]
+                        emp.service_charge = pp[14]
+                        emp.ppe = pp[15]
                         emp.save(ignore_permissions=True)
                         frappe.db.commit()
 
@@ -104,7 +106,7 @@ def get_template():
 
 
 def add_header(w):
-    w.writerow(['Employee ID','Employee Name','Basic','House Rent Allowance','Conveyance Allowance','Special Allowance','Other Allowance','Medical Allowance','Leave Travel Allowance','Position Allowance','Children Education','Children Hostel','Washing Allowance','Welding Allowance','Temp Allowance'])
+    w.writerow(['Employee ID','Employee Name','Basic','House Rent Allowance','Conveyance Allowance','Special Allowance','Other Allowance','Medical Allowance','Leave Travel Allowance','Position Allowance','Children Education','Children Hostel','Washing Allowance','Welding Allowance','Temp Allowance','Service Charge','PPE'])
     return w
 
 

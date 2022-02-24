@@ -31,7 +31,7 @@ def get_data(filters):
     row = []
     basic_component_amount = earning_component_amount = deduction_component_amount = gross_wage = total_deduction = 0
     salary_comp = ['Basic','House Rent Allowance','Welding Allowance']
-    earning_comp = ['Basic','House Rent Allowance','Welding Allowance','Attendance Allowance','Shift Allowance','Arrear','PPE Allowance','Transport Allowance','Other Allowance',]
+    earning_comp = ['Basic','House Rent Allowance','Welding Allowance','Attendance Bonus','Shift Allowance','Arrear','PPE Allowance','Transport Allowance','Other Allowance',]
     dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','PPE']
 
     if filters.department:

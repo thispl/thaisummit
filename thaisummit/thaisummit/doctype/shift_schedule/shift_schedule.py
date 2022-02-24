@@ -296,14 +296,10 @@ class ShiftSchedule(Document):
 
     @frappe.whitelist()
     def validate_employees(self):
-        shift_assignment = frappe.db.sql("""select name from `tabShift Assignment` where department = '%s' and start_date between '%s' and '%s' """%(self.department,self.from_date,self.to_date),as_dict=True)
-        if shift_assignment:
-            self.upload = ''
-            frappe.throw('Shift Schedule already submitted for the selected date')
+        err_list = ""
         filepath = get_file(self.upload)
         pps = read_csv_content(filepath[1])
         dates = self.get_dates()
-        err_list = ""
         emp_list = []
         for pp in pps:
             if pp[0] != 'ID':
@@ -314,6 +310,10 @@ class ShiftSchedule(Document):
                 err_list += '<li> Maximum manpower limit for <b>%s</b> is <font color="red"> %s</font>. </li>'%(self.department,limit)
                 if err_list:
                     return err_list
+        shift_assignment = frappe.db.sql("""select name from `tabShift Assignment` where department = '%s' and start_date between '%s' and '%s' """%(self.department,self.from_date,self.to_date),as_dict=True)
+        if shift_assignment:
+            self.upload = ''
+            return 'Shift Schedule already submitted for the selected date'
         for pp in pps:
             if emp_list.count(pp[0]) > 1:
                 err_list += '<li> Employee ID - <font color="red"> %s</font> appears multiple times in the list. </li>'%pp[0]
@@ -503,6 +503,7 @@ def create_shift_assignment(file,from_date,to_date,name):
                     if not frappe.db.exists("Shift Assignment",{'employee':pp[0],'start_date':date,'end_date':date,'docstatus':['in',[0,1]]}):
                         doc = frappe.new_doc("Shift Assignment")
                         doc.employee = pp[0]
+                        doc.department = pp[2]
                         doc.shift_type = pp[5]
                         doc.start_date = date
                         doc.end_date = date

@@ -111,7 +111,6 @@ frappe.ui.form.on('Manual Attendance Correction Approval', {
 // })
 
 frappe.ui.form.on("MP Child Approval", "onload", function (frm, cdt, cdn) {
-	console.log('hi')
 	var child = locals[cdt][cdn];
 	cur_frm.doc.mp_child_approval.forEach(function (child) {
 		var sel = format('div[data-fieldname="mp_child_approval"] > div.grid-row[data-idx="{0}"]', [child.idx]);

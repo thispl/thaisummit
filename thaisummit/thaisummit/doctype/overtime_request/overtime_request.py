@@ -8,29 +8,56 @@ from erpnext.hr.doctype.employee.employee import deactivate_sales_person
 import frappe
 from frappe.model.document import Document
 from datetime import datetime,timedelta,date,time
-from frappe.utils import add_days
+from frappe.utils import add_days,today
+import pandas as pd
 
 from pytz import HOUR
 
 class OvertimeRequest(Document):
+    # def on_update(self):
+    #     if frappe.db.exists("Attendance",{'attendance_date':self.ot_date,'employee':self.employee,'docstatus':('!=','2')}):
+    #         att = frappe.get_doc("Attendance",{'attendance_date':self.ot_date,'employee':self.employee,'docstatus':('!=','2')})
+    #         if att.in_time and att.out_time:
+    #             twh = att.out_time - att.in_time
+    #             self.bio_in = att.in_time
+    #             self.bio_out = att.out_time
+    #             self.total_wh = twh
+    #             return att.out_time
+    #         else:
+    #             self.bio_in = ''
+    #             self.bio_out = ''
+    #             self.total_wh = ''
+    #             self.to_time = ''
+    #             frappe.msgprint('Overtime Cannot be applied without Biometric In time and Out time')
+    #     else:
+    #         self.bio_in = ''
+    #         self.bio_out = ''
+    #         self.total_wh = ''
+    #         self.to_time = ''
+    #         frappe.msgprint('Overtime Cannot be applied without Biometric In time and Out time')
+
+        
+
     def on_submit(self):
         if self.workflow_state == 'Approved':
-            doc = frappe.new_doc('Timesheet')
-            doc.employee = self.employee
-            from_time = datetime.strptime(str(self.from_time), "%H:%M:%S").time()
-            to_time = datetime.strptime(str(self.to_time), "%H:%M:%S").time()
-            ot_date = datetime.date(datetime.strptime(str(self.ot_date),'%Y-%m-%d'))
-            ftr = [3600,60,1]
-            hr = sum([a*b for a,b in zip(ftr, map(int,str(self.ot_hours).split(':')))])
-            doc.append('time_logs',{
-                'activity_type': 'Over Time',
-                'from_time': datetime.combine(ot_date,from_time),
-                'hours': hr/3600
-            })
-            doc.save(ignore_permissions=True)
-            doc.submit()
-            frappe.db.commit()
-            
+            if not frappe.db.exists('Overtime Request',{'overtime_request':self.name}):
+                doc = frappe.new_doc('Timesheet')
+                doc.employee = self.employee
+                doc.overtime_request = self.name
+                from_time = datetime.strptime(str(self.from_time), "%H:%M:%S").time()
+                to_time = datetime.strptime(str(self.to_time), "%H:%M:%S").time()
+                ot_date = datetime.date(datetime.strptime(str(self.ot_date),'%Y-%m-%d'))
+                ftr = [3600,60,1]
+                hr = sum([a*b for a,b in zip(ftr, map(int,str(self.ot_hours).split(':')))])
+                doc.append('time_logs',{
+                    'activity_type': 'Over Time',
+                    'from_time': datetime.combine(ot_date,from_time),
+                    'hours': hr/3600
+                })
+                doc.save(ignore_permissions=True)
+                doc.submit()
+                frappe.db.commit()
+                
     def validate(self):
         today = frappe.db.sql("select count(*) as count from `tabOvertime Request` where employee = '%s' and ot_date = '%s' and name != '%s' and workflow_state != 'Rejected' "%(self.employee,self.ot_date,self.name),as_dict=True)
         if today[0].count >= 1:
@@ -41,21 +68,89 @@ class OvertimeRequest(Document):
     def send_for_approval(self):
         if self.workflow_state == 'Draft':
             if self.ot_hours and self.total_wh and self.bio_in and self.bio_out :
+                if self.employee_type != 'CL':
+                    basic = ((frappe.db.get_value('Employee',self.employee,'basic')/26)/8)*2
+                    frappe.db.set_value('Overtime Request',self.name,'ot_basic',basic)
+                    ftr = [3600,60,1]
+                    hr = sum([a*b for a,b in zip(ftr, map(int,str(self.ot_hours).split(':')))])
+                    ot_hr = round(hr/3600,1)
+                    frappe.db.set_value('Overtime Request',self.name,'ot_amount',ot_hr*basic)
+                else:
+                    basic = 0
+                    designation = frappe.db.get_value('Employee',self.employee,'designation')
+                    if designation == 'Skilled':
+                        basic = 116
+                    elif designation == 'Un Skilled':
+                        basic = 112
+                    frappe.db.set_value('Overtime Request',self.name,'ot_basic',basic)
+                    ftr = [3600,60,1]
+                    hr = sum([a*b for a,b in zip(ftr, map(int,str(self.ot_hours).split(':')))])
+                    ot_hr = round(hr/3600,1)
+                    frappe.db.set_value('Overtime Request',self.name,'ot_amount',ot_hr*basic)
+                
+                
                 frappe.db.set_value('Overtime Request',self.name,'workflow_state','Pending for HOD')
+                # basic = ((frappe.db.get_value('Employee',self.employee,'basic')/26)/8)*2
+                # frappe.db.set_value('Overtime Request',self.name,'ot_basic',basic)
+                # ftr = [3600,60,1]
+                # hr = sum([a*b for a,b in zip(ftr, map(int,str(self.ot_hours).split(':')))])
+                # ot_hr = round(hr/3600,1)
+                # frappe.db.set_value('Overtime Request',self.name,'ot_amount',ot_hr*basic)
+
+    @frappe.whitelist()
+    def get_ot_amount(self):
+        if self.employee_type != 'CL':
+            basic = ((frappe.db.get_value('Employee',self.employee,'basic')/26)/8)*2
+            ftr = [3600,60,1]
+            hr = sum([a*b for a,b in zip(ftr, map(int,str(self.ot_hours).split(':')))])
+            ot_hr = round(hr/3600,1)
+            ot_amount = ot_hr*basic
+        else:
+            basic = 0
+            designation = frappe.db.get_value('Employee',self.employee,'designation')
+            if designation == 'Skilled':
+                basic = 116
+            elif designation == 'Un Skilled':
+                basic = 112
+            ftr = [3600,60,1]
+            hr = sum([a*b for a,b in zip(ftr, map(int,str(self.ot_hours).split(':')))])
+            ot_hr = round(hr/3600,1)
+            ot_amount = ot_hr*basic
+        return basic, ot_amount
 
     @frappe.whitelist()
     def get_bio_checkins(self):
-        if frappe.db.exists("Attendance",{'attendance_date':self.ot_date,'employee':self.employee,'docstatus':('!=','2')}):
-            att = frappe.get_doc("Attendance",{'attendance_date':self.ot_date,'employee':self.employee,'docstatus':('!=','2')})
-            if att.in_time and att.out_time:
-                twh = att.out_time - att.in_time
-                self.bio_in = att.in_time
-                self.bio_out = att.out_time
-                self.total_wh = twh
+        od = frappe.db.sql("""select `tabOn Duty Application`.name from `tabOn Duty Application` 
+        left join `tabMulti Employee` on `tabOn Duty Application`.name = `tabMulti Employee`.parent where 
+        `tabMulti Employee`.employee = '%s' and '%s' between `tabOn Duty Application`.from_date and `tabOn Duty Application`.to_date and `tabOn Duty Application`.workflow_state = 'Approved' """%(self.employee,self.ot_date),as_dict=True)
+        if od:
+            self.on_duty = od[0].name
+            # frappe.db.set_value('Overtime Request',self.name,'workflow_state','Pending for HOD')
+            # frappe.db.set_value('Overtime Request',self.name,'on_duty',od[0].name)
         else:
-            self.bio_in = ''
-            self.bio_out = ''
-            self.total_wh = ''
+            if frappe.db.exists("Attendance",{'attendance_date':self.ot_date,'employee':self.employee,'docstatus':('!=','2')}):
+                att = frappe.get_doc("Attendance",{'attendance_date':self.ot_date,'employee':self.employee,'docstatus':('!=','2')})
+                if att.in_time and att.out_time:
+                    twh = att.out_time - att.in_time
+                    self.bio_in = att.in_time
+                    self.bio_out = att.out_time
+                    self.total_wh = twh
+                    self.on_duty = ''
+                    return att.out_time
+                else:
+                    self.bio_in = ''
+                    self.bio_out = ''
+                    self.total_wh = ''
+                    self.to_time = ''
+                    self.on_duty = ''
+                    frappe.msgprint('Overtime Cannot be applied without Biometric In time and Out time')
+            else:
+                self.bio_in = ''
+                self.bio_out = ''
+                self.total_wh = ''
+                self.to_time = ''
+                self.on_duty = ''
+                frappe.msgprint('Overtime Cannot be applied without Biometric In time and Out time')
 
     @frappe.whitelist()
     def get_ot_total(self):

@@ -12,6 +12,7 @@ class TAGOUT(Document):
 	@frappe.whitelist()
 	def make_as_delivery(self,receipt_entry):
 		for row in receipt_entry:
+			# part_no =frappe.get_value('Part Master',{'parts_no':row["parts_no"]},'name')
 			tag_master =frappe.db.sql("""select name,recieved_time from `tabTAG Master` where  parts_no = '%s' and required_quantity = '%s' and item_delivered = 0 and delivery_status != 'Cancelled' order by name""" %(row["parts_no"],row["quantity"]),as_dict=True)[0]
 			master_name = tag_master.name
 			status = 'On Time Sent'
@@ -24,6 +25,7 @@ class TAGOUT(Document):
 				status = 'Delay'
 			update_master = frappe.get_doc("TAG Master",tag_master.name)
 			update_master.item_delivered = 1
+			update_master.vehicle_out = self.vehicle
 			update_master.date_and_time = datetime.now()
 			update_master.delivery_status = 'Delivered'
 			update_master.sent = status

@@ -17,7 +17,7 @@ class CLPlanvsActual(Document):
             data = ''
             data += '<table class="table table-bordered table-sm"><tr style="font-size:8px"><th style="background-color:#ff9900;border: 1px solid black;"><b><center>DATE</center></b></th><th colspan="2" style="background-color:#00b33c;border: 1px solid black"><center><b>%s</b></center></th><th colspan="2" style="background-color:#ff9900;border: 1px solid black"><center><b>SHIFT</b></center></th><th colspan="2" style="background-color:#00b33c;border: 1px solid black"><center><b>%s</b></center></th></tr>'%(frappe.utils.format_date(self.date),self.shift)
             data += '<tr height="10%" style="background-color:#d5dbdb;border: 1px solid black;font-size:8px"><td style="border: 1px solid black"><b><center>CONTRACTOR</center></b></td><td style="border: 1px solid black"><b><center>PLAN</center></b></td><td style="border: 1px solid black"><b><center>ACTUAL</center></b></td><td style="border: 1px solid black"><b><center>DIFF</center></b></td><td style="border: 1px solid black"><b><center>SHORT %</center></b></td><td style="border: 1px solid black"><b><center>OT</center></b></td></tr>'
-            contractors = frappe.get_all('Contractor')
+            contractors = frappe.get_all('Contractor',{'status':'Active'})
             for contractor in contractors:
                 plan=frappe.db.sql("select %s as plan from `tabCL Head Count Plan` where contractor = '%s' and date = '%s' "%(shift_type,contractor.name,self.date),as_dict=True)
                 if plan:
@@ -72,7 +72,7 @@ class CLPlanvsActual(Document):
             data = ''
             data += '<table class="table table-bordered table-sm"><tr style="font-size:8px"><th style="background-color:#ff9900;border: 1px solid black;"><b><center>DATE</center></b></th><th colspan="2" style="background-color:#00b33c;border: 1px solid black"><center><b>%s</b></center></th><th colspan="2" style="background-color:#ff9900;border: 1px solid black"><center><b>SHIFT</b></center></th><th colspan="2" style="background-color:#00b33c;border: 1px solid black"><center><b>%s</b></center></th></tr>'%(frappe.utils.format_date(self.date),self.shift)
             data += '<tr height="10%" style="background-color:#d5dbdb;border: 1px solid black;font-size:8px"><td style="border: 1px solid black"><b><center>CONTRACTOR</center></b></td><td style="border: 1px solid black"><b><center>PLAN</center></b></td><td style="border: 1px solid black"><b><center>ACTUAL</center></b></td><td style="border: 1px solid black"><b><center>DIFF</center></b></td><td style="border: 1px solid black"><b><center>SHORT %</center></b></td><td style="border: 1px solid black"><b><center>OT</center></b></td></tr>'
-            contractors = frappe.get_all('Contractor')
+            contractors = frappe.get_all('Contractor',{'status':'Active'})
             for contractor in contractors:
                 plan_doc=frappe.db.sql("select * from `tabCL Head Count Plan` where contractor = '%s' and date = '%s' "%(contractor.name,self.date),as_dict=True)
                 shift_1 = 0

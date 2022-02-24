@@ -5,6 +5,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "vehicle",
+  "column_break_2",
+  "model_number",
+  "column_break_4",
   "qr",
   "status",
   "items_recieved_section",
@@ -16,7 +20,9 @@
   {
    "fieldname": "qr",
    "fieldtype": "Data",
-   "label": "QR"
+   "in_list_view": 1,
+   "label": "QR",
+   "reqd": 1
   },
   {
    "fieldname": "status",
@@ -46,13 +52,37 @@
    "fieldname": "submit",
    "fieldtype": "Button",
    "label": "Submit"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vehicle",
+   "options": "Vehicle",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "model_number",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Model Number",
+   "options": "Model Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-05-15 15:52:21.785077",
+ "modified": "2021-09-14 21:10:41.822285",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TAG OUT",

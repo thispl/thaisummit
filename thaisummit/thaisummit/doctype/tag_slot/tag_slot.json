@@ -8,6 +8,7 @@
  "field_order": [
   "slot_no",
   "vehicle",
+  "model_number",
   "datetime",
   "data_3",
   "status",
@@ -36,7 +37,6 @@
    "default": "Pending",
    "fieldname": "status",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "Status",
    "options": "\nLive\nPending\nDelivered\nCancelled"
   },
@@ -77,7 +77,6 @@
   {
    "fieldname": "dispatch_time",
    "fieldtype": "Datetime",
-   "in_list_view": 1,
    "label": "Dispatch Time"
   },
   {
@@ -89,14 +88,21 @@
   {
    "fieldname": "vehicle",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Vehicle",
    "read_only": 1
+  },
+  {
+   "fieldname": "model_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Number"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-07-01 20:17:57.242216",
+ "modified": "2021-09-14 20:50:47.249499",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TAG Slot",

@@ -15,7 +15,8 @@ frappe.ui.form.on('TAG OUT', {
 				receipt_entry:frm.doc.receipt_entry_table
 			})
             .then(r =>{
-                frappe.msgprint(__(r.message))
+                // frappe.msgprint(__(r.message))
+                frappe.show_alert(__(r.message), 5);
             })
     },
     refresh: function(frm) {
@@ -36,10 +37,12 @@ frappe.ui.form.on('TAG OUT', {
             if (qr_length == 68){
             var part_no = frm.doc.qr.substring(11, 25)
             var qty = frm.doc.qr.substring(38,43)
-            frappe.db.get_doc('Part Master',part_no)
+            frappe.db.get_doc('Part Master',null, {'parts_no':part_no})
                 .then(doc => {
                 frm.add_child("receipt_entry_table",{
-                    parts_no :part_no,
+                    vehicle : frm.doc.vehicle,
+                    model_number: frm.doc.model_number,
+                    parts_no :doc.name,
                     quantity :parseInt(qty, 10),
                     card_type:doc.tag_type,
                     parts_name:doc.parts_name,
@@ -47,21 +50,22 @@ frappe.ui.form.on('TAG OUT', {
                     model:doc.model_no,
                     date_and_time:datetime,
                     qr :frm.doc.qr,
-                    date :date,
-                    sp_purchase_price:doc.sp_purchase_price
+                    date :date
                     
                 })
-                frm.refresh_field("receipt_entry_table")
                 frm.set_value("qr","")
+                frm.refresh_field("receipt_entry_table")
                 })
             }
             else if(qr_length == 49){
             var part_no = frm.doc.qr.substring(11, 25)
             var qty = frm.doc.qr.substring(44,49)
-            frappe.db.get_doc('Part Master',part_no)
+            frappe.db.get_doc('Part Master',null, {'parts_no':part_no})
                 .then(doc => {
                 frm.add_child("receipt_entry_table",{
-                    parts_no :part_no,
+                    vehicle : frm.doc.vehicle,
+                    model_number: frm.doc.model_number,
+                    parts_no :doc.name,
                     quantity :parseInt(qty, 10),
                     card_type:doc.tag_type,
                     parts_name:doc.parts_name,
@@ -69,11 +73,11 @@ frappe.ui.form.on('TAG OUT', {
                     model:doc.model_no,
                     date_and_time:datetime,
                     qr :frm.doc.qr,
-                    date :date,
-                    sp_purchase_price:doc.sp_purchase_price
+                    date :date
             });
-            frm.refresh_field("receipt_entry_table")
             frm.set_value("qr","")
+            frm.refresh_field("receipt_entry_table")
+            
         })
             }
 		}

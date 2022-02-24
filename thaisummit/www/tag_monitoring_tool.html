@@ -38,10 +38,12 @@
                     $("#tbs").html(d[4]);
                     $("#delay").html(d[5]);
                     $("#delaypercent").html(d[6]);
-                    $("#recieved_month").html(d[7]);
-                    $("#ots_month").html(d[8]);
-                    $("#delay_month").html(d[9]);
-                    $("#delay_month_percent").html(d[10]);
+                    $("#failed").html(d[7]);
+                    $("#recieved_month").html(d[8]);
+                    $("#ots_month").html(d[9]);
+                    $("#delay_month").html(d[10]);
+                    $("#delay_month_percent").html(d[11]);
+                    $("#failed_month").html(d[12]);
 
                     let tags = d[0];
                     html = '<thead><tr>\
@@ -52,14 +54,15 @@
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>Model</b></h4></center></td>\
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>Req. Qty</b></h4></center></td>\
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>SAP Qty</b></h4></center></td>\
-                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Diff.</b></h4></center></td>\
+                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>SAP Diff.</b></h4></center></td>\
+                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Readiness Qty</b></h4></center></td>\
+                            <td style="background-color:steelblue"><center><h4 style="color:white"><b>Readiness Diff.</b></h4></center></td>\
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>IYM Card IN</b></h4></center></td>\
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>Delay</b></h4></center></td>\
                             <td style="background-color:steelblue"><center><h4 style="color:white"><b>Reason</b></h4></center></td>\
                             </tr></thead><tbody>'
 
                     $.each(tags, function (j, k) {
-                        console.log(k)
                         index = parseInt(j) + 1;
                         html += "<tr>\
                             <td><center><h4>"+ index + "</h4></center></td>\
@@ -69,14 +72,31 @@
                             <td><center><h4>"+ k['model'] + "</h4></center></td>\
                             <td><center><h4>"+ k['required_quantity'] + "</h4></center></td>\
                             <td><center><h4>"+ k['sap_quantity'] + "</h4></center></td>"
-                        if (k['difference'] > 0){
-                            html += "<td style='background-color:red'><center><h4 style='color:white'>"+ k['difference'] + "</h4></center></td>\
-                            <td><center><h4>"+ k['recieved_time'] + "</h4></center></td>"
+                            if (k['difference'] > 0){
+                            html += "<td style='background-color:red'><center><h4 style='color:white'>"+ k['difference'] + "</h4></center></td>"
                         }
                         else{
-                            html += "<td><center><h4>"+ k['difference'] + "</h4></center></td>\
-                            <td><center><h4>"+ k['recieved_time'] + "</h4></center></td>"
+                            html += "<td><center><h4>"+ k['difference'] + "</h4></center></td>"
                         }
+
+                        if (k['readiness_qty'] == k['required_quantity']){
+
+                            html += "<td style='background-color:green'><center><h4 style='color:white'>"+ k['readiness_qty'] + "</h4></center></td>"
+                        }
+                        else if(k['readiness_qty'] == 0){
+                            html += "<td style='background-color:red'><center><h4 style='color:white'>"+ k['readiness_qty'] + "</h4></center></td>"
+                        }
+                        else{
+                            html += "<td style='background-color:orange'><center><h4 style='color:white'>"+ k['readiness_qty'] + "</h4></center></td>"
+                        }
+
+                        if (k['readiness_diff'] < 0){
+                            html += "<td><center><h4 style='color:red'>"+ k['readiness_diff'] + "</h4></center></td>"
+                        }
+                        else{
+                            html += "<td><center><h4 style='color:green'>"+ k['readiness_diff'] + "</h4></center></td>"
+                        }
+                        html += "<td><center><h4>"+ k['recieved_time'] + "</h4></center></td>"
                         if (k['status'] == 'on-time') {
                             html += "<td style='background-color:yellow'><center><h4>" + k['time_taken'] + "</h4></center></td>";
                         } else {
@@ -99,7 +119,7 @@
             })
 
 
-       }, 60000);
+       }, 10000);
 
         // Get the page info, so we know what the last is
          count = 0
@@ -175,6 +195,11 @@
                 <h5 style="color:white"><b> FAILURE % </b></h5>
             </center>
         </td>
+        <td  colspan="1" style="background-color:red;color:black">
+            <center>
+                <h5 style="color:white"><b> FAILED DELIVERY </b></h5>
+            </center>
+        </td>
     </tr>
     <tr>
         <td  colspan="1" style="background-color:white;color:brown">
@@ -207,6 +232,11 @@
             <h3 id="delaypercent">{{ tag_list[6] }} </h3>
         </center>
         </td> 
+        <td  colspan="1" style="background-color:white;color:brown">
+            <center>
+                <h3 id="delaypercent">{{ tag_list[7] }}</h3>
+            </center>
+            </td> 
     </tr>
     <tr>  
         <td  colspan="1">
@@ -217,13 +247,13 @@
         </td>
         <td  colspan="1">
             <center>
-                <h3 id="recieved_month"> {{ tag_list[7] }} </h3>
+                <h3 id="recieved_month"> {{ tag_list[8] }} </h3>
             </center>
         </td>
        
         <td  colspan="1">
             <center>
-                <h3 id="ots_month"> {{ tag_list[8] }} </h3>
+                <h3 id="ots_month"> {{ tag_list[9] }} </h3>
             </center>
         </td>
         <td  colspan="1">
@@ -234,13 +264,18 @@
         </td>
         <td  colspan="1">
             <center>
-                <h3 id="delay_month"> {{ tag_list[9] }} </h3>
+                <h3 id="delay_month"> {{ tag_list[10] }} </h3>
             </center>
         </td>
         
         <td  colspan="1">
             <center>
-                <h3 id="delay_month_percent"> {{ tag_list[10] }} </h3>
+                <h3 id="delay_month_percent"> {{ tag_list[11] }} </h3>
+            </center>
+        </td>
+        <td  colspan="1">
+            <center>
+                <h3 id="delay_month_percent"> {{ tag_list[12] }}</h3>
             </center>
         </td>
     </tr>
@@ -287,7 +322,17 @@
             </td>
             <td style="background-color:steelblue">
                 <center>
-                    <h4 style="color:white"><b>Diff.</b></h4>
+                    <h4 style="color:white"><b>SAP Diff.</b></h4>
+                </center>
+            </td>
+            <td style="background-color:steelblue">
+                <center>
+                    <h4 style="color:white"><b>Readiness Qty</b></h4>
+                </center>
+            </td>
+            <td style="background-color:steelblue">
+                <center>
+                    <h4 style="color:white"><b>Readiness Diff.</b></h4>
                 </center>
             </td>
             <td style="background-color:steelblue">
@@ -357,6 +402,40 @@
                     </center>
                 </td>
                 {% endif %}
+                
+                {% if row['readiness_qty'] | int == row['required_quantity'] | int %} 
+                <td style="background-color:green">
+                    <center>
+                        <h4 style="color:white">{{ row['readiness_qty'] }}</h4>
+                    </center>
+                    </td>
+                    {% elif row['readiness_qty'] | int == 0 %}
+                    <td style="background-color:red">
+                        <center>
+                            <h4 style="color:white">{{ row['readiness_qty'] }}</h4>
+                        </center>
+                    </td>
+                    {% else %}
+                    <td style="background-color:orange">
+                        <center>
+                            <h4 style="color:white">{{ row['readiness_qty'] }}</h4>
+                        </center>
+                    </td>
+                    {% endif %}
+
+
+                {% if row['readiness_diff'] < 0 %} <td>
+                    <center>
+                        <h4 style="color:red">{{ row['readiness_diff'] }}</h4>
+                    </center>
+                    </td>
+                    {% else %}
+                    <td>
+                        <center>
+                            <h4 style="color:green">{{ row['readiness_diff'] }}</h4>
+                        </center>
+                    </td>
+                    {% endif %}
                 <td>
                     <center>
                         <h4>{{ row['recieved_time'] }}</h4>

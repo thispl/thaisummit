@@ -56,7 +56,11 @@ class ManualAttendanceCorrectionRequest(Document):
 def create_miss_punch(row,from_date):
     row = json.loads(row)
     date = datetime.strptime(from_date, '%Y-%m-%d').date()
-    last_month = add_months(date,-1)
+    d = date.strftime('%d')
+    if int(d) <= 25:
+        last_month = add_months(date,-1)
+    else:
+        last_month = date
     last_month_start = get_first_day(last_month)
     allowed_from = add_days(last_month_start,25)
     cur_month_start = get_first_day(date)

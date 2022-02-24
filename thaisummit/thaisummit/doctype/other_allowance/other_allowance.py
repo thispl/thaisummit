@@ -33,7 +33,7 @@ class OtherAllowance(Document):
 				doc = frappe.new_doc('Additional Salary')
 				doc.employee = self.employee
 				doc.payroll_date = self.payroll_date
-				doc.salary_component = "Other Allowance"
+				doc.salary_component = "Additional Allowance"
 				doc.amount = self.amount
 				doc.save(ignore_permissions=True)
 				doc.submit()

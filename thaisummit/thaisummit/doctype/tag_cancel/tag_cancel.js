@@ -38,9 +38,11 @@ frappe.ui.form.on('TAG Cancel', {
             if (qr_length == 68){
             var part_no = frm.doc.qr.substring(11, 25)
             var qty = frm.doc.qr.substring(38,43)
-            frappe.db.get_doc('Part Master',part_no)
+            frappe.db.get_doc('Part Master',null, {'parts_no':part_no})
                 .then(doc => {
                 frm.add_child("receipt_entry_table",{
+                    vehicle : frm.doc.vehicle,
+                    model_number: frm.doc.model_number,
                     parts_no :part_no,
                     quantity :parseInt(qty, 10),
                     card_type:doc.tag_type,
@@ -53,16 +55,18 @@ frappe.ui.form.on('TAG Cancel', {
                     sp_purchase_price:doc.sp_purchase_price
                     
                 })
-                frm.refresh_field("receipt_entry_table")
                 frm.set_value("qr","")
+                frm.refresh_field("receipt_entry_table")
                 })
             }
             else if(qr_length == 49){
             var part_no = frm.doc.qr.substring(11, 25)
             var qty = frm.doc.qr.substring(44,49)
-            frappe.db.get_doc('Part Master',part_no)
+            frappe.db.get_doc('Part Master',null, {'parts_no':part_no})
                 .then(doc => {
                 frm.add_child("receipt_entry_table",{
+                    vehicle : frm.doc.vehicle,
+                    model_number: frm.doc.model_number,
                     parts_no :part_no,
                     quantity :parseInt(qty, 10),
                     card_type:doc.tag_type,
@@ -74,8 +78,8 @@ frappe.ui.form.on('TAG Cancel', {
                     date :date,
                     sp_purchase_price:doc.sp_purchase_price
             });
-            frm.refresh_field("receipt_entry_table")
             frm.set_value("qr","")
+            frm.refresh_field("receipt_entry_table")
         })
             }
 		}

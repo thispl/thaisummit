@@ -1,0 +1,300 @@
+{% extends "templates/web.html" %}
+{% block title %} INVOICE KEY {% endblock %}
+{% block head_include %}
+<link href="https://unpkg.com/frappe-datatable/dist/frappe-datatable.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block script %}
+
+
+<!-- include the dependencies -->
+<script src="https://unpkg.com/sortablejs@1.7.0/Sortable.min.js"></script>
+<script src="https://unpkg.com/clusterize.js@0.18.0/clusterize.min.js"></script>
+<!-- include the lib -->
+<script src="https://unpkg.com/frappe-datatable@latest"></script>
+<script>
+  window.cols = [
+    {
+      name: "MAT No", editable: false
+    },
+    {
+      name: "Parts No", editable: false
+    },
+    {
+      name: "Parts Name", editable: false
+    }, {
+      name: "PO No", editable: false
+    }, {
+      name: "PO Date", editable: false
+    }, {
+      name: "Delivery date", editable: false
+    }, {
+      name: "Supplier Name", editable: false
+    }, {
+      name: "UOM", editable: false
+    }, {
+      name: "Unit Price", editable: false
+    }, {
+      name: "PO Qty", editable: false,
+    }, {
+      name: "Open Qty", editable: false
+    }, {
+      name: "%", editable: false
+    }, {
+      name: "Packing", editable: false
+    }, {
+      name: "Daily Order", editable: false
+    }, {
+      name: "Max Qty", editable: false
+    }, {
+      name: "Min Qty", editable: false
+    }, {
+      name: "Stock Qty", editable: false
+    }, {
+      name: "In transit Qty", editable: false
+    }, {
+      name: "Total Qty", editable: false
+    }, {
+      name: "Req Qty", editable: false,
+    }, {
+      name: "Key Qty", editable: true,
+    }, {
+      name: "Basic Amount", editable: false,
+    },
+    {
+      name: "GST %", editable: false,
+    },
+    {
+      name: "GST Amount", editable: false,
+    },
+    { name: "Invoice Amount", editable: false },
+
+  ]
+  $(document).ready(function () {
+    var download = document.getElementById("download");
+    download.style.display = 'none'
+    var invoice_no = document.getElementById("invoice_no");
+    invoice_no.style.display = 'none'
+    var submit = document.getElementById("submit");
+    submit.style.display = 'none'
+    var qrcode = document.getElementById("qrcode");
+    qrcode.style.display = 'none'
+    var irn_no = document.getElementById("irn_no");
+    irn_no.style.display = 'none'
+    var qr = document.getElementById("qr");
+    qr.style.display = 'none'
+    var irn = document.getElementById("irn");
+    irn.style.display = 'none'
+
+    window.po = []
+
+    opts = {
+      method: "thaisummit.www.invoice_key.get_data",
+    }
+    frappe.call(opts).then(r => {
+      const container = document.querySelector('#datatable');
+      options = {
+        columns: window.cols,
+        data: r.message,
+        // layout: 'fixed:50p',
+        getEditor(colIndex, rowIndex, value, parent, column, row, data) {
+          const $input = document.createElement('input');
+          $input.type = 'int';
+          parent.appendChild($input);
+
+          return {
+            // called when cell is being edited
+            initValue(value) {
+              // $input.focus();
+              $input.value = value
+            },
+            // called when cell value is set
+            setValue(value) {
+              var up = window.dt.getCell(9, rowIndex);
+              var gst_percent = window.dt.getCell(23, rowIndex)
+              if (colIndex == 21) {
+                var basic_amount = 0
+                var gst_amount = 0
+                if (parseFloat(value) > 0) {
+                  var basic_amount = Math.round(parseFloat(up['content']) * parseFloat(value), 2)
+                  var gst_amount = Math.round((parseFloat(gst_percent['content']) * basic_amount) / 100, 2)
+                }
+                else {
+                  window.dt.cellmanager.updateCell(22, rowIndex, 0)
+                }
+                window.dt.cellmanager.updateCell(22, rowIndex, basic_amount)
+                window.dt.cellmanager.updateCell(24, rowIndex, gst_amount)
+                window.dt.cellmanager.updateCell(25, rowIndex, basic_amount + gst_amount)
+
+                var req_qty = window.dt.getCell(20, rowIndex);
+                var pack_std = window.dt.getCell(13, rowIndex);
+                if (parseFloat(value) > 0) {
+                  if (parseFloat(value) > parseFloat(req_qty['content'])) {
+                    window.dt.cellmanager.updateCell(21, rowIndex, 0)
+                    window.dt.cellmanager.updateCell(22, rowIndex, 0)
+                    window.dt.cellmanager.updateCell(24, rowIndex, 0)
+                    window.dt.cellmanager.updateCell(25, rowIndex, 0)
+                    alert("Key Qty cannot be greater than Req Qty")
+                  }
+                  else if (!Number.isInteger(parseFloat(value) / pack_std['content'])) {
+                    window.dt.cellmanager.updateCell(21, rowIndex, 0)
+                    window.dt.cellmanager.updateCell(22, rowIndex, 0)
+                    window.dt.cellmanager.updateCell(24, rowIndex, 0)
+                    window.dt.cellmanager.updateCell(25, rowIndex, 0)
+                    alert("Key Qty is not in Packing Std")
+                  }
+                  else {
+                    var po_list = []
+                    $.each(window.dt.datamanager.getRows(), function (i, d) {
+                      if (parseFloat(d[22]['content']) > 0) {
+                        if (po_list.length == 0) {
+                          po_list.push(d[4]['content'])
+                        }
+                        else {
+                          if (!po_list.includes(d[4]['content'])) {
+                            window.dt.cellmanager.updateCell(21, rowIndex, 0)
+                            window.dt.cellmanager.updateCell(22, rowIndex, 0)
+                            window.dt.cellmanager.updateCell(24, rowIndex, 0)
+                            window.dt.cellmanager.updateCell(25, rowIndex, 0)
+                            alert("Invoice cannot be raised by mutiple PO")
+                          }
+                          else {
+                            po_list.push(d[4]['content'])
+                          }
+                        }
+                      }
+                    })
+                    if (po_list.length > 10) {
+                      window.dt.cellmanager.updateCell(21, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(22, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(24, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(25, rowIndex, 0)
+                      alert("Invoice cannot be raised for more than 10 Items")
+                    }
+                  }
+                }
+
+              }
+            },
+            // value to show in cell
+            getValue() {
+              return $input.value;
+            }
+          }
+        }
+      }
+
+      window.dt = new DataTable(container, options);
+      var download = document.getElementById("download");
+      download.style.display = 'block'
+      var submit = document.getElementById("submit");
+      submit.style.display = 'block'
+      var invoice_no = document.getElementById("invoice_no");
+      invoice_no.style.display = 'block'
+      var qrcode = document.getElementById("qrcode");
+      qrcode.style.display = 'block'
+      var irn_no = document.getElementById("irn_no");
+      irn_no.style.display = 'block'
+      var qr = document.getElementById("qr");
+      qr.style.display = 'block'
+      var irn = document.getElementById("irn");
+      irn.style.display = 'block'
+
+      opts = {
+        method: "thaisummit.www.invoice_key.get_invoice_no",
+      }
+      frappe.call(opts).then(r => {
+        if (r.message) {
+          document.getElementById('invoice_no').value = r.message
+        }
+      })
+
+    });
+  })
+
+
+  function submit_po() {
+    var qr = document.getElementById("qrcode").value;
+    var irn = document.getElementById("irn_no").value;
+    var invoice_no = document.getElementById("invoice_no").value;
+
+    if (!(qr && irn)) {
+      alert("kindly fill QR Code & IRN No")
+    }
+    else {
+      const table = window.dt.datamanager.getRows();
+      opts = {
+        method: "thaisummit.www.invoice_key.submit_po",
+        args: {
+          table: table,
+          qr_code: qr,
+          irn_no: irn,
+          invoice_no : invoice_no
+        },
+        freeze: true,
+        freeze_message: 'Submitting....',
+      }
+      frappe.call(opts).then(r => {
+        if (r.message == 'ok') {
+          alert("Invoice Submitted Successfully")
+          window.location.reload()
+        }
+      })
+    }
+  }
+
+  function download_excel() {
+    var datas = window.dt.options.data;
+    window.location.href = repl("https://182.156.241.11" +
+      '?cmd=%(cmd)s', {
+      cmd: "thaisummit.www.invoice_key.download_excel",
+    });
+  }
+
+</script>
+{% endblock %}
+
+{%- block content -%}
+<div class="row">
+  <div class="col-xs-2">
+    <h3 nowrap>&nbsp;&nbsp;INVOICE KEY</h3>
+    <input id='invoice_no'></input>
+  </div>
+  <div class="col-xs-3">
+    <b id='qr'>QR Code</b>
+    <input id='qrcode'></input>
+  </div>
+  <div class="col-xs-3">
+    <b id="irn">IRN No</b>
+    <input id='irn_no'></input>
+  </div>
+  <div class="col-xs-1">
+    <br>
+    <button id="download" class="btn" onclick="download_excel()">Download</button>
+  </div>
+  <div class="col-xs-1">
+    <br>
+    <button id="submit" class="btn" onclick="submit_po()">Submit</button>
+  </div>
+</div>
+
+<div id="datatable"></div>
+<style>
+  .btn {
+    transition-duration: 0.4s;
+    border-color: 2px solid #4CAF50;
+    background-color: #4CAF50;
+    /* Green */
+    color: white;
+  }
+
+  .btn:hover {
+    background-color: white;
+    /* Green */
+    color: #4CAF50;
+  }
+</style>
+
+
+
+{% endblock %}

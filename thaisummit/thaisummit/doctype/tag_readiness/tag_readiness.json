@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "creation": "2021-08-17 13:14:34.330033",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "slot_no",
+  "section_break_2",
+  "tag_readiness_update",
+  "submit"
+ ],
+ "fields": [
+  {
+   "fieldname": "slot_no",
+   "fieldtype": "Data",
+   "label": "Slot No"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "tag_readiness_update",
+   "fieldtype": "Table",
+   "label": "Tag Readiness Update",
+   "options": "Tag Readiness Update"
+  },
+  {
+   "fieldname": "submit",
+   "fieldtype": "Button",
+   "label": "Submit"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2021-09-06 12:20:15.363945",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag Readiness",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_seen": 1
+}

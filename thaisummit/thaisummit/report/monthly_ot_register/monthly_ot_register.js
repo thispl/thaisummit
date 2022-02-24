@@ -34,7 +34,8 @@ frappe.query_reports["Monthly OT Register"] = {
 			"fieldname": "employee_type",
 			"label": __("Employee Type"),
 			"fieldtype": "Select",
-			"reqd": 0,
+			"reqd": 1,
+			"default": "WC",
 			"options": ["","WC", "BC", "FT", "NT", "CL"],
 		},
 		{

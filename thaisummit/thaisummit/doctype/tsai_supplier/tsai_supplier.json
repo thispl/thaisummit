@@ -1,0 +1,138 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:supplier_code",
+ "creation": "2021-12-18 12:39:38.155136",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "supplier_code",
+  "supplier_name",
+  "address",
+  "gstin",
+  "state",
+  "column_break_3",
+  "email",
+  "phone_no",
+  "user_name",
+  "user",
+  "section_break_5",
+  "window_time",
+  "invoice_running_no",
+  "column_break_8",
+  "prefixed_running_no",
+  "current_running_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "supplier_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Supplier Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Supplier Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "user_name",
+   "fieldtype": "Data",
+   "label": "User Name"
+  },
+  {
+   "fieldname": "section_break_5",
+   "fieldtype": "Section Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "window_time",
+   "fieldtype": "Time",
+   "label": "Window Time"
+  },
+  {
+   "fieldname": "invoice_running_no",
+   "fieldtype": "Data",
+   "label": "Invoice Running No"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "prefixed_running_no",
+   "fieldtype": "Data",
+   "label": "Prefixed Running No"
+  },
+  {
+   "fieldname": "current_running_no",
+   "fieldtype": "Data",
+   "label": "Current Running No"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "gstin",
+   "fieldtype": "Data",
+   "label": "GSTIN"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State"
+  },
+  {
+   "fieldname": "phone_no",
+   "fieldtype": "Data",
+   "label": "Phone No"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-02-14 15:07:38.599996",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TSAI Supplier",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "supplier_name",
+ "track_changes": 1
+}

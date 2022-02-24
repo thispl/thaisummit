@@ -6,13 +6,18 @@
  "engine": "InnoDB",
  "field_order": [
   "report",
+  "attach",
   "download",
+  "payroll_reports",
+  "payroll_download",
   "column_break_3",
   "date",
   "employee",
   "from_date",
   "to_date",
-  "shift"
+  "shift",
+  "department",
+  "employee_type"
  ],
  "fields": [
   {
@@ -29,7 +34,7 @@
    "fieldname": "report",
    "fieldtype": "Select",
    "label": "Report",
-   "options": "Manpower Plan vs Actual Live Report (Shift Wise)\nShift Schedule Summary Report\nMonthly Manpower Report\nMonthly Individual Attendance Report\nMonthly Overtime Person Report\nMonthly Overtime Amount Report\nCL Manpower Shortage Deduction Summary Report"
+   "options": "Manpower Plan vs Actual Live Report (Shift Wise)\nShift Schedule Summary Report\nMonthly Manpower Report\nMonthly Manpower Plan vs Actual Report\nOverall Monthly Manpower Report\nMonthly Individual Attendance Report\nMonthly Overtime Person Report\nMonthly Overtime Amount Report\nCL Manpower Shortage Deduction Summary Report\nDaily Sales Report\nDaily Sales Report Summary\nN2 Sequence Plan vs Stock Report\nPayroll Cross Check Report\nCL Overtime Report (Shift Continue)\nWC Salary Register\nBC Salary Register\nFT Salary Register\nNT Salary Register\nCL Salary Register"
   },
   {
    "fieldname": "column_break_3",
@@ -56,13 +61,42 @@
    "fieldtype": "Select",
    "label": "Shift",
    "options": "1\n2\n3\nPP1\nPP2\nFull Day"
+  },
+  {
+   "fieldname": "employee_type",
+   "fieldtype": "Select",
+   "label": "Employee Type",
+   "options": "\nWC\nBC\nNT\nFT\nCL\nTH"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "payroll_reports",
+   "fieldtype": "Select",
+   "label": "Payroll Reports",
+   "options": "\nESI Statement\nESI and PF\nCost Center Wise WC Wages\nLabour and Head cost"
+  },
+  {
+   "fieldname": "payroll_download",
+   "fieldtype": "Button",
+   "label": "Download"
+  },
+  {
+   "depends_on": "attach",
+   "fieldname": "attach",
+   "fieldtype": "Attach",
+   "label": "Document"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-08-14 10:53:20.751180",
+ "modified": "2022-01-29 14:51:41.540154",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Reports Dashboard",

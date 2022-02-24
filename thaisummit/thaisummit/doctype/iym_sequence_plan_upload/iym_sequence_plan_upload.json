@@ -1,0 +1,78 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "autoname": "IYMP.####",
+ "creation": "2021-08-21 13:31:58.426978",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "upload_date",
+  "column_break_2",
+  "attach",
+  "upload",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "upload_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Upload Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "attach",
+   "fieldtype": "Attach",
+   "label": "Attach",
+   "reqd": 1
+  },
+  {
+   "fieldname": "upload",
+   "fieldtype": "Button",
+   "hidden": 1,
+   "label": "Upload"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "IYM Sequence Plan Upload",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2021-09-06 15:12:11.506483",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "IYM Sequence Plan Upload",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_seen": 1
+}

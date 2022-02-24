@@ -12,9 +12,7 @@ frappe.ui.form.on('Attendance Dashboard', {
 		frm.trigger('display_data')
 	},
 	display_data(frm) {
-		console.log(frappe.session.user)
 		frappe.db.get_value('Employee', { "user_id": frappe.session.user }, 'employee', (r) => {
-			console.log(r)
 			if (r.employee) {
 				frappe.call({
 					method: "thaisummit.thaisummit.doctype.attendance_dashboard.attendance_dashboard.get_shift",

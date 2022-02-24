@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "creation": "2021-10-09 19:12:43.965064",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "welfare_occasion",
+  "welfare_item",
+  "scan"
+ ],
+ "fields": [
+  {
+   "fieldname": "welfare_occasion",
+   "fieldtype": "Link",
+   "label": "Welfare Occasion",
+   "options": "Welfare Occasion"
+  },
+  {
+   "fieldname": "welfare_item",
+   "fieldtype": "Link",
+   "label": "Welfare Item",
+   "options": "Welfare Item"
+  },
+  {
+   "fieldname": "scan",
+   "fieldtype": "Button",
+   "label": "Scan"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2021-10-09 19:17:58.673474",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Employee Welfare Scan",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

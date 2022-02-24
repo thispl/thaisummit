@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "autoname": "SAPP-.####",
+ "creation": "2021-08-26 11:08:45.865652",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "select",
+  "doc_series",
+  "doc_no",
+  "type",
+  "status",
+  "product_no",
+  "product_description",
+  "planned_quantity",
+  "completed_quantity",
+  "open_quantity",
+  "rejected_quantity",
+  "order_date",
+  "start_date",
+  "due_date",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "select",
+   "fieldtype": "Data",
+   "label": "Select"
+  },
+  {
+   "fieldname": "doc_series",
+   "fieldtype": "Data",
+   "label": "Doc Series"
+  },
+  {
+   "fieldname": "doc_no",
+   "fieldtype": "Data",
+   "label": "Doc No"
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Data",
+   "label": "Type"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status"
+  },
+  {
+   "fieldname": "product_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Product No"
+  },
+  {
+   "fieldname": "product_description",
+   "fieldtype": "Data",
+   "label": "Product Description"
+  },
+  {
+   "fieldname": "planned_quantity",
+   "fieldtype": "Int",
+   "label": "Planned Quantity"
+  },
+  {
+   "fieldname": "completed_quantity",
+   "fieldtype": "Data",
+   "label": "Completed Quantity"
+  },
+  {
+   "fieldname": "open_quantity",
+   "fieldtype": "Data",
+   "label": "Open Quantity"
+  },
+  {
+   "fieldname": "rejected_quantity",
+   "fieldtype": "Data",
+   "label": "Rejected Quantity"
+  },
+  {
+   "fieldname": "order_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Order Date"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "SAP Production Plan",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-01-24 12:16:50.148690",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "SAP Production Plan",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -18,6 +18,8 @@ class QRCheckin(Document):
             if frappe.db.exists("QR Checkin",{'employee':self.employee,'qr_shift':'2','shift_date':self.shift_date}):
                 frappe.db.set_value("QR Checkin",self.name,'ot',1)
                 self.get_bio_checkins()
+        if self.qr_shift == "PP2":
+            self.create_pp2_ot()
         # if self.qr_shift == "1":
         #     shift_date = add_days(self.shift_date,-1)
         #     if frappe.db.exists("QR Checkin",{'employee':self.employee,'qr_shift':'3','shift_date':shift_date}):
@@ -38,6 +40,21 @@ class QRCheckin(Document):
             shift_start_time = datetime.strptime(str(shift_start), '%H:%M:%S')
             qr_shift = datetime.strptime(str(self.created_date), '%Y-%m-%d')
             ot.from_time = datetime.combine(qr_shift,shift_start_time.time())
+            ot.to_time = ""
+            ot.total_hours = ""
+            ot.total_wh = ""
+            ot.ot_hours = ""
+            ot.save(ignore_permissions=True)
+            frappe.db.commit()
+
+    def create_pp2_ot(self):
+        if not frappe.db.exists("Overtime Request",{'ot_date':self.shift_date,'employee':self.employee,'shift':self.qr_shift}):
+            ot = frappe.new_doc('Overtime Request')
+            ot.employee = self.employee
+            ot.department = self.department
+            ot.ot_date = self.shift_date
+            ot.shift = self.qr_shift
+            ot.from_time = '04:30:00'
             ot.to_time = ""
             ot.total_hours = ""
             ot.total_wh = ""

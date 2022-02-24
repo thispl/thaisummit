@@ -1,0 +1,209 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "SAP-OUT.####",
+ "creation": "2021-08-05 10:34:31.692507",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_no",
+  "part_no",
+  "item_name",
+  "quantity",
+  "column_break6",
+  "amount",
+  "wh",
+  "last_transaction_date",
+  "daily_order",
+  "coverage_days",
+  "section_break_1",
+  "ar_invoice_date",
+  "ar_invoice_no",
+  "item_service_description",
+  "column_break_5",
+  "data_16",
+  "customer_ref_no",
+  "customer_code",
+  "customer_name",
+  "customer_group",
+  "short_name",
+  "section_break_11",
+  "base_price",
+  "base_value",
+  "sales_price",
+  "column_break_15",
+  "sales_value",
+  "fm"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_no",
+   "fieldtype": "Data",
+   "label": "Item No"
+  },
+  {
+   "fieldname": "part_no",
+   "fieldtype": "Data",
+   "label": "Part No"
+  },
+  {
+   "fetch_from": "part_no.parts_name",
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "label": "Item Name"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "column_break6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Data",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "wh",
+   "fieldtype": "Data",
+   "label": "W/H"
+  },
+  {
+   "fieldname": "last_transaction_date",
+   "fieldtype": "Date",
+   "label": "Last Transaction Date"
+  },
+  {
+   "fieldname": "daily_order",
+   "fieldtype": "Data",
+   "label": "Daily Order"
+  },
+  {
+   "fieldname": "coverage_days",
+   "fieldtype": "Data",
+   "label": "Coverage Days"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "ar_invoice_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "AR Invoice Date"
+  },
+  {
+   "fieldname": "ar_invoice_no",
+   "fieldtype": "Int",
+   "label": "AR Invoice No"
+  },
+  {
+   "fieldname": "item_service_description",
+   "fieldtype": "Small Text",
+   "label": "Item/Service Description"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "data_16",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "customer_ref_no",
+   "fieldtype": "Data",
+   "label": "Customer Ref No"
+  },
+  {
+   "fieldname": "customer_code",
+   "fieldtype": "Data",
+   "label": "Customer Code"
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Customer Name",
+   "options": "TSAI Customer"
+  },
+  {
+   "fetch_from": "customer_name.customer_group",
+   "fieldname": "customer_group",
+   "fieldtype": "Data",
+   "label": "Customer Group"
+  },
+  {
+   "fetch_from": "customer_name.short_name",
+   "fieldname": "short_name",
+   "fieldtype": "Data",
+   "label": "Short Name"
+  },
+  {
+   "fieldname": "section_break_11",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "base_price",
+   "fieldtype": "Currency",
+   "label": "Base Price"
+  },
+  {
+   "fieldname": "base_value",
+   "fieldtype": "Currency",
+   "label": "Base Value"
+  },
+  {
+   "fieldname": "sales_price",
+   "fieldtype": "Currency",
+   "label": "Sales Price"
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sales_value",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Sales Value"
+  },
+  {
+   "fieldname": "fm",
+   "fieldtype": "Data",
+   "label": "FM"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-09-06 20:13:53.963293",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "SAP Outgoing Report",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_seen": 1
+}

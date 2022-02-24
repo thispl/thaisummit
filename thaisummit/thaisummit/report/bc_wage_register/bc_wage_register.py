@@ -20,10 +20,10 @@ def get_dates(filters):
 
 def get_columns(filters):
     columns = [_("Cost Centre") + ":Data/:100",_("Emp No") + ":Data/:100",_("Name") + ":Data/:150",_("DOJ") + ":Date/:100",_("Department") + ":Data/:150",_("Section") + ":Data/:100",_("Designation") + ":Data/:150",
-    _("Category") + ":Data/:100",_("Paid days 100%") + ":Data/:100",_("OT Hours") + ":Data/:100",_("Basic & DA") + ":Currency/:100",_("House Rent Allowance") + ":Currency/:100",_("Other Allowance") + ":Currency/:100",
+    _("Category") + ":Data/:100",_("Paid days 100%") + ":Data/:100",_("Basic & DA") + ":Currency/:100",_("House Rent Allowance") + ":Currency/:100",_("Other Allowance") + ":Currency/:100",
     _("Position All") + ":Currency/:100",_("Gross Wage") + ":Currency/:100",_("Basic") + ":Currency/:100",_("HRA") + ":Currency/:100",_("Other Allowance") + ":Currency/:100",_("Position All") + ":Currency/:100",_("ATA") + ":Currency/:100",
-    _("SHT") + ":Currency/:100",_("ARR") + ":Currency/:100",_("PP Allowance") + ":Currency/:100",_("Transport Allowance") + ":Currency/:100",_("Other") + ":Currency/:100",_("Gross") + ":Currency/:100",_("PF") + ":Currency/:100",_("ESI") + ":Currency/:100",
-    _("Can") + ":Currency/:100",_("P Tax") + ":Currency/:100",_("LWF") + ":Currency/:100",_("TEL EXP") + ":Currency/:100",_("PPE") + ":Currency/:100",_("Advance") + ":Currency/:100",_("Total") + ":Currency/:100",_("Net Wage") + ":Currency/:100"]
+    _("SHT") + ":Currency/:100",_("ARR") + ":Currency/:100",_("Additional Allowance") + ":Currency/:150",_("PP Allowance") + ":Currency/:100",_("Transport Allowance") + ":Currency/:100",_("Others") + ":Currency/:100",_("Gross") + ":Currency/:100",_("PF") + ":Currency/:100",_("ESI") + ":Currency/:100",
+    _("Can") + ":Currency/:100",_("P Tax") + ":Currency/:100",_("LWF") + ":Currency/:100",_("TEL EXP") + ":Currency/:100",_("PPE") + ":Currency/:100",_("Advance") + ":Currency/:100",_("Total Deduction") + ":Currency/:100",_("Net Wage") + ":Currency/:100"]
     return columns
 
 def get_data(filters):
@@ -31,7 +31,8 @@ def get_data(filters):
     row = []
     basic_component_amount = earning_component_amount = deduction_component_amount = gross_wage = total_deduction = 0
     salary_comp = ['Basic','House Rent Allowance','Other Allowance','Position Allowance']
-    earning_comp = ['Basic','House Rent Allowance','Other Allowance','Position Allowance','Attendance Allowance','Shift Allowance','Arrear','PPE Allowance','Transport Allowance','Other Allowance',]
+
+    earning_comp = ['Basic','House Rent Allowance','Other Allowance','Position Allowance','Attendance Bonus','Shift Allowance','Arrear','Additional Allowance','PPE Allowance','Transport Allowance']
     dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','LWF','TELEXP','PPE','ADV']
 
     if filters.department:
@@ -46,42 +47,12 @@ def get_data(filters):
     for ss in salary_slips:
         row = []
         cost_center = frappe.get_value('Department',ss.department,'cost_centre')
-        emp_no = ss.employee
-        emp_name = ss.employee_name
-        dept = filters.department
-        doj =ss.date_of_join
-        
-        section = ss.section
-        designation = ss.designation
-        category = frappe.get_value("Employee",ss.employee,'employee_category')
+        section = ''
+        emp = frappe.get_doc("Employee",ss.employee)
         paid_days = ss.payment_days
-        row += [cost_center,emp_no,emp_name,doj,dept,section,designation,category,paid_days,]
-        ot_hrs = timedelta(0,0,0)
-        ots = frappe.get_all("Overtime Request",{'department':ss.department,'employee':ss.employee,'ot_date':['between', [filters.from_date, filters.to_date]],'workflow_state':'Approved'},['ot_hours']) 
-        
-        for ot in ots:
-            ot_hrs += ot.ot_hours
-        day = ot_hrs.days * 24
-        hours = day + ot_hrs.seconds // 3600
-        minutes = (ot_hrs.seconds//60)%60
-        ftr = [3600,60,1]
-        hr = (sum([a*b for a,b in zip(ftr, map(int,str(str(hours) +':'+str(minutes)+':00').split(':')))]))/3600
-        row+= [hr]
-        net_pay = ss.net_pay
-
-        gross_wage_sc = 0
-        for sc in salary_comp:
-            
-            basic_component_amount = frappe.get_value('Salary Detail',{'salary_component':sc,'parent':ss.name},['amount'])
-            if basic_component_amount:
-                row += [basic_component_amount]
-                gross_wage_sc += basic_component_amount
-            else:
-                row += ['']
-
-            
-        row += [gross_wage_sc]
+        row += [cost_center,emp.name,emp.employee_name,emp.date_of_joining,emp.department,section,emp.designation,emp.employee_type,paid_days,emp.basic,emp.house_rent_allowance,emp.other_allowance,emp.position_allowance,emp.basic+emp.house_rent_allowance+emp.other_allowance+emp.position_allowance]
         gross_wage_ec = 0
+        
         for ec in earning_comp:
             
             earning_component_amount = frappe.get_value('Salary Detail',{'salary_component':ec,'parent':ss.name},['amount'])
@@ -91,8 +62,7 @@ def get_data(filters):
             else:
                 row += ['']
 
-            
-        row += [gross_wage_ec]
+        row += [frappe.get_value('Salary Detail',{'salary_component':'Others','parent':ss.name},['amount']),ss.gross_pay]
         total_deduction =0
         for dc in dedcution_comp:
             deduction_component_amount = frappe.get_value('Salary Detail',{'salary_component':dc,'parent':ss.name},['amount'])
@@ -104,7 +74,7 @@ def get_data(filters):
         
         
         row += [ total_deduction ]
-        row += [ net_pay ]
+        row += [ ss.net_pay ]
 
         data.append(row) 
     return data

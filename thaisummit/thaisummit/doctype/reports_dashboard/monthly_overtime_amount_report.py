@@ -85,8 +85,8 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
     ws.merge_cells(start_row=iym+6, start_column=1, end_row=iym+8+re, end_column=1)
     ws.merge_cells(start_row=iym+9+re, start_column=1, end_row=iym+11+ford+re, end_column=1)
     ws.merge_cells(start_row=iym+12+ford+re, start_column=1, end_row=iym+14+ford+re, end_column=1)
-    ws.merge_cells(start_row=iym+15+ford+re, start_column=1, end_row=iym+14+ford+re+support, end_column=1)
-    ws.merge_cells(start_row=iym+15+ford+re+support, start_column=1, end_row=iym+18+ford+re+support, end_column=1)
+    ws.merge_cells(start_row=iym+15+ford+re, start_column=1, end_row=iym+14+ford+re+support+1, end_column=1)
+    ws.merge_cells(start_row=iym+16+ford+re+support, start_column=1, end_row=iym+18+ford+re+support, end_column=1)
 
     
 
@@ -236,7 +236,7 @@ def add_date(args):
 def get_data(args):
     data = []
     dept_group = ['IYM','RE','FORD',]
-    mfg_dept_list = []
+    mfg_dept_list = '('
     mfg_ot_amt_header = ['MFG','OT Amount']
     mfg_ot_percent_header=['','OT%']
     mfg_ot_sales_amt = ['',"Sales Amount"]
@@ -246,52 +246,39 @@ def get_data(args):
         ot_percent_header = ['','OT%']
         ot_sales_amt = ['',"Sales Amount"]
         departments = frappe.get_all("Department",{'parent_department':dg,"is_group":"0"},)
-        dept_list = []
+        dept_list = '('
         for dept in departments:
-            dept_list.append(dept.name)
-            mfg_dept_list.append(dept.name)
+            dept_list = dept_list + '"' + str(dept.name) + '",'
+            mfg_dept_list = mfg_dept_list + '"' + str(dept.name) + '",'
+        dept_list = dept_list[:-1]
+        dept_list = dept_list + ')'
         for dept in departments:
             row = [dg,dept.name]
             dates = get_dates(args)
             total_ot_amt = 0
             for date in dates:
-                t_ot = 0
-                ot_amt = 0
-                ot_hrs = timedelta(0,0,0)
-                ots = frappe.get_all("Overtime Request",{"department":dept.name,"ot_date":date,"workflow_state":"Approved"},["employee","ot_hours"])
-                for ot in ots:
-                    ot_hrs = ot.ot_hours
-                    amt_per_hr = ((frappe.db.get_value("Employee",ot.employee,'basic')/26)/8)*2
-                    day = ot_hrs.days * 24
-                    hours = day + ot_hrs.seconds // 3600
-                    minutes = (ot_hrs.seconds//60)%60
-                    ftr = [3600,60,1]
-                    hr = (sum([a*b for a,b in zip(ftr, map(int,str(str(hours) +':'+str(minutes)+':00').split(':')))]))/3600
-                    ot_amt = hr * amt_per_hr
-                    t_ot += ot_amt
-                    total_ot_amt += ot_amt
-                row.append(t_ot)
-            row.append(total_ot_amt)
+                if args.employee_type:
+                    ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+                    where `tabOvertime Request`.employee_type = '%s' and `tabOvertime Request`.department = '%s' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,dept.name,date),as_dict=True)[0].ot_amount or 0
+                else:
+                    ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+                    where `tabOvertime Request`.department = '%s' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(dept.name,date),as_dict=True)[0].ot_amount or 0
+                total_ot_amt += round(ot)
+                row.append(round(ot))
+            row.append(round(total_ot_amt))
                 
             data.append(row)
         dates = get_dates(args)
         total_ot_amt = 0
         for date in dates:
-            t_ot = 0
-            ot_hrs = timedelta(0,0,0)
-            ots = frappe.get_all("Overtime Request",{"department":('in',(dept_list)),"ot_date":date,"workflow_state":"Approved"},["employee","ot_hours"])
-            for ot in ots:
-                ot_hrs = ot.ot_hours
-                amt_per_hr = ((frappe.db.get_value("Employee",ot.employee,'basic')/26)/8)*2
-                day = ot_hrs.days * 24
-                hours = day + ot_hrs.seconds // 3600
-                minutes = (ot_hrs.seconds//60)%60
-                ftr = [3600,60,1]
-                hr = (sum([a*b for a,b in zip(ftr, map(int,str(str(hours) +':'+str(minutes)+':00').split(':')))]))/3600
-                ot_amt = hr * amt_per_hr
-                t_ot += ot_amt
-                total_ot_amt += ot_amt
-            ot_amt_header.append(t_ot)
+            if args.employee_type:
+                ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+                where `tabOvertime Request`.employee_type = '%s' and `tabOvertime Request`.department in %s and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,dept_list,date),as_dict=True)[0].ot_amount or 0
+            else:
+                ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+                where `tabOvertime Request`.department in %s and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(dept_list,date),as_dict=True)[0].ot_amount or 0
+            ot_amt_header.append(ot)
+            total_ot_amt += round(ot)
             ot_percent_header.append("0")
             ot_sales_amt.append("0")
         ot_amt_header.append(total_ot_amt)
@@ -300,22 +287,17 @@ def get_data(args):
         data.append(ot_sales_amt)
         data.append(ot_percent_header)
     total_mfg_ot_amt = 0
+    mfg_dept_list = mfg_dept_list[:-1]
+    mfg_dept_list = mfg_dept_list + ')'
     for date in dates:
-        mfg_t_ot = 0
-        mfg_ot_hrs = timedelta(0,0,0)
-        mfg_ot = frappe.get_all("Overtime Request",{"department":('in',(mfg_dept_list)),"ot_date":date,"workflow_state":"Approved"},["employee","ot_hours"])
-        for mf_ot in mfg_ot:
-            mfg_ot_hrs = mf_ot.ot_hours
-            day = mfg_ot_hrs.days * 24
-            hours = day + mfg_ot_hrs.seconds // 3600
-            minutes = (mfg_ot_hrs.seconds//60)%60
-            ftr = [3600,60,1]
-            hr = (sum([a*b for a,b in zip(ftr, map(int,str(str(hours) +':'+str(minutes)+':00').split(':')))]))/3600
-            amt_per_hr = ((frappe.db.get_value("Employee",ot.employee,'basic')/26)/8)*2
-            mfg_ot_amt = hr * amt_per_hr
-            mfg_t_ot += mfg_ot_amt
-            total_mfg_ot_amt += mfg_ot_amt
-        mfg_ot_amt_header.append(mfg_t_ot)
+        if args.employee_type:
+            mfg_ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+            where `tabOvertime Request`.employee_type = '%s' and `tabOvertime Request`.department in %s and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,mfg_dept_list,date),as_dict=True)[0].ot_amount or 0
+        else:
+            mfg_ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+            where `tabOvertime Request`.department in %s and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(mfg_dept_list,date),as_dict=True)[0].ot_amount or 0
+        total_mfg_ot_amt += mfg_ot
+        mfg_ot_amt_header.append(mfg_ot)
         mfg_ot_percent_header.append("0")
         mfg_ot_sales_amt.append("0")
     mfg_ot_amt_header.append(total_mfg_ot_amt)
@@ -325,11 +307,12 @@ def get_data(args):
     data.append(mfg_ot_amt_header)
     data.append(mfg_ot_sales_amt)
     data.append(mfg_ot_percent_header)
+
     support = get_support(args)
     
     for s in support:
         data.append(s)
-    tsai = get_tsai(args)
+    tsai = get_support_total(args)
     for ts in tsai:
         data.append(ts)
 
@@ -343,127 +326,135 @@ def get_dates(args):
 def get_support(args):
     departments = frappe.get_all("Department",{'parent_department':'SUPPORT',"is_group":"0"},)
     support_data = []
-    support_dept_list = []
-   
     for dept in departments:
         row = ['SUPPORT',dept.name]
         dates = get_dates(args)
-        support_dept_list.append(dept.name)
         total_ot_amt =0
         for date in dates:
-            t_ot = 0
-            ot_hrs = timedelta(0,0,0)
-            ots = frappe.get_all("Overtime Request",{"department":dept.name,"ot_date":date,"workflow_state":"Approved"},["employee","ot_hours"])
-            for ot in ots:
-                ot_hrs = ot.ot_hours
-                day = ot_hrs.days * 24
-                hours = day + ot_hrs.seconds // 3600
-                minutes = (ot_hrs.seconds//60)%60
-                ftr = [3600,60,1]
-                hr = (sum([a*b for a,b in zip(ftr, map(int,str(str(hours) +':'+str(minutes)+':00').split(':')))]))/3600
-                amt_per_hr = ((frappe.db.get_value("Employee",ot.employee,'basic')/26)/8)*2
-                ot_amt = hr * amt_per_hr
-                t_ot += ot_amt
-                total_ot_amt+=ot_amt
-            row.append(t_ot)
-            # row.append(total_ot_amt)
-        row.append(total_ot_amt)
+            if args.employee_type:
+                ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+                where `tabOvertime Request`.employee_type = '%s' and `tabOvertime Request`.department = '%s' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,dept.name,date),as_dict=True)[0].ot_amount or 0
+            else:
+                ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+                where `tabOvertime Request`.department = '%s' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(dept.name,date),as_dict=True)[0].ot_amount or 0
+            total_ot_amt += round(ot)
+            row.append(round(ot))
+        row.append(round(total_ot_amt))
         support_data.append(row)
     return support_data
 
-def get_tsai(args):
+def get_support_total(args):
     data = []
     dates = get_dates(args)
-    tsai_ot_amount_header = ['TSAI','OT Amount']
-    tsai_sales_amount_header = ['','Sales Amount']
-    tsai_ot_percent_header = ['','OT %']
-    dept_list = []
+    support_total_header = ['','OT Amount']
+    support_amount_header = ['','Sales Amount']
+    support_percent_header = ['','OT %']
+    dept_list = '('
     departments = frappe.get_all("Department",{'parent_department':'SUPPORT',"is_group":"0"},)
     for dept in departments:
-        dept_list.append(dept.name)
-    actual_ot_amt = 0
+        dept_list = dept_list + '"' + str(dept.name) + '",'
+    dept_list = dept_list[:-1]
+    dept_list = dept_list + ')'
+    total_ot_amount = 0
     for date in dates:
-        total_ot_amt = 0
-        ot_hrs = timedelta(0,0,0)
-        mfg_ot = frappe.get_all("Overtime Request",{"department":('in',(dept_list)),"ot_date":date,"workflow_state":"Approved"},["employee","ot_hours"])
-        for ot in mfg_ot:
-            ot_hrs = ot.ot_hours
-            day = ot_hrs.days * 24
-            hours = day + ot_hrs.seconds // 3600
-            minutes = (ot_hrs.seconds//60)%60
-            ftr = [3600,60,1]
-            hr = (sum([a*b for a,b in zip(ftr, map(int,str(str(hours) +':'+str(minutes)+':00').split(':')))]))/3600
-            amt_per_hr = ((frappe.db.get_value("Employee",ot.employee,'basic')/26)/8)*2
-            ot_amt = hr * amt_per_hr
-            # t_ot += ot_amt
-            total_ot_amt += ot_amt
-            actual_ot_amt+=total_ot_amt
-        tsai_ot_amount_header.append(total_ot_amt)
-        tsai_sales_amount_header.append('0')
-        tsai_ot_percent_header.append('0')
-    tsai_ot_amount_header.append(actual_ot_amt)
-    data.append(tsai_ot_amount_header)
-    g_total = grand_total(args)
-    for g in g_total:
-        data.append(g)
-    data.append(tsai_sales_amount_header)
-    data.append(tsai_ot_percent_header)
+        if args.employee_type:
+            ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+            where `tabOvertime Request`.employee_type = '%s' and `tabOvertime Request`.department in %s and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,dept_list,date),as_dict=True)[0].ot_amount or 0
+        else:
+            ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+            where `tabOvertime Request`.department in %s and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(dept_list,date),as_dict=True)[0].ot_amount or 0
+        total_ot_amount += ot
+        support_total_header.append(ot)
+        support_amount_header.append("0")
+        support_percent_header.append("0")
+    support_total_header.append(total_ot_amount)
+    data.append(support_total_header)
+    data.append(support_amount_header)
+    data.append(support_percent_header)
+
+    tsai_total_header = ['TSAI','Grand Total']
+    # tsai_amount_header = ['','Sales Amount']
+    # tasi_percent_header = ['','OT %']
+
+    dates = get_dates(args)
+    row = []
+    total_ot_amt =0
+    for date in dates:
+        if args.employee_type:
+            ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+            where `tabOvertime Request`.employee_type = '%s' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,date),as_dict=True)[0].ot_amount or 0
+        else:
+            ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+            where `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(date),as_dict=True)[0].ot_amount or 0
+        total_ot_amt += round(ot)
+        tsai_total_header.append(round(ot))
+        # tsai_amount_header.append("0")
+        # tasi_percent_header.append("0")
+    tsai_total_header.append(round(total_ot_amt))
+
+    data.append(tsai_total_header)
+    # data.append(tsai_amount_header)
+    # data.append(tsai_total_header)
     return data
-# def grand_total(args,get_data,get_tsai):
+
+
+# def grand_total(args):
 #     data = []
-#     grand_total_header = ['']
+#     row = []
 #     dates = get_dates(args)
+#     total_ot_amt =0
 #     for date in dates:
-#         grand_total = get_data.total_mfg_ot_amt +  get_tsai.total_ot_amt
-#         grand_total_header.append(grand_total)
+#         if args.employee_type:
+#             ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+#             where `tabOvertime Request`.employee_type = '%s' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,date),as_dict=True)[0].ot_amount or 0
+#         else:
+#             ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+#             where `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(date),as_dict=True)[0].ot_amount or 0
+#         total_ot_amt += round(ot)
+#         row.append(round(ot))
+#     row.append(round(total_ot_amt))
+#     .append("0")
+#     ot_sales_amt.append("0")
+#     data.append(row)
+#     return data
+
+
+# def grand_total(args):
+#     data = []
+#     dept_group = ['IYM','RE','FORD','SUPPORT']
+#     grand_total_header = ['TSAI','Grand Total']
+#     dept_list = []
+#     for dg in dept_group:
+#         departments = frappe.get_all("Department",{'parent_department':dg,"is_group":"0"},)  
+#         for dept in departments:
+#             dept_list.append(dept.name)
+#     dept_list = tuple(dept_list)
+#     dates = get_dates(args)
+#     actual_ot_amt=0
+#     for date in dates:
+#         ot_hrs = timedelta(0,0,0)
+#         total_ot_amt = 0
+#         if args.employee_type:
+#             ots = frappe.db.sql("""select `tabOvertime Request`.employee as employee,`tabOvertime Request`.ot_hours as ot_hours from `tabOvertime Request` left JOIN
+#             `tabEmployee` on `tabOvertime Request`.employee = `tabEmployee`.name  where `tabEmployee`.employee_type = '%s' and `tabEmployee`.department in %s and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,format(dept_list),date),as_dict=1)
+#         else:
+#             # frappe.log_error(title='hi',message=dept_list)
+#             ots = frappe.db.sql("""select `tabOvertime Request`.employee as employee,`tabOvertime Request`.ot_hours as ot_hours from `tabOvertime Request` left JOIN
+#             `tabEmployee` on `tabOvertime Request`.employee = `tabEmployee`.name  where `tabEmployee`.department in %s and `tabOvertime Request`.ot_date = %s and `tabOvertime Request`.workflow_state in ('Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(format(dept_list),date),as_dict=1)
+#         # ots = frappe.get_all("Overtime Request",{"department":('in',(dept_list)),"ot_date":date,"workflow_state":('in',("Pending for HOD","Approved")),'docstatus':('!=',2)},["employee","ot_hours"])
+#         for ot in ots:
+#             ot_hrs = ot.ot_hours
+#             if ot_hrs:
+#                 day = ot_hrs.days * 24
+#                 hours = day + ot_hrs.seconds // 3600
+#                 minutes = (ot_hrs.seconds//60)%60
+#                 ftr = [3600,60,1]
+#                 hr = (sum([a*b for a,b in zip(ftr, map(int,str(str(hours) +':'+str(minutes)+':00').split(':')))]))/3600
+#                 amt_per_hr = ((frappe.db.get_value("Employee",ot.employee,'basic')/26)/8)*2
+#                 ot_amt = hr * amt_per_hr
+#                 total_ot_amt += round(ot_amt)
+#                 actual_ot_amt += round(ot_amt)
+#         grand_total_header.append(total_ot_amt)
+#     grand_total_header.append(actual_ot_amt)
 #     data.append(grand_total_header)
 #     return data
-def grand_total(args):
-    data = []
-    dept_group = ['IYM','RE','FORD','SUPPORT']
-    grand_total_header = ['','Grand Total']
-    dept_list = []
-    for dg in dept_group:
-        departments = frappe.get_all("Department",{'parent_department':dg,"is_group":"0"},)  
-        for dept in departments:
-            dept_list.append(dept.name)
-    dates = get_dates(args)
-    actual_ot_amt=0
-    for date in dates:
-        ot_hrs = timedelta(0,0,0)
-        total_ot_amt = 0
-        ots = frappe.get_all("Overtime Request",{"department":('in',(dept_list)),"ot_date":date,"workflow_state":"Approved"},["ot_hours"])
-        for ot in ots:
-            ot_hrs += ot.ot_hours
-        day = ot_hrs.days * 24
-        hours = day + ot_hrs.seconds // 3600
-        minutes = (ot_hrs.seconds//60)%60
-        ftr = [3600,60,1]
-        hr = (sum([a*b for a,b in zip(ftr, map(int,str(str(hours) +':'+str(minutes)+':00').split(':')))]))/3600
-        ot_amt = hr * 50
-        total_ot_amt += ot_amt
-        actual_ot_amt+=total_ot_amt
-        grand_total_header.append(total_ot_amt)
-    grand_total_header.append(actual_ot_amt)
-    data.append(grand_total_header)
-    return data
-            
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-    

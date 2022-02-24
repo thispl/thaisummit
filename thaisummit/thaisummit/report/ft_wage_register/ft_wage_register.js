@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 /* eslint-disable */
 
-frappe.query_reports["FT Wage Register"] = {
+frappe.query_reports["TSA Wage Register"] = {
 	"filters": [
 		{
 			"fieldname": "from_date",
@@ -29,6 +29,12 @@ frappe.query_reports["FT Wage Register"] = {
 			"fieldtype": "Date",
 			"reqd": 1,
 			"read_only": 1
+		},
+		{
+			"fieldname": "employee_type",
+			"label": __("Employee Type"),
+			"fieldtype": "Select",
+			"options": ['NT','FT','CL']
 		},
 		{
 			"fieldname": "department",

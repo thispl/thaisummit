@@ -22,6 +22,8 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee"
   },
@@ -85,8 +87,7 @@
   {
    "fieldname": "payroll_date",
    "fieldtype": "Date",
-   "label": "Payroll Date",
-   "read_only": 1
+   "label": "Payroll Date"
   },
   {
    "fieldname": "additional_salary",
@@ -99,7 +100,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-08-19 16:34:25.020037",
+ "modified": "2021-10-01 12:14:00.595625",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Other Allowance",
