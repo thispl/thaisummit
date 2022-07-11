@@ -96,7 +96,7 @@ class CustomSalarySlip(SalarySlip):
                 lwp += equivalent_lwp
                 if d.leave_type != 'Leave without Pay':
                     leave_days += 0.5
-                transport_days += 1
+                # transport_days += 1
             if d.status == "On Leave":
                 equivalent_lwp = 1
                 if leave_type_map[d.leave_type]["is_ppl"]:
@@ -122,7 +122,7 @@ class CustomSalarySlip(SalarySlip):
                 status in ("Present","Half Day","Absent")
                 AND employee = %s
                 AND docstatus = 1
-                AND shift is null
+                # AND shift is null
                 AND on_duty_application is not null
                 AND attendance_date between %s and %s
         ''', values=(self.employee, self.start_date, self.end_date), as_dict=1)
@@ -131,20 +131,19 @@ class CustomSalarySlip(SalarySlip):
         for d in present_attendances:
             # holiday = check_holiday(d.attendance_date)
             # if not holiday:
-            if d.shift == "1":
+            if d.shift_status in ("1","11",'1L1'):
                 shift1 += 1
-            if d.shift == "2":
-                if d.shift_status not in ('2M','M2'):
-                    shift2 += 1
-            if d.shift == "3":
-                if d.shift_status not in ('3M','M3'):
-                    shift3 += 1
-            if d.shift == "PP1":
+            if d.shift_status in ('2','22'):
+                shift2 += 1
+            if d.shift_status in ('3','33'):
+                shift3 += 1
+            if d.shift_status in ("PP1","PP1PP1","P1P1"):
                 shiftpp1 += 1
-            if d.shift == "PP2":
+            if d.shift_status in ("PP2","PP2PP2","P2P2"):
                 shiftpp2 += 1
-            if d.shift_status not in ('1M','M1','2M','M2','3M','M3','PP2M','MPP2'):
+            if d.shift_status in ('1','1L1','11','2','22','3','33','PP2','PP2PP2','0.5LL','0.5CL','0.5SL','0.5EL','0.5Leave Without Pay','0.5Casual Leave','0.5Earned Leave','0.5Casual Leave','0.5Sick Leave','0.5Compensatory Off','0.5Special Leave'):
                 transport_days += 1
+                # frappe.errprint(transport_days)
         self.shift_1 = shift1
         self.shift_2 = shift2
         self.shift_3 = shift3

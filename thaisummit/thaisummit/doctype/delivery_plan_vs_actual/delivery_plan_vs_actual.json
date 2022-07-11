@@ -6,8 +6,15 @@
  "engine": "InnoDB",
  "field_order": [
   "from_date",
+  "column_break_2",
   "to_date",
-  "download"
+  "column_break_4",
+  "view",
+  "download",
+  "attach",
+  "last_download_on",
+  "section_break_6",
+  "html"
  ],
  "fields": [
   {
@@ -24,12 +31,47 @@
    "fieldname": "download",
    "fieldtype": "Button",
    "label": "Download"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "html",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "view",
+   "fieldtype": "Button",
+   "hidden": 1,
+   "label": "View"
+  },
+  {
+   "depends_on": "attach",
+   "fieldname": "attach",
+   "fieldtype": "Attach",
+   "label": "Attach"
+  },
+  {
+   "depends_on": "attach",
+   "fieldname": "last_download_on",
+   "fieldtype": "Datetime",
+   "label": "Last Download On"
   }
  ],
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-02-24 18:39:22.405236",
+ "modified": "2022-05-09 00:24:41.367405",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Delivery Plan vs Actual",

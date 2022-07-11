@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from os import stat
+from unicodedata import category
 import frappe
 from frappe.utils import cstr, add_days, date_diff, getdate, touch_file
 from frappe import _
@@ -71,12 +72,13 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
     ford = frappe.db.count('Department',{'parent_department':'FORD','is_group':0})
     support = frappe.db.count('Department',{'parent_department':'SUPPORT','is_group':0})
     departments = (iym+re+ford+support)
+    contractors = frappe.db.count('Contractor',{'status':'Active'})
 
     border = Border(left=Side(border_style='thin', color='000000'),
              right=Side(border_style='thin', color='000000'),
              top=Side(border_style='thin', color='000000'),
              bottom=Side(border_style='thin', color='000000'))
-    for rows in ws.iter_rows(min_row=1, max_row=departments+18, min_col=1, max_col=len(dates)+3):
+    for rows in ws.iter_rows(min_row=1, max_row=departments+28+contractors, min_col=1, max_col=len(dates)+3):
         for cell in rows:
             cell.border = border
 
@@ -87,6 +89,9 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
     ws.merge_cells(start_row=iym+12+ford+re, start_column=1, end_row=iym+14+ford+re, end_column=1)
     ws.merge_cells(start_row=iym+15+ford+re, start_column=1, end_row=iym+14+ford+re+support+1, end_column=1)
     ws.merge_cells(start_row=iym+16+ford+re+support, start_column=1, end_row=iym+18+ford+re+support, end_column=1)
+    ws.merge_cells(start_row=iym+16+ford+re+support+5, start_column=1, end_row=iym+18+ford+re+support+7, end_column=1)
+    ws.merge_cells(start_row=iym+16+ford+re+support+12, start_column=1, end_row=iym+18+ford+re+support+9+contractors, end_column=1)
+
 
     
 
@@ -189,6 +194,26 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
             cell.font = Font(bold=True)
 
     for rows in ws.iter_rows(min_row=iym+18+re+ford+support, max_row=iym+18+re+ford+support, min_col=2, max_col=len(dates)+3):
+        for cell in rows:
+            cell.fill = PatternFill(fgColor='46A1E9', fill_type = "solid")
+            cell.font = Font(bold=True)
+
+    for rows in ws.iter_rows(min_row=iym+16+ford+re+support+5, max_row=iym+16+ford+re+support+9, min_col=2, max_col=2):
+        for cell in rows:
+            cell.fill = PatternFill(fgColor='ffff00', fill_type = "solid")
+            cell.font = Font(bold=True)
+
+    for rows in ws.iter_rows(min_row=iym+16+ford+re+support+10, max_row=iym+16+ford+re+support+10, min_col=2, max_col=len(dates)+3):
+        for cell in rows:
+            cell.fill = PatternFill(fgColor='46A1E9', fill_type = "solid")
+            cell.font = Font(bold=True)
+
+    for rows in ws.iter_rows(min_row=iym+16+ford+re+support+12, max_row=iym+16+ford+re+support+11+contractors, min_col=2, max_col=2):
+        for cell in rows:
+            cell.fill = PatternFill(fgColor='ffff00', fill_type = "solid")
+            cell.font = Font(bold=True)
+    
+    for rows in ws.iter_rows(min_row=iym+16+ford+re+support+contractors+12, max_row=iym+16+ford+re+support+12+contractors, min_col=2, max_col=len(dates)+3):
         for cell in rows:
             cell.fill = PatternFill(fgColor='46A1E9', fill_type = "solid")
             cell.font = Font(bold=True)
@@ -391,70 +416,53 @@ def get_support_total(args):
         # tsai_amount_header.append("0")
         # tasi_percent_header.append("0")
     tsai_total_header.append(round(total_ot_amt))
-
     data.append(tsai_total_header)
-    # data.append(tsai_amount_header)
-    # data.append(tsai_total_header)
+
+    data.append([])
+    data.append([])
+    for emp_type in ['WC','BC','FT','NT','CL']:
+        category_wise = ['Category',emp_type]
+        cat_wise_actual = 0
+        for date in dates:
+            ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+                where `tabOvertime Request`.employee_type = '%s' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(emp_type,date),as_dict=True)[0].ot_amount or 0
+            category_wise.append(round(ot))
+            cat_wise_actual += round(ot)
+        category_wise.append(cat_wise_actual)
+        data.append(category_wise)
+    
+    category_wise_total = ['','Total']
+    cat_wise_actual_total = 0
+    for date in dates:
+        ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+            where `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(date),as_dict=True)[0].ot_amount or 0
+        category_wise_total.append(round(ot))
+        cat_wise_actual_total += round(ot)
+    category_wise_total.append(cat_wise_actual_total)
+    data.append(category_wise_total)
+
+    data.append([])
+
+    contractors = frappe.get_all('Contractor',{'status':'Active'})
+    for con in contractors:
+        contractor_wise = ['Contractor',con.name]
+        con_wise_actual = 0
+        for date in dates:
+            ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+                where `tabOvertime Request`.employee_type = 'CL' and `tabOvertime Request`.contractor = '%s' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(con.name,date),as_dict=True)[0].ot_amount or 0
+            contractor_wise.append(round(ot))
+            con_wise_actual += round(ot)
+        contractor_wise.append(con_wise_actual)
+        data.append(contractor_wise)
+    
+    contractor_wise_total = ['','Total']
+    con_wise_actual_total = 0
+    for date in dates:
+        ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
+                where `tabOvertime Request`.employee_type = 'CL' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(date),as_dict=True)[0].ot_amount or 0
+        contractor_wise_total.append(round(ot))
+        con_wise_actual_total += round(ot)
+    contractor_wise_total.append(con_wise_actual_total)
+    data.append(contractor_wise_total)
+
     return data
-
-
-# def grand_total(args):
-#     data = []
-#     row = []
-#     dates = get_dates(args)
-#     total_ot_amt =0
-#     for date in dates:
-#         if args.employee_type:
-#             ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
-#             where `tabOvertime Request`.employee_type = '%s' and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,date),as_dict=True)[0].ot_amount or 0
-#         else:
-#             ot = frappe.db.sql("""select sum(ot_amount) as ot_amount from `tabOvertime Request`
-#             where `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Draft','Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(date),as_dict=True)[0].ot_amount or 0
-#         total_ot_amt += round(ot)
-#         row.append(round(ot))
-#     row.append(round(total_ot_amt))
-#     .append("0")
-#     ot_sales_amt.append("0")
-#     data.append(row)
-#     return data
-
-
-# def grand_total(args):
-#     data = []
-#     dept_group = ['IYM','RE','FORD','SUPPORT']
-#     grand_total_header = ['TSAI','Grand Total']
-#     dept_list = []
-#     for dg in dept_group:
-#         departments = frappe.get_all("Department",{'parent_department':dg,"is_group":"0"},)  
-#         for dept in departments:
-#             dept_list.append(dept.name)
-#     dept_list = tuple(dept_list)
-#     dates = get_dates(args)
-#     actual_ot_amt=0
-#     for date in dates:
-#         ot_hrs = timedelta(0,0,0)
-#         total_ot_amt = 0
-#         if args.employee_type:
-#             ots = frappe.db.sql("""select `tabOvertime Request`.employee as employee,`tabOvertime Request`.ot_hours as ot_hours from `tabOvertime Request` left JOIN
-#             `tabEmployee` on `tabOvertime Request`.employee = `tabEmployee`.name  where `tabEmployee`.employee_type = '%s' and `tabEmployee`.department in %s and `tabOvertime Request`.ot_date = '%s' and `tabOvertime Request`.workflow_state in ('Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(args.employee_type,format(dept_list),date),as_dict=1)
-#         else:
-#             # frappe.log_error(title='hi',message=dept_list)
-#             ots = frappe.db.sql("""select `tabOvertime Request`.employee as employee,`tabOvertime Request`.ot_hours as ot_hours from `tabOvertime Request` left JOIN
-#             `tabEmployee` on `tabOvertime Request`.employee = `tabEmployee`.name  where `tabEmployee`.department in %s and `tabOvertime Request`.ot_date = %s and `tabOvertime Request`.workflow_state in ('Pending for HOD','Approved') and `tabOvertime Request`.docstatus != '2' """%(format(dept_list),date),as_dict=1)
-#         # ots = frappe.get_all("Overtime Request",{"department":('in',(dept_list)),"ot_date":date,"workflow_state":('in',("Pending for HOD","Approved")),'docstatus':('!=',2)},["employee","ot_hours"])
-#         for ot in ots:
-#             ot_hrs = ot.ot_hours
-#             if ot_hrs:
-#                 day = ot_hrs.days * 24
-#                 hours = day + ot_hrs.seconds // 3600
-#                 minutes = (ot_hrs.seconds//60)%60
-#                 ftr = [3600,60,1]
-#                 hr = (sum([a*b for a,b in zip(ftr, map(int,str(str(hours) +':'+str(minutes)+':00').split(':')))]))/3600
-#                 amt_per_hr = ((frappe.db.get_value("Employee",ot.employee,'basic')/26)/8)*2
-#                 ot_amt = hr * amt_per_hr
-#                 total_ot_amt += round(ot_amt)
-#                 actual_ot_amt += round(ot_amt)
-#         grand_total_header.append(total_ot_amt)
-#     grand_total_header.append(actual_ot_amt)
-#     data.append(grand_total_header)
-#     return data

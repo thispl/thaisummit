@@ -1,0 +1,75 @@
+{
+ "cards_label": "",
+ "category": "Modules",
+ "charts": [],
+ "creation": "2022-03-22 11:30:28.032607",
+ "developer_mode_only": 0,
+ "disable_user_customization": 1,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "for_user": "",
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Security",
+ "links": [],
+ "modified": "2022-06-16 14:44:44.416741",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Security",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "Window IN",
+   "link_to": "Window IN",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Window OUT",
+   "link_to": "Window OUT",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Window Time IN Report",
+   "link_to": "Window Time IN",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Window Time OUT Report",
+   "link_to": "Window Time OUT",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "CL Return",
+   "link_to": "CL Return",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "CL Report",
+   "link_to": "CL Return Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Bus Arrival ",
+   "link_to": "Bus Arrival Form",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Bus Arrival Report",
+   "link_to": "Bus Arrival Report",
+   "type": "Report"
+  }
+ ]
+}

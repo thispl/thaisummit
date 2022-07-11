@@ -1,0 +1,61 @@
+{
+ "cards_label": "Settings & Master",
+ "category": "Modules",
+ "charts": [],
+ "creation": "2021-11-10 09:37:03.575267",
+ "developer_mode_only": 0,
+ "disable_user_customization": 1,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "for_user": "",
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "E-KANBAN",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Inventory Control Area",
+   "link_to": "Inventory Control Area",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2022-06-16 10:47:40.468012",
+ "modified_by": "Administrator",
+ "module": "Canteen",
+ "name": "E-KANBAN",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "Daily Sales Report",
+   "link_to": "Daily Sales Report",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Production Daily Order",
+   "link_to": "Production Daily Order",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "BOM",
+   "link_to": "TSAI BOM",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Ekanban Settings",
+   "link_to": "Ekanban Settings",
+   "type": "DocType"
+  }
+ ]
+}

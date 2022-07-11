@@ -8,10 +8,12 @@
  "field_order": [
   "from_date",
   "attach",
+  "upload",
   "column_break_2",
   "to_date",
-  "upload",
+  "view",
   "download",
+  "downloaded_forecast",
   "column_break_4",
   "summary",
   "section_break_10",
@@ -63,13 +65,24 @@
   {
    "fieldname": "summary",
    "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "view",
+   "fieldtype": "Button",
+   "label": "View"
+  },
+  {
+   "depends_on": "downloaded_forecast",
+   "fieldname": "downloaded_forecast",
+   "fieldtype": "Attach",
+   "label": "Downloaded Forecast"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-11-10 18:05:39.061171",
+ "modified": "2022-04-17 18:41:41.119163",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Forecast",

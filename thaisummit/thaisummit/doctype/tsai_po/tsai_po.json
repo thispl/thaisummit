@@ -13,16 +13,25 @@
   "po_no",
   "section_break_6",
   "po_date",
+  "plan_date",
   "column_break_8",
   "delivery_date",
   "section_break_10",
   "supplier_code",
   "supplier_name",
   "uom",
+  "hsn_code",
+  "packing_std",
+  "open_qty",
   "column_break_14",
   "po_status",
   "po_qty",
-  "unit_price"
+  "unit_price",
+  "cgst",
+  "sgst",
+  "igst",
+  "gst_amount",
+  "invoice_amount"
  ],
  "fields": [
   {
@@ -112,11 +121,56 @@
    "fieldname": "po_status",
    "fieldtype": "Data",
    "label": "PO Status"
+  },
+  {
+   "fieldname": "plan_date",
+   "fieldtype": "Date",
+   "label": "Plan Date"
+  },
+  {
+   "fieldname": "hsn_code",
+   "fieldtype": "Data",
+   "label": "HSN Code"
+  },
+  {
+   "fieldname": "packing_std",
+   "fieldtype": "Float",
+   "label": "Packing Std"
+  },
+  {
+   "fieldname": "cgst",
+   "fieldtype": "Int",
+   "label": "CGST"
+  },
+  {
+   "fieldname": "sgst",
+   "fieldtype": "Int",
+   "label": "SGST"
+  },
+  {
+   "fieldname": "igst",
+   "fieldtype": "Int",
+   "label": "IGST"
+  },
+  {
+   "fieldname": "gst_amount",
+   "fieldtype": "Currency",
+   "label": "GST Amount"
+  },
+  {
+   "fieldname": "invoice_amount",
+   "fieldtype": "Currency",
+   "label": "Invoice Amount"
+  },
+  {
+   "fieldname": "open_qty",
+   "fieldtype": "Float",
+   "label": "Open Qty"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-12-23 10:28:57.513496",
+ "modified": "2022-04-12 09:13:27.493896",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI PO",

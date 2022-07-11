@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "autoname": "SOB-.####",
+ "creation": "2022-03-11 16:26:52.052409",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "supplier_code",
+  "supplier_name",
+  "mat_no",
+  "column_break_4",
+  "part_name",
+  "share_of_business"
+ ],
+ "fields": [
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Mat No"
+  },
+  {
+   "fetch_from": "mat_no.parts_name",
+   "fieldname": "part_name",
+   "fieldtype": "Data",
+   "label": "Part Name"
+  },
+  {
+   "fieldname": "supplier_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Supplier Code",
+   "options": "TSAI Supplier"
+  },
+  {
+   "fetch_from": "supplier_code.supplier_name",
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "label": "Supplier Name"
+  },
+  {
+   "fieldname": "share_of_business",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Share of Business"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-03-18 15:10:34.328539",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Shares of Business Entry",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

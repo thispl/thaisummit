@@ -19,13 +19,7 @@ no_cache = True
 def get_context(context):
     redirect_to = frappe.local.request.args.get("redirect-to")
 
-    # if frappe.session.user != 'Administrator':
-    frappe.errprint('HI')
-    if 'Supplier' in frappe.get_roles(frappe.session.user):
-        redirect_to = "/invoice-key"
-        frappe.errprint('hiiiii')
-
-    elif frappe.session.user != "Guest":
+    if frappe.session.user != "Guest":
         if not redirect_to:
             if frappe.session.data.user_type=="Website User":
                 redirect_to = get_home_page()

@@ -1,0 +1,282 @@
+{% extends "templates/web.html" %}
+{% block title %} IYM LIVE SCREEN {% endblock %}
+{% block head_include %}
+<style>
+    body {
+        padding: 35px;
+    }
+    thead th {
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  top: 0;
+}
+
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css" />
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+<script>
+    setTimeout(function(){
+   window.location.reload(1);
+}, 900000);
+    $(document).ready(function () {
+        var table = $('#pager').DataTable({
+            pageLength: 50,
+            searching: false,
+            lengthChange: false
+        });
+    
+    
+
+    // Get the page info, so we know what the last is
+    count = 0
+        var pageInfo = table.page.info(),
+
+        //     // Set the ending interval to the last page
+        endInt = pageInfo.end,
+
+        //     // Current page
+        currentInt = 0,
+
+        //     // Start an interval to go to the "next" page every 3 seconds
+        interval = setInterval(function () {
+        //         // "Next" ...
+        table.page(currentInt).draw('page');
+
+        //         // Increment the current page int
+        currentInt++;
+
+        //         // If were on the last page, reset the currentInt to the first page #
+        if (currentInt === endInt)
+            currentInt = 0;
+
+        }, 5000000000);
+    })
+
+    function download_excel() {
+        // frappe.call('thaisummit.www.fg_req_iym.get_tag_list')
+        //     .then(r => {
+        window.location.href = repl("https://172.16.1.1" + '?cmd=%(cmd)s', {
+            cmd: "thaisummit.www.fg_req_iym.download_excel",
+        });
+        // });
+    }
+</script>
+{% endblock %}
+
+{%- block content -%}
+
+
+<table border="1px solid" width="100%" id="pager">
+<thead>
+    <tr>
+        <!-- <td colspan="5" align="center" valign="middle"><img src="/files/iym-thai-logo.jpeg" width="200" height="100">
+        </td> -->
+        <td colspan='8' style="background-color:#fcb456">
+            <center>    
+                <h3 style="color:#ffffff"><b>POSTLOT - FG IYM</b></h3>
+            </center>
+        </td>
+        <td colspan="8" style="background-color:#fcb456" colspan="4">
+            <center>
+                <h3 style="color:#ffffff"><b id='livetimer'>{{tag_list[1]}}</b></h3>
+            </center>
+        </td>
+
+    </tr>
+    
+    <tr>
+        <th style="background-color:#F30611;font-size: 8px;">
+            <center>
+                <h3 style="color:#ffffff"><b>S.No</b></h3>
+            </center>
+        </th>
+        
+        <th style="background-color:#F30611;font-size: 10px;">
+            <center>
+                <h3 style="color:#ffffff"><b>Mat #</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Part #</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Part Name</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Line</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Model</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Packing</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Daily Order</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Max Day</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Max Stock</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Min Day</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Min Stock</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Stock</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Coverage Day</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Req</b></h3>
+            </center>
+        </th>
+        <th style="background-color:#F30611">
+            <center>
+                <h3 style="color:#ffffff"><b>Prod Plan</b></h3>
+            </center>
+
+        </th>
+
+
+    </tr>
+</thead>
+<tbody>
+    {% for row in tag_list[0] %}
+    
+    <tr>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{ loop.index }}</b></h5>
+            </center>
+        </td>
+
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{row['mat_no']}}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{row['parts_no']}}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{row['parts_name']}}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{row['production_line']}}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{row['model']}}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{ row['packing_std'] }}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{ row['daily_order'] }}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{row['max_day']}}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{ row['max_stock'] }}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{row['min_day']}}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{ row['min_stock'] }}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{ row['live_stock'] }}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{ row['coverage_day'] }}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{ row['req'] }}</b></h5>
+            </center>
+        </td>
+        <td style="background-color:#fffbfb">
+            <center>
+                <h5 style="color:#000000"><b>{{ row['openqty'] }}</b></h5>
+            </center>
+        </td>
+
+    </tr>
+    {% endfor %}
+</tbody>
+
+</table>
+<br>
+<div class="row">
+    <div class="col-xs-11">
+        <br>
+        
+    </div>
+    <div class="col-xs-1">
+        <br>
+        <button id="download" class="btn" onclick="download_excel()">Download</button>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -13,14 +13,37 @@ class QRCheckin(Document):
         if self.qr_shift == "2":
             if frappe.db.exists("QR Checkin",{'employee':self.employee,'qr_shift':'1','shift_date':self.shift_date}):
                 frappe.db.set_value("QR Checkin",self.name,'ot',1)
-                self.get_bio_checkins()
+                if not frappe.db.exists("QR Checkin",{'employee':self.employee,'qr_shift':'1','shift_date':self.shift_date,'ot':1}):
+                    self.get_bio_checkins()
+            else:
+                holiday = frappe.db.sql("""select `tabHoliday`.holiday_date from `tabHoliday List`
+                left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(self.shift_date),as_dict=True)
+                if holiday:
+                    frappe.db.set_value("QR Checkin",self.name,'ot',1)
+                    self.get_bio_checkins()
+
         if self.qr_shift == "3":
             if frappe.db.exists("QR Checkin",{'employee':self.employee,'qr_shift':'2','shift_date':self.shift_date}):
                 frappe.db.set_value("QR Checkin",self.name,'ot',1)
-                self.get_bio_checkins()
+                if not frappe.db.exists("QR Checkin",{'employee':self.employee,'qr_shift':'2','shift_date':self.shift_date,'ot':1}):
+                    self.get_bio_checkins()
+            
+            else:
+                holiday = frappe.db.sql("""select `tabHoliday`.holiday_date from `tabHoliday List`
+                left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(self.shift_date),as_dict=True)
+                if holiday:
+                    frappe.db.set_value("QR Checkin",self.name,'ot',1)
+                    self.get_bio_checkins()
+                    
         if self.qr_shift == "PP2":
             self.create_pp2_ot()
-        # if self.qr_shift == "1":
+        if self.qr_shift == "1":
+            holiday = frappe.db.sql("""select `tabHoliday`.holiday_date from `tabHoliday List`
+            left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(self.shift_date),as_dict=True)
+            if holiday:
+                frappe.db.set_value("QR Checkin",self.name,'ot',1)
+                self.get_bio_checkins()
+                
         #     shift_date = add_days(self.shift_date,-1)
         #     if frappe.db.exists("QR Checkin",{'employee':self.employee,'qr_shift':'3','shift_date':shift_date}):
         #         frappe.db.set_value("QR Checkin",self.name,'ot',1)

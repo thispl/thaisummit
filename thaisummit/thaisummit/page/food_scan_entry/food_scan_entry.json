@@ -1,0 +1,22 @@
+{
+ "content": null,
+ "creation": "2022-06-04 19:48:28.218097",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2022-06-04 19:48:28.218097",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "food-scan-entry",
+ "owner": "Administrator",
+ "page_name": "Food Scan Entry",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0
+}

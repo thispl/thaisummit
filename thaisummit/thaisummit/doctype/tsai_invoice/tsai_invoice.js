@@ -2,7 +2,9 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('TSAI Invoice', {
-	// refresh: function(frm) {
-
-	// }
+	onload(frm) {
+        var time = new Date().toLocaleTimeString();
+        var time_format = moment(time, "h:mm:ss A").format("HH:mm");
+        frm.set_value('invoice_time', time_format)
+	}
 });

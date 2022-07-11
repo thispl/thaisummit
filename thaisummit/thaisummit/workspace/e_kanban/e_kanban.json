@@ -25,7 +25,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-02-17 12:39:10.957862",
+ "modified": "2022-06-16 10:47:56.549629",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "E-KANBAN",
@@ -35,44 +35,26 @@
  "shortcuts": [
   {
    "doc_view": "",
-   "label": "Part Master",
-   "link_to": "Part Master Data",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "",
-   "label": "Forecast",
-   "link_to": "Forecast",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "",
    "label": "Daily Sales Report",
    "link_to": "Daily Sales Report",
    "type": "DocType"
   },
   {
    "doc_view": "",
-   "label": "Daily Order",
-   "link_to": "Daily Order",
+   "label": "Production Daily Order",
+   "link_to": "Production Daily Order",
    "type": "Report"
   },
   {
    "doc_view": "",
-   "label": "Invoice Key",
-   "link_to": "invoice-key",
-   "type": "Page"
+   "label": "BOM",
+   "link_to": "TSAI BOM",
+   "type": "DocType"
   },
   {
    "doc_view": "",
-   "label": "Pickup Plan",
-   "link_to": "Pickup Plan",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "Print Invoice",
-   "link_to": "Print Invoice",
+   "label": "Ekanban Settings",
+   "link_to": "Ekanban Settings",
    "type": "DocType"
   }
  ]

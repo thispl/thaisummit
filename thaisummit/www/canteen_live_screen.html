@@ -1,0 +1,233 @@
+{% extends "templates/web.html" %}
+{% block title %} CANTEEN LIVE SCREEN {% endblock %}
+{% block head_include %}
+
+<style>
+    body {
+        padding: 20px;
+    }
+    thead th {
+  position: -webkit-sticky; /* for Safari */
+  position: sticky;
+  top: 0;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css" />
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+
+<script>
+    setTimeout(function(){
+   window.location.reload(1);
+}, 900000);
+    $(document).ready(function () {
+        var table = $('#pager').DataTable({
+            pageLength: 10,
+            searching: false,
+            lengthChange: false
+        });
+    })
+</script>
+{% endblock %}
+
+{%- block content -%}
+<table border="1px solid" width="100%" id="pager">
+<thead>
+    <tr>
+        <td colspan='7' style="background-color:#90ee90">
+            <center>
+                <h3 style="color:#000000"><b id="livetimer">{{data['current_datetime']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#90ee90">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_type']}}</b></h3>
+            </center>
+        </td>
+    </tr>
+    <tr>
+        <th colspan="1" style="background-color:#90ee90;">
+            <center>
+                <h3 style="color:#000000"><b>LIST</b></h3>
+            </center>
+        </th>
+        <th  colspan="1" style="background-color:#90ee90;">
+            <center>
+                <h3 style="color:#000000"><b>NORMAL</b></h3>
+            </center>
+        </th>
+        <th  colspan="1" style="background-color:#90ee90;">
+            <center>
+                <h3 style="color:#000000"><b>B(VEG)</b></h3>
+            </center>
+        </th>
+        <th colspan="1" style="background-color:#90ee90;">
+            <center>
+                <h3 style="color:#000000"><b>B(N-VEG)</b></h3>
+            </center>
+        </th>
+        <th  colspan="1" style="background-color:#90ee90;">
+            <center>
+                <h3 style="color:#000000"><b>S(VEG)</b></h3>
+            </center>
+        </th>
+        <th colspan="1" style="background-color:#90ee90;">
+            <center>
+                <h3 style="color:#000000"><b>S(N-VEG)</b></h3>
+            </center>
+        </th>
+        <th  colspan="1" style="background-color:#90ee90;">
+            <center>
+                <h3 style="color:#000000"><b>TOTAL</b></h3>
+            </center>
+        </th>
+        <th colspan="3" style="background-color:#90ee90;">
+            <center>
+                <h3 style="color:#000000"><b>%</b></h3>
+            </center>
+        </th>
+    </tr> 
+    </thead>
+    <tbody>   
+    <tr>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>PLAN</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_count']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_count']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_count']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_count']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_count']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            {% set total = data['food_count'] + data['food_count'] + data['food_count'] + data['food_count'] + data ['food_count'] %}
+            <center>
+                <h3 style="color:#000000"><b>{{total}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>100%</b></h3>
+            </center>
+        </td>
+    </tr>
+    <tr>
+        {% set scan_percentage = data ['food_scan'] / data ['food_count'] * 100 %}
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>ACTUAL</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_scan']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_scan']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_scan']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_scan']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{data['food_scan']}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            {% set total = data['food_scan'] + data['food_scan'] + data['food_scan'] + data['food_scan'] + data['food_scan'] %}
+            <center>
+                <h3 style="color:#000000"><b>{{total}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{scan_percentage |int}}%</b></h3>
+            </center>
+        </td>        
+    </tr>
+    <tr>
+        {% set normal_gap = data['food_count'] - data['food_scan']%}
+        {% set percentage = normal_gap / data ['food_count'] * 100 %}
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>GAP</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{normal_gap}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            {% set b_veg = data['food_count'] - data['food_scan']%}
+            <center>
+                <h3 style="color:#000000"><b>{{b_veg}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            {% set b_non_veg = data['food_count'] - data['food_scan']%}
+            <center>
+                <h3 style="color:#000000"><b>{{b_non_veg}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            {% set s_veg = data['food_count'] - data['food_scan']%}
+            <center>
+                <h3 style="color:#000000"><b>{{s_veg}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            {% set s_non_veg = data['food_count'] - data['food_scan']%}
+            <center>
+                <h3 style="color:#000000"><b>{{s_non_veg}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            {%set total = normal_gap + b_veg + b_non_veg + s_veg + s_non_veg %}
+            <center>
+                <h3 style="color:#000000"><b>{{total}}</b></h3>
+            </center>
+        </td>
+        <td colspan="1" style="background-color:#FFFFFF;">
+            <center>
+                <h3 style="color:#000000"><b>{{(percentage) | int}}%</b></h3>
+            </center>
+        </td>        
+    </tr>
+</tbody>
+</table>
+{% endblock %}    
+

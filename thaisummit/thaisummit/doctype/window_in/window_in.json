@@ -1,0 +1,73 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "creation": "2022-03-21 14:56:14.705391",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "column_break_2",
+  "supplier",
+  "section_break_2",
+  "window_in",
+  "record_in_data"
+ ],
+ "fields": [
+  {
+   "fieldname": "window_in",
+   "fieldtype": "Table",
+   "options": "Window IN Child"
+  },
+  {
+   "fieldname": "record_in_data",
+   "fieldtype": "Button",
+   "label": "Record IN Data"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "TSAI Supplier"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-05-01 19:58:13.995353",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Window IN",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

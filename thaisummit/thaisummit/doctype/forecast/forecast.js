@@ -2,22 +2,26 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Forecast', {
-    refresh(frm){
+    refresh(frm) {
         frm.disable_save()
-        frappe.breadcrumbs.add("Home","E-KANBAN");
+        frappe.breadcrumbs.add("Home", "E-KANBAN");
     },
     onload: function (frm) {
-        frm.set_value('attach','')
-        frm.set_value('from_date', frappe.datetime.month_start())
-        frm.set_value('to_date', frappe.datetime.month_end())
+        frm.set_value('attach', '')
+        // frm.set_value('from_date', frappe.datetime.month_start())
+        // frm.set_value('to_date', frappe.datetime.month_end())
+        frm.set_value('from_date', frappe.datetime.nowdate())
+        frm.set_value('to_date', frappe.datetime.add_days(frappe.datetime.nowdate(), 5))
+    },
+    view(frm) {
         frm.trigger('show_data')
     },
-    show_data(frm){
+    show_data(frm) {
         frm.call({
             method: 'get_data',
             doc: frm.doc,
             freeze: true,
-			freeze_message: __("Loading......"),
+            freeze_message: __("Loading......"),
             callback: function (r) {
                 if (r.message) {
                     frm.fields_dict.html.$wrapper.empty().append(r.message[0])
@@ -26,49 +30,65 @@ frappe.ui.form.on('Forecast', {
             }
         });
     },
-    form_date(frm){
-        if(frm.doc.from_date && frm.doc.to_date){
-        frm.trigger('show_data')
+    form_date(frm) {
+        if (frm.doc.from_date && frm.doc.to_date) {
+            // frm.trigger('show_data')
         }
     },
-    to_date(frm){
-        if(frm.doc.from_date && frm.doc.to_date){
-        frm.trigger('show_data')
+    to_date(frm) {
+        if (frm.doc.from_date && frm.doc.to_date) {
+            // frm.trigger('show_data')
         }
     },
-    download: function (frm) {
-		window.location.href = repl(frappe.request.url +
-			'?cmd=%(cmd)s&from_date=%(from_date)s&to_date=%(to_date)s', {
-			cmd: "thaisummit.thaisummit.doctype.forecast.forecast.download",
-            from_date: frm.doc.from_date,
-			to_date: frm.doc.to_date,
-		});
-	},
-    upload(frm){
-		if(frm.doc.attach){
-			frappe.call({
-				method : 'thaisummit.thaisummit.doctype.forecast.forecast.enqueue_upload',
-				args: {
-					file: frm.doc.attach,
-                    from_date : frm.doc.from_date,
-                    to_date: frm.doc.to_date
-				},
-				freeze: true,
-				freeze_message: 'Updating Forecast Data....',
-				callback(r){
-					if(r.message){
-						frappe.show_alert({
-							message:__('Forecast Data Updated Successfully'),
-							indicator:'green'
-						}, 5);
-						frm.set_value('attach','')
-                        frm.trigger('show_data')
-					}
-				}
-			})
-		}
-		else{
-			frappe.msgprint('Please Attach the Excel')
-		}
-	}
+    // download: function (frm) {
+    //     window.location.href = repl(frappe.request.url +
+    //         '?cmd=%(cmd)s&from_date=%(from_date)s&to_date=%(to_date)s', {
+    //         cmd: "thaisummit.thaisummit.doctype.forecast.forecast.download",
+    //         from_date: frm.doc.from_date,
+    //         to_date: frm.doc.to_date,
+    //     });
+    // },
+    download(frm){
+        frm.set_value("downloaded_forecast")
+        frappe.call({
+            method : 'thaisummit.thaisummit.doctype.forecast.forecast.download',
+            args : {
+                f_date : frm.doc.from_date,
+                t_date : frm.doc.to_date,
+            }
+        })
+        frappe.msgprint("Download initiated. Kindly check after 15 mins")
+    },
+    upload(frm) {
+        if (frappe.user.has_role('E-Kanban Manager') || frappe.user.has_role('PPC')) {
+            if (frm.doc.attach) {
+                frappe.call({
+                    method: 'thaisummit.thaisummit.doctype.forecast.forecast.enqueue_upload',
+                    args: {
+                        file: frm.doc.attach,
+                        from_date: frm.doc.from_date,
+                        to_date: frm.doc.to_date
+                    },
+                    freeze: true,
+                    freeze_message: 'Updating Forecast Data....',
+                    callback(r) {
+                        if (r.message) {
+                            frappe.show_alert({
+                                message: __('Forecast Data Updated Successfully'),
+                                indicator: 'green'
+                            }, 5);
+                            frm.set_value('attach', '')
+                            // frm.trigger('show_data')
+                        }
+                    }
+                })
+            }
+            else {
+                frappe.msgprint('Please Attach the Excel')
+            }
+        } else {
+			frappe.msgprint("You don't have enough access to upload Forecast")
+        }
+
+    }
 });

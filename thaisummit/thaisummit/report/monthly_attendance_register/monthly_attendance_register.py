@@ -276,8 +276,8 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 							if frappe.db.exists('Attendance',{'attendance_date':filterdate,'employee':emp,'status':('!=','Absent')}):
 								shift = frappe.get_value('Attendance',{'attendance_date':filterdate,'employee':emp },['employee_type','shift','qr_shift','late_entry']) or ''
 								late = ''
-								if shift[3] == 1:
-									late = 'L'
+								# if shift[3] == 1:
+								# 	late = 'L'
 								if holiday_map[emp_holiday_list][idx][1]:
 									if shift[0] == 'WC':
 										if shift[1]:
@@ -302,7 +302,6 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 								else:
 									status = "Holiday"
 							total_h += 1
-						
 			if emp_det.employee_type == "WC":
 				abbr = wc_status_map.get(status, "")
 			else:
@@ -434,7 +433,7 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 			total_holidays = total_holidays - len(hds)
 			total_weekoffs = total_weekoffs - len(wof)
 
-		total_payable_days = total_worked_days + total_holidays + total_cl + total_el + total_sl + total_co + total_spl
+		total_payable_days = total_worked_days + total_holidays + total_cl + total_el + total_sl + total_co + total_spl - total_wrong_shifts
 		calendar_days = filters['total_days_in_month']
 		row.extend([calendar_days,total_worked_days,total_weekoffs,total_holidays,total_cl ,total_el,total_sl,total_spl,total_la,total_lop,total_wrong_shifts,total_payable_days])
 		emp_att_map[emp] = emp_status_map

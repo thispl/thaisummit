@@ -1,0 +1,122 @@
+{
+ "actions": [],
+ "autoname": "PL.#####",
+ "creation": "2022-05-21 16:00:03.069175",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "section_break_2",
+  "break_fast",
+  "column_break_4",
+  "lunch",
+  "section_break_6",
+  "special_veg",
+  "column_break_8",
+  "special_nonveg",
+  "section_break_10",
+  "dinner",
+  "column_break_12",
+  "supper",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "break_fast",
+   "fieldtype": "Currency",
+   "label": "Break Fast"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lunch",
+   "fieldtype": "Currency",
+   "label": "Lunch"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "dinner",
+   "fieldtype": "Currency",
+   "label": "Dinner"
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "supper",
+   "fieldtype": "Currency",
+   "label": "Supper"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Price Plan",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "special_veg",
+   "fieldtype": "Currency",
+   "label": "Special(Veg)"
+  },
+  {
+   "fieldname": "special_nonveg",
+   "fieldtype": "Currency",
+   "label": "Special(Non Veg)"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-05-25 14:46:23.050839",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Price Plan",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

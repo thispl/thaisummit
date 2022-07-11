@@ -1,0 +1,118 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "creation": "2022-03-26 18:04:30.932852",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "sync_grn",
+  "column_break_3",
+  "download",
+  "invoice_key",
+  "overall_last_download_on",
+  "section_break_2",
+  "invoice_key_date",
+  "download_invoice_key",
+  "invoice_key_date_wise",
+  "date_wise_last_download_on",
+  "enqueued_methods"
+ ],
+ "fields": [
+  {
+   "depends_on": "eval:frappe.user.has_role(\"E-Kanban Manager\")",
+   "fieldname": "sync_grn",
+   "fieldtype": "Button",
+   "label": "Sync GRN",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "permlevel": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:frappe.user.has_role(\"E-Kanban Manager\")",
+   "fieldname": "download",
+   "fieldtype": "Button",
+   "label": "Overall Invoice Key"
+  },
+  {
+   "fieldname": "invoice_key_date",
+   "fieldtype": "Date",
+   "label": "Invoice Key Date"
+  },
+  {
+   "depends_on": "eval:frappe.user.has_role(\"E-Kanban Manager\")",
+   "fieldname": "download_invoice_key",
+   "fieldtype": "Button",
+   "label": "Download"
+  },
+  {
+   "depends_on": "invoice_key",
+   "fieldname": "invoice_key",
+   "fieldtype": "Attach",
+   "label": "Invoice Key"
+  },
+  {
+   "depends_on": "invoice_key",
+   "fieldname": "overall_last_download_on",
+   "fieldtype": "Datetime",
+   "label": "Last Download On",
+   "read_only": 1
+  },
+  {
+   "depends_on": "invoice_key_date_wise",
+   "fieldname": "invoice_key_date_wise",
+   "fieldtype": "Attach",
+   "label": "Invoice Key Date Wise"
+  },
+  {
+   "depends_on": "invoice_key_date_wise",
+   "fieldname": "date_wise_last_download_on",
+   "fieldtype": "Datetime",
+   "label": "Last Download On"
+  },
+  {
+   "fieldname": "enqueued_methods",
+   "fieldtype": "HTML",
+   "label": "Enqueued Methods",
+   "options": "<a src=\"172.16.1.1/app/enqueue-methods\">EQ</a>"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-06-06 12:21:17.680799",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Ekanban Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

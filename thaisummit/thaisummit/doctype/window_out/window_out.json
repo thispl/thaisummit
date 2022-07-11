@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "creation": "2022-03-21 15:03:52.953006",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "window_out",
+  "section_break_3",
+  "vehicle_no",
+  "record_out_data",
+  "column_break_5",
+  "column_break_6"
+ ],
+ "fields": [
+  {
+   "fieldname": "window_out",
+   "fieldtype": "Table",
+   "label": "Window OUT",
+   "options": "Window OUT Child"
+  },
+  {
+   "fieldname": "record_out_data",
+   "fieldtype": "Button",
+   "label": "Record OUT Data"
+  },
+  {
+   "fieldname": "vehicle_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vehicle No.",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-05-01 20:07:21.457702",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Window OUT",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

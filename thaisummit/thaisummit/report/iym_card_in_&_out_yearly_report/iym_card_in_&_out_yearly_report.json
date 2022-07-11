@@ -20,12 +20,6 @@
    "width": 0
   },
   {
-   "fieldname": "model_number",
-   "fieldtype": "Data",
-   "label": "Model Number",
-   "width": 0
-  },
-  {
    "fieldname": "vehicle_in",
    "fieldtype": "Data",
    "label": "Vehicle In",
@@ -35,6 +29,12 @@
    "fieldname": "vehicle_out",
    "fieldtype": "Data",
    "label": "Vehicle Out",
+   "width": 0
+  },
+  {
+   "fieldname": "model_number",
+   "fieldtype": "Data",
+   "label": "Model Number",
    "width": 0
   },
   {
@@ -86,6 +86,12 @@
    "width": 0
   },
   {
+   "fieldname": "in_out_difference",
+   "fieldtype": "Data",
+   "label": "Time Difference",
+   "width": 0
+  },
+  {
    "fieldname": "delay_duration",
    "fieldtype": "Time",
    "label": "Delay Duration",
@@ -122,13 +128,13 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "TS_logo",
- "modified": "2021-09-14 21:54:17.893740",
+ "modified": "2022-05-26 12:53:23.616126",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "IYM Card IN & OUT Yearly Report",
  "owner": "Administrator",
  "prepared_report": 0,
- "query": "select\nROW_NUMBER() OVER(PARTITION BY `tabTAG Master`.name) AS sno,\n`tabTAG Master`.slot_no,\n`tabTAG Master`.mat_no,\n`tabTAG Master`.vehicle_in,\n`tabTAG Master`.vehicle_out,\n`tabTAG Master`.model_number,\n`tabTAG Master`.tag_type,\n`tabTAG Master`.parts_no,\n`tabTAG Master`.parts_name,\n`tabTAG Master`.required_quantity,\n`tabTAG Master`.sap_quantity,\n`tabTAG Master`.difference,\n`tabTAG Master`.recieved_time,\n`tabTAG Master`.date_and_time,\n`tabTAG Master`.delay_duration,\n`tabTAG Master`.reason_for_card_delay,\n`tabTAG Master`.sp_purchase_price*`tabTAG Master`.required_quantity  AS total_price\nfrom\n`tabTAG Master`\nwhere\nyear(recieved_time) = %(yearly)s\n",
+ "query": "select\nROW_NUMBER() OVER(PARTITION BY `tabTAG Master`.name) AS sno,\n`tabTAG Master`.slot_no,\n`tabTAG Master`.mat_no,\n`tabTAG Master`.vehicle_in,\n`tabTAG Master`.vehicle_out,\n SUBSTRING_INDEX(SUBSTRING_INDEX(`tabTAG Master`.parts_no, '-', 1), '-', -1),\n`tabTAG Master`.tag_type,\n SUBSTRING_INDEX(SUBSTRING_INDEX(`tabTAG Master`.parts_no,'-', 2),'-', -1),\n`tabTAG Master`.parts_name,\n`tabTAG Master`.required_quantity,\n`tabTAG Master`.sap_quantity,\n`tabTAG Master`.difference,\n`tabTAG Master`.recieved_time,\n`tabTAG Master`.date_and_time,\nTIMEDIFF(`tabTAG Master`.date_and_time,`tabTAG Master`.recieved_time),\n`tabTAG Master`.delay_duration,\n`tabTAG Master`.reason_for_card_delay,\n`tabTAG Master`.sp_purchase_price*`tabTAG Master`.required_quantity  AS total_price\nfrom\n`tabTAG Master`\nwhere\nyear(recieved_time) = %(yearly)s\n",
  "ref_doctype": "TAG Master",
  "report_name": "IYM Card IN & OUT Yearly Report",
  "report_type": "Query Report",

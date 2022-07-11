@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_copy": 1,
  "autoname": "PR-.####",
  "creation": "2021-05-06 18:16:34.374775",
  "doctype": "DocType",
@@ -154,7 +155,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2021-06-28 17:13:47.888784",
+ "modified": "2022-03-24 11:29:36.428467",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Permission Request",

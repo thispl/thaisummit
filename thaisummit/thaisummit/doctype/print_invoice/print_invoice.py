@@ -5,10 +5,16 @@ import frappe
 from frappe.model.document import Document
 
 class PrintInvoice(Document):
-	pass
+    pass
 
 @frappe.whitelist()
-def get_supplier_invoice(from_date,to_date):
-	supplier_code = frappe.db.get_value('TSAI Supplier',{'user':frappe.session.user},'user_name')
-	invs = frappe.db.sql("""select name, invoice_date from `tabTSAI Invoice` where invoice_date between '%s' and '%s' and supplier_code = '%s' """%(from_date,to_date,supplier_code),as_dict=True)
-	return invs
+def get_supplier_invoice(from_date,to_date,supplier=None):
+    if 'System Manager' not in frappe.get_roles(frappe.session.user):
+        if 'Supplier' in frappe.get_roles(frappe.session.user):
+            supplier_code = frappe.db.get_value('TSAI Supplier',{'email':frappe.session.user},'name')
+            invs = frappe.db.sql("""select name, invoice_date, supplier_name from `tabTSAI Invoice` where invoice_date between '%s' and '%s' and supplier_code = '%s' """%(from_date,to_date,supplier_code),as_dict=True)
+            return invs
+    else:
+        if supplier:
+            invs = frappe.db.sql("""select name, invoice_date,supplier_name from `tabTSAI Invoice` where invoice_date between '%s' and '%s' and supplier_code = '%s' """%(from_date,to_date,supplier),as_dict=True)
+            return invs

@@ -490,6 +490,15 @@ class ShiftSchedule(Document):
 def enqueue_shift_assignment(file,from_date,to_date,name):
     enqueue(create_shift_assignment, queue='default', timeout=6000, event='create_shift_assignment',
                     file=file,from_date=from_date,to_date=to_date,name=name)
+
+@frappe.whitelist()
+def manual_shift_assignment():
+    file = '/private/files/FZ (27-02).csv'
+    from_date = '2022-06-27' 
+    to_date = '2022-07-02'
+    name = "SC-3827"
+    create_shift_assignment(file,from_date,to_date,name)
+    
 @frappe.whitelist()
 def create_shift_assignment(file,from_date,to_date,name):
     filepath = get_file(file)

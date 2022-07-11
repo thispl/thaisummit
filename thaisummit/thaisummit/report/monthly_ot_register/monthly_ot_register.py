@@ -34,6 +34,7 @@ def get_data(filters):
     data = []
     employees = get_employees(filters)
     if filters.employee_type != 'CL':
+        frappe.errprint('yes')
         for emp in employees:
             dates = get_dates(filters.from_date,filters.to_date)
             if frappe.db.exists("Overtime Request",{'ot_date':('in',dates),'employee':emp.name,'workflow_state':'Approved'}):

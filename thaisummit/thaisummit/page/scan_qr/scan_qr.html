@@ -34,10 +34,11 @@
         <div class="col-md-6">
         <table class="table">
             <thead>
-                <tr><td colspan="4" style="background-color: lightgrey;text-align:center">Mobile Scanning Report</td></tr>
+                <tr><td colspan="5" style="background-color: lightgrey;text-align:center">Mobile Scanning Report</td></tr>
                 <tr style="background-color: orange;">
                     <td>List</td>
-                    <td>Onroll</td>
+                    <td>BC</td>
+                    <td>NT</td>
                     <td>CL</td>
                     <td>Total</td>
                 </tr>
@@ -47,30 +48,34 @@
             
             <tr>
                 <td>Planned</td>
-                <td> {{ data["planned_onroll_count"] }}</td>
+                <td> {{ data["planned_bc_count"] }}</td>
+                <td> {{ data["planned_nt_count"] }}</td>
                 <td>{{ data["planned_cl_count"] }} </td>
-                <td>{{ data["planned_onroll_count"] + data["planned_cl_count"] }}</td>
+                <td>{{ data["planned_bc_count"] + data["planned_nt_count"] + data["planned_cl_count"] }}</td>
             </tr>
             <tr>
                 <td>Actual</td>
-                <td>{{ data["actual_onroll_count"] }}</td>
+                <td>{{ data["actual_bc_count"] }}</td>
+                <td>{{ data["actual_nt_count"] }}</td>
                 <td>{{ data["actual_cl_count"] }}</td>
-                <td>{{ data["actual_onroll_count"] + data["actual_cl_count"] }}</td>
+                <td>{{ data["actual_bc_count"] + data["actual_nt_count"] + data["actual_cl_count"] }}</td>
             </tr>
             <tr>
                 <td>Shortage</td>
-                <td>{{ data["onroll_shortage"] }}</td>
+                <td>{{ data["bc_shortage"] }}</td>
+                <td>{{ data["nt_shortage"] }}</td>
                 <td>{{ data["cl_shortage"] }}</td>
-                {% if (data["actual_onroll_count"] + data["actual_cl_count"]) >= (data["planned_onroll_count"] + data["planned_cl_count"])  %}
+                {% if (data["actual_bc_count"] + data["actual_nt_count"] + data["actual_cl_count"]) >= (data["planned_bc_count"] + data["planned_nt_count"] + data["planned_cl_count"])  %}
                 <td>0</td>
                 {% else %}
-                <td>{{ (data["planned_onroll_count"] + data["planned_cl_count"]) - (data["actual_onroll_count"] + data["actual_cl_count"]) }}</td>
+                <td>{{ (data["planned_bc_count"] + data["planned_nt_count"] + data["planned_cl_count"]) - (data["actual_bc_count"] + data["actual_nt_count"] + data["actual_cl_count"]) }}</td>
                 {% endif %}
 
             </tr>
             <tr>
                 <td>%</td>
-                <td>{{ data["onroll_percentage"] }} %</td>
+                <td>{{ data["bc_percentage"] }} %</td>
+                <td>{{ data["nt_percentage"] }} %</td>
                 <td>{{ data["cl_percentage"] }} %</td>
                 <td>{{ data["total_percentage"] }} %</td>
             </tr>
@@ -82,9 +87,10 @@
             </tr> -->
             <tr>
                 <td>OT</td>
-                <td>{{ data["ot_onroll_count"] }}</td>
+                <td>{{ data["ot_bc_count"] }}</td>
+                <td>{{ data["ot_nt_count"] }}</td>
                 <td>{{ data["ot_cl_count"] }}</td>
-                <td>{{ data["ot_onroll_count"] + data["ot_cl_count"] }}</td>
+                <td>{{ data["ot_bc_count"] + data["ot_nt_count"] + data["ot_cl_count"] }}</td>
             </tr>
 
             

@@ -8,19 +8,18 @@
  "engine": "InnoDB",
  "field_order": [
   "supplier_code",
+  "enabled",
   "supplier_name",
   "address",
-  "gstin",
-  "state",
   "column_break_3",
   "email",
   "phone_no",
-  "user_name",
-  "user",
-  "section_break_5",
+  "gstin",
+  "state",
+  "section_break_10",
   "window_time",
-  "invoice_running_no",
-  "column_break_8",
+  "invoice_no_type",
+  "data_15",
   "prefixed_running_no",
   "current_running_no"
  ],
@@ -29,7 +28,7 @@
    "fieldname": "supplier_code",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Supplier Code",
+   "label": "Supplier Code / User Name",
    "reqd": 1,
    "unique": 1
   },
@@ -45,50 +44,11 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "user_name",
-   "fieldtype": "Data",
-   "label": "User Name"
-  },
-  {
-   "fieldname": "section_break_5",
-   "fieldtype": "Section Break",
-   "hidden": 1
-  },
-  {
-   "fieldname": "window_time",
-   "fieldtype": "Time",
-   "label": "Window Time"
-  },
-  {
-   "fieldname": "invoice_running_no",
-   "fieldtype": "Data",
-   "label": "Invoice Running No"
-  },
-  {
-   "fieldname": "column_break_8",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "prefixed_running_no",
-   "fieldtype": "Data",
-   "label": "Prefixed Running No"
-  },
-  {
-   "fieldname": "current_running_no",
-   "fieldtype": "Data",
-   "label": "Current Running No"
-  },
-  {
-   "fieldname": "user",
-   "fieldtype": "Link",
-   "label": "User",
-   "options": "User"
-  },
-  {
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
    "options": "Email",
+   "read_only_depends_on": "eval:!doc.__islocal",
    "reqd": 1
   },
   {
@@ -110,11 +70,53 @@
    "fieldname": "phone_no",
    "fieldtype": "Data",
    "label": "Phone No"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:!doc.__islocal",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "00:00:00",
+   "fieldname": "window_time",
+   "fieldtype": "Time",
+   "label": "Window Time"
+  },
+  {
+   "fieldname": "invoice_no_type",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Invoice No Type",
+   "options": "\nManual\nAutomatic",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.invoice_no_type == 'Automatic'",
+   "fieldname": "prefixed_running_no",
+   "fieldtype": "Data",
+   "label": "Prefixed Running No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "data_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.invoice_no_type == 'Automatic'",
+   "fieldname": "current_running_no",
+   "fieldtype": "Int",
+   "label": "Current Running No"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-02-14 15:07:38.599996",
+ "modified": "2022-04-03 13:05:38.944506",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI Supplier",

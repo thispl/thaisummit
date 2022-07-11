@@ -1,0 +1,204 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "FA.####",
+ "creation": "2022-05-23 14:16:49.364994",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "column_break_2",
+  "time",
+  "section_break_4",
+  "id_no",
+  "employee_name",
+  "department",
+  "date_of_birth",
+  "age",
+  "image",
+  "hod",
+  "column_break_10",
+  "employee_type",
+  "emergency_contact_person",
+  "relationship",
+  "emergency_phone",
+  "blood_group",
+  "section_break_16",
+  "symptoms",
+  "column_break_18",
+  "prescription",
+  "section_break_22",
+  "medicine",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "id_no.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name"
+  },
+  {
+   "fetch_from": "id_no.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fetch_from": "id_no.date_of_birth",
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "age",
+   "fieldtype": "Data",
+   "label": "Age"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "id_no",
+   "fieldtype": "Link",
+   "label": "ID No",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "id_no.employee_type",
+   "fieldname": "employee_type",
+   "fieldtype": "Data",
+   "label": "Employee Type"
+  },
+  {
+   "fetch_from": "id_no.person_to_be_contacted",
+   "fieldname": "emergency_contact_person",
+   "fieldtype": "Data",
+   "label": "Emergency Contact Person"
+  },
+  {
+   "fetch_from": "id_no.relation",
+   "fieldname": "relationship",
+   "fieldtype": "Data",
+   "label": "RelationShip"
+  },
+  {
+   "fetch_from": "id_no.emergency_phone_number",
+   "fieldname": "emergency_phone",
+   "fieldtype": "Data",
+   "label": "Emergency Phone"
+  },
+  {
+   "fetch_from": "id_no.blood_group",
+   "fieldname": "blood_group",
+   "fieldtype": "Data",
+   "label": "Blood Group"
+  },
+  {
+   "fieldname": "symptoms",
+   "fieldtype": "Small Text",
+   "label": "Symptoms"
+  },
+  {
+   "fieldname": "prescription",
+   "fieldtype": "Small Text",
+   "label": "Prescription"
+  },
+  {
+   "fieldname": "section_break_16",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_18",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "First Aid",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fetch_from": "id_no.image",
+   "fetch_if_empty": 1,
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "Image"
+  },
+  {
+   "fetch_from": "department.hod",
+   "fieldname": "hod",
+   "fieldtype": "Data",
+   "label": "HOD",
+   "options": "Email",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_22",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "medicine",
+   "fieldtype": "Table",
+   "label": "Medicine",
+   "options": "Medicine Table"
+  }
+ ],
+ "image_field": "image",
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "max_attachments": 5,
+ "modified": "2022-06-16 12:43:39.333460",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "First Aid",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "track_changes": 1
+}

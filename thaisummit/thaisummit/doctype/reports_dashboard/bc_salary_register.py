@@ -103,7 +103,7 @@ def get_dates(args):
 def get_column(args):
     data = ["SR No","Cost C ","Emp No","Employee_Name","DOJ","Department","Designation",
     "Paid Days 100 %","OT Hours","Basic & DA","House Rent Allow","Other Allw","Position All","Gross Wage",
-    "Basic","HRA","Other Allw","Position All","Additional Bonus","SHT","ARR","PP Allowance","Transport Allowance","Additional Allowance","Others",
+    "Basic","HRA","Other Allw","Position All","Additional Bonus","ATA","SHT","ARR","PP Allowance","Transport Allowance","Additional Allowance","Others",
     "Gross","PF","ESI","Can","P Tax","PPE","Other Deduction","Total","Net Wage","Bonus"]
     
     return data      
@@ -114,7 +114,7 @@ def get_data(args):
     row = []
     basic_component_amount = earning_component_amount = deduction_component_amount = gross_wage = total_deduction = 0
 
-    earning_comp = ["Basic","House Rent Allowance","Other Allowance","Position Allowance","Attendance Allowance","Shift Allowance","Arrear","PP Allowance","Transport Allowance","Additional Allowance","Others",]
+    earning_comp = ["Basic","House Rent Allowance","Other Allowance","Position Allowance","Attendance Allowance","Attendance Bonus","Shift Allowance","Arrear","PP Allowance","Transport Allowance","Additional Allowance","Others",]
 
     dedcution_comp = ["Provident Fund","Employee State Insurance","Canteen Charges","Professional Tax","Personal Protective Equipment","Other Deduction"]
 
@@ -139,7 +139,6 @@ def get_data(args):
                 row.append(earning_component_amount)
             else:
                 row.append('')
-        frappe.log_error(title = 'ss.gross_pay',message=ss.gross_pay)
         row += [ss.gross_pay]
         total_deduction =0
         for dc in dedcution_comp:

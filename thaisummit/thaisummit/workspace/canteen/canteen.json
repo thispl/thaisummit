@@ -1,0 +1,85 @@
+{
+ "cards_label": "Reports",
+ "category": "Modules",
+ "charts": [],
+ "creation": "2022-06-16 10:18:57.558568",
+ "developer_mode_only": 0,
+ "disable_user_customization": 1,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "hide_custom": 0,
+ "icon": "",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Canteen",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Canteen",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Food Scan Report",
+   "link_to": "Food Scan Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Food Report",
+   "link_to": "Food Report",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2022-07-09 21:55:06.136669",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Canteen",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "Food Scan",
+   "link_to": "Food Entry Scan",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Food Plan Entry",
+   "link_to": "Food Plan Entry",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Food Menu",
+   "link_to": "Food Menu",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Guest Entry",
+   "link_to": "Guest Entry",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Food Scan Report",
+   "link_to": "Food Scan Report",
+   "type": "Report"
+  }
+ ],
+ "shortcuts_label": "Canteen"
+}

@@ -129,7 +129,6 @@ def get_status(emp,date):
                 shift = shift_status[0] + holiday
         else:
             shift = shift_status[0]
-        # frappe.errprint([date,shift])
         if shift_status[1] == "WC":
             status = wc_status_map.get(shift, "")
         else:

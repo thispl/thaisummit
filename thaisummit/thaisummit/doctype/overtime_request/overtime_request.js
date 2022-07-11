@@ -40,12 +40,13 @@ frappe.ui.form.on('Overtime Request', {
 	},
 	validate(frm) {
 		if (!frappe.user.has_role('System Manager')) {
-			var date = frappe.datetime.add_days(frm.doc.ot_date, 6)
+			var date = frappe.datetime.add_days(frm.doc.ot_date, 3)
 			frappe.call({
 				"method": "thaisummit.utils.get_server_date",
 				callback(r) {
 					if (r.message > date) {
-						frappe.throw("Overtime should be applied within 6 days")
+						frappe.msgprint("OT should be applied within 3 days")
+						frappe.validated = false;
 					}
 				}
 			})
@@ -79,6 +80,19 @@ frappe.ui.form.on('Overtime Request', {
 	},
 	employee(frm) {
 		if (frm.doc.employee) {
+			frappe.call({
+				method: "frappe.client.get_value",
+				args:{
+					doctype : "Employee",
+					filters:{
+						name : frm.doc.employee
+					},
+					fieldname : ['department']
+				},
+				callback(r){
+					frm.set_value('department',r.message.department)
+				}				
+			})
 			// if (!frm.doc.approver) {
 			if (frappe.user.has_role('GM')) {
 				frm.call('get_ceo', { employee: frm.doc.employee }).then(r => {
@@ -219,13 +233,14 @@ frappe.ui.form.on('Overtime Request', {
 		}
 	},
 	ot_date(frm) {
-		var date = frappe.datetime.add_days(frm.doc.ot_date, 6)
+		var date = frappe.datetime.add_days(frm.doc.ot_date, 3)
 		if (!frappe.user.has_role('System Manager')) {
 			frappe.call({
 				"method": "thaisummit.utils.get_server_date",
 				callback(r) {
 					if (r.message > date) {
-						frappe.throw("Overtime should be applied within 6 days")
+						frappe.msgprint("OT should be applied within 3 days")
+						frappe.validated = false;
 					}
 				}
 			})

@@ -2,10 +2,10 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('TAG Monitoring Management', {
-	refresh: function(frm) {
-        frm.disable_save()
+	// refresh: function(frm) {
+    //     frm.disable_save()
         
-    },
+    // },
 
 	get_item_qty:function(frm){
 		frappe.call({

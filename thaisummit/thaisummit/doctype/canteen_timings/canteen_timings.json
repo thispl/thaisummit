@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "autoname": "CT.####",
+ "creation": "2022-06-27 08:09:49.154545",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "meal_type",
+  "min_time",
+  "max_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "meal_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Meal type",
+   "options": "Food Menu"
+  },
+  {
+   "fieldname": "min_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Min Time"
+  },
+  {
+   "fieldname": "max_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Max Time"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-06-27 08:10:05.980199",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Canteen Timings",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

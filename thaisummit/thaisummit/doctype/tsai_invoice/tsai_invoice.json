@@ -7,22 +7,45 @@
  "engine": "InnoDB",
  "field_order": [
   "po_no",
+  "invoice_time",
   "po_date",
   "qr_code",
   "irn_no",
   "column_break_3",
+  "status",
   "invoice_no",
+  "po_entry",
   "invoice_date",
   "supplier_code",
+  "supplier_name",
   "section_break_7",
   "invoice_items",
   "section_break_11",
   "total_qty",
   "total_basic_amount",
+  "total_bin",
+  "grn",
   "column_break_14",
-  "gst_percentage",
+  "cgst",
+  "sgst",
+  "igst",
+  "tcs",
   "total_gst_amount",
-  "total_invoice_amount"
+  "total_invoice_amount",
+  "section_break_23",
+  "window_status",
+  "std_in_time",
+  "actual_in_time",
+  "delaymins",
+  "remarks",
+  "column_break_27",
+  "vehicle_no",
+  "gate_in_date",
+  "std_outtime",
+  "planned_out_time",
+  "actual_out_time",
+  "outdelay",
+  "out_bin"
  ],
  "fields": [
   {
@@ -73,7 +96,7 @@
   },
   {
    "fieldname": "qr_code",
-   "fieldtype": "Data",
+   "fieldtype": "Long Text",
    "label": "QR Code"
   },
   {
@@ -100,19 +123,144 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "gst_percentage",
-   "fieldtype": "Data",
-   "label": "GST Percentage"
-  },
-  {
    "fieldname": "total_invoice_amount",
    "fieldtype": "Currency",
    "label": "Total Invoice Amount"
+  },
+  {
+   "default": "OPEN",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nOPEN\nCANCELLED\nCLOSED"
+  },
+  {
+   "fetch_from": "supplier_code.supplier_name",
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "label": "Supplier Name"
+  },
+  {
+   "fieldname": "cgst",
+   "fieldtype": "Percent",
+   "label": "CGST"
+  },
+  {
+   "fieldname": "sgst",
+   "fieldtype": "Percent",
+   "label": "SGST"
+  },
+  {
+   "fieldname": "igst",
+   "fieldtype": "Percent",
+   "label": "IGST"
+  },
+  {
+   "fieldname": "total_bin",
+   "fieldtype": "Int",
+   "label": "Total Bin"
+  },
+  {
+   "fieldname": "section_break_23",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "00:00",
+   "fieldname": "std_in_time",
+   "fieldtype": "Time",
+   "label": "Std IN Time",
+   "read_only": 1
+  },
+  {
+   "default": "00:00",
+   "fieldname": "actual_in_time",
+   "fieldtype": "Time",
+   "label": "Actual IN Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delaymins",
+   "fieldtype": "Int",
+   "label": "IN Delay (Mins)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_27",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "00:00",
+   "fieldname": "actual_out_time",
+   "fieldtype": "Time",
+   "label": "Actual Out Time"
+  },
+  {
+   "fieldname": "outdelay",
+   "fieldtype": "Int",
+   "label": "Out Delay"
+  },
+  {
+   "fieldname": "window_status",
+   "fieldtype": "Select",
+   "label": "Window Status",
+   "options": "\nIN\nOUT"
+  },
+  {
+   "fieldname": "gate_in_date",
+   "fieldtype": "Date",
+   "label": "Gate IN Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "grn",
+   "fieldtype": "Check",
+   "label": "GRN"
+  },
+  {
+   "fieldname": "vehicle_no",
+   "fieldtype": "Data",
+   "label": "Vehicle No"
+  },
+  {
+   "fieldname": "std_outtime",
+   "fieldtype": "Int",
+   "label": "std_outtime"
+  },
+  {
+   "fieldname": "out_bin",
+   "fieldtype": "Int",
+   "label": "Out Bin"
+  },
+  {
+   "fieldname": "planned_out_time",
+   "fieldtype": "Time",
+   "label": "Planned Out Time"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Data",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "po_entry",
+   "fieldtype": "Data",
+   "label": "PO Entry"
+  },
+  {
+   "fieldname": "tcs",
+   "fieldtype": "Percent",
+   "label": "TCS"
+  },
+  {
+   "fieldname": "invoice_time",
+   "fieldtype": "Time",
+   "label": "Invoice Time",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-02-21 14:42:54.137679",
+ "modified": "2022-06-28 15:50:55.518178",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI Invoice",

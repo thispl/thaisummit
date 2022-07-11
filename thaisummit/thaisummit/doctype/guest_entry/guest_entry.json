@@ -1,0 +1,574 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2022-05-31 16:17:42.174354",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "column_break_2",
+  "time",
+  "section_break_4",
+  "type",
+  "requester_id",
+  "employee_name",
+  "department",
+  "column_break_10",
+  "naming_series",
+  "party_name",
+  "from",
+  "to",
+  "section_break_12",
+  "break_fast",
+  "lunch",
+  "lunch_briyani_veg",
+  "lunch_briyani_non_veg",
+  "lunch_special_veg",
+  "lunch_special_non_veg",
+  "dinner",
+  "dinner_briyani_veg",
+  "dinner_briyani_non_veg",
+  "dinner_special_veg",
+  "dinner_special_non_veg",
+  "supper_dates",
+  "supper_special_food",
+  "column_break_28",
+  "bf_no_of_days",
+  "lu_no_of_days",
+  "lbv_no_of_days",
+  "lbnv_no_of_days",
+  "lsv_no_of_days",
+  "lsnv_no_of_days",
+  "dn_no_of_days",
+  "dbv_no_of_days",
+  "dbnv_no_of_days",
+  "dsv_no_of_days",
+  "dsnv_no_of_days",
+  "sd_no_of_days",
+  "ssf_no_of_days",
+  "column_break_40",
+  "bf_price",
+  "lu_price",
+  "lbv_price",
+  "lbnv_price",
+  "lsv_price",
+  "lsnv_price",
+  "dn_price",
+  "dbv_price",
+  "dbnv_price",
+  "dsv_price",
+  "dsnv_price",
+  "sd_price",
+  "ssf_price",
+  "column_break_52",
+  "bf_amount",
+  "lu_amount",
+  "lbv_amount",
+  "lbnv_amount",
+  "lsv_amount",
+  "lsnv_amount",
+  "dn_amount",
+  "dbv_amount",
+  "dbnv_amount",
+  "dsv_amount",
+  "dsnv_amount",
+  "sd_amount",
+  "ssf_amount",
+  "section_break_60",
+  "remarks",
+  "column_break_62",
+  "total_amount",
+  "section_break_64",
+  "allowed_items"
+ ],
+ "fields": [
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "requester_id",
+   "fieldtype": "Link",
+   "label": "Requester ID",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "from",
+   "fieldtype": "Date",
+   "label": "From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Date",
+   "label": "To",
+   "reqd": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "\nCustomer\nVendor\nGovernment Officers\nOthers",
+   "reqd": 1
+  },
+  {
+   "fieldname": "party_name",
+   "fieldtype": "Link",
+   "label": "Party Name",
+   "options": "Party",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_12",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "break_fast",
+   "fieldtype": "Check",
+   "label": "Break Fast"
+  },
+  {
+   "default": "0",
+   "fieldname": "lunch_briyani_veg",
+   "fieldtype": "Check",
+   "label": "Lunch Briyani Veg"
+  },
+  {
+   "default": "0",
+   "fieldname": "lunch_briyani_non_veg",
+   "fieldtype": "Check",
+   "label": "Lunch Briyani Non Veg"
+  },
+  {
+   "default": "0",
+   "fieldname": "lunch_special_veg",
+   "fieldtype": "Check",
+   "label": "Lunch Special Veg"
+  },
+  {
+   "default": "0",
+   "fieldname": "lunch_special_non_veg",
+   "fieldtype": "Check",
+   "label": "Lunch Special Non Veg"
+  },
+  {
+   "default": "0",
+   "fieldname": "dinner_briyani_veg",
+   "fieldtype": "Check",
+   "label": "Dinner Briyani Veg"
+  },
+  {
+   "default": "0",
+   "fieldname": "dinner_briyani_non_veg",
+   "fieldtype": "Check",
+   "label": "Dinner Briyani Non Veg"
+  },
+  {
+   "default": "0",
+   "fieldname": "dinner_special_veg",
+   "fieldtype": "Check",
+   "label": "Dinner Special Veg"
+  },
+  {
+   "default": "0",
+   "fieldname": "dinner_special_non_veg",
+   "fieldtype": "Check",
+   "label": "Dinner Special Non Veg"
+  },
+  {
+   "default": "0",
+   "fieldname": "supper_dates",
+   "fieldtype": "Check",
+   "label": "Supper Dates"
+  },
+  {
+   "default": "0",
+   "fieldname": "supper_special_food",
+   "fieldtype": "Check",
+   "label": "Supper Special Food"
+  },
+  {
+   "fieldname": "column_break_28",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.break_fast == 1",
+   "fieldname": "bf_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "depends_on": "eval:doc.lunch_briyani_veg== 1",
+   "fieldname": "lbv_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "depends_on": "eval:doc.lunch_briyani_non_veg== 1",
+   "fieldname": "lbnv_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "depends_on": "eval:doc.lunch_special_veg== 1",
+   "fieldname": "lsv_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "depends_on": "eval:doc.lunch_special_non_veg== 1",
+   "fieldname": "lsnv_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "depends_on": "eval:doc.dinner_briyani_veg== 1",
+   "fieldname": "dbv_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "depends_on": "eval:doc.dinner_briyani_non_veg== 1",
+   "fieldname": "dbnv_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "depends_on": "eval:doc.dinner_special_veg== 1",
+   "fieldname": "dsv_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "depends_on": "eval:doc.dinner_special_non_veg== 1",
+   "fieldname": "dsnv_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "depends_on": "eval:doc.supper_dates== 1",
+   "fieldname": "sd_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "fieldname": "column_break_40",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.break_fast == 1",
+   "fieldname": "bf_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch_briyani_veg== 1",
+   "fieldname": "lbv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch_briyani_non_veg== 1",
+   "fieldname": "lbnv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch_special_veg== 1",
+   "fieldname": "lsv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch_special_non_veg== 1",
+   "fieldname": "lsnv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner_briyani_veg== 1",
+   "fieldname": "dbv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner_briyani_non_veg== 1",
+   "fieldname": "dbnv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner_special_veg== 1",
+   "fieldname": "dsv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner_special_non_veg== 1",
+   "fieldname": "dsnv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.supper_dates== 1",
+   "fieldname": "sd_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "depends_on": "eval:doc.supper_special_food== 1",
+   "fieldname": "ssf_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.supper_special_food== 1",
+   "fieldname": "ssf_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.break_fast == 1",
+   "fieldname": "bf_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch_briyani_veg== 1",
+   "fieldname": "lbv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch_briyani_non_veg== 1",
+   "fieldname": "lbnv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch_special_veg== 1",
+   "fieldname": "lsv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch_special_non_veg== 1",
+   "fieldname": "lsnv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner_briyani_veg== 1",
+   "fieldname": "dbv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner_briyani_non_veg== 1",
+   "fieldname": "dbnv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner_special_veg== 1",
+   "fieldname": "dsv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner_special_non_veg== 1",
+   "fieldname": "dsnv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.supper_dates== 1",
+   "fieldname": "sd_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.supper_special_food== 1",
+   "fieldname": "ssf_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "column_break_52",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_60",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_62",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "requester_id.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "fetch_from": "requester_id.department",
+   "fieldname": "department",
+   "fieldtype": "Data",
+   "label": "Department"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Type ID",
+   "options": "\nCUS.####\nVEN.####\nGOV.####\nOTS.####",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_64",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "allowed_items",
+   "fieldtype": "Small Text",
+   "label": "Allowed Items"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "lunch",
+   "fieldtype": "Check",
+   "label": "Lunch"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch == 1",
+   "fieldname": "lu_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch == 1",
+   "fieldname": "lu_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "fieldname": "dinner",
+   "fieldtype": "Check",
+   "label": "Dinner"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner == 1",
+   "fieldname": "dn_no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner == 1",
+   "fieldname": "dn_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.lunch == 1",
+   "fieldname": "lu_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.dinner == 1",
+   "fieldname": "dn_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-07-06 16:20:24.734315",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Guest Entry",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -72,7 +72,7 @@
                             <td><center><h4>"+ k['model'] + "</h4></center></td>\
                             <td><center><h4>"+ k['required_quantity'] + "</h4></center></td>\
                             <td><center><h4>"+ k['sap_quantity'] + "</h4></center></td>"
-                            if (k['difference'] > 0){
+                            if (k['difference'] <= 0){
                             html += "<td style='background-color:red'><center><h4 style='color:white'>"+ k['difference'] + "</h4></center></td>"
                         }
                         else{
@@ -390,7 +390,7 @@
                     <h4>{{ row['sap_quantity'] }}</h4>
                 </center>
             </td>
-            {% if row['difference'] > 0 %} <td style="background-color:red">
+            {% if row['difference'] <= 0 %} <td style="background-color:red">
                 <center>
                     <h4 style="color:white">{{ row['difference'] }}</h4>
                 </center>

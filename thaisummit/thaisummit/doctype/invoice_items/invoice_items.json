@@ -9,16 +9,26 @@
   "parts_no",
   "parts_name",
   "uom",
+  "po_qty",
   "column_break_8",
   "unit_price",
-  "hsc_sac",
   "packing_standard",
+  "hsn_code",
   "key_qty",
-  "column_break_34",
   "basic_amount",
-  "gst_percent",
+  "column_break_34",
+  "cgst",
+  "sgst",
+  "igst",
+  "tcs",
   "gst_amount",
-  "invoice_amount"
+  "invoice_amount",
+  "section_break_17",
+  "grn",
+  "grn_no",
+  "column_break_20",
+  "grn_date",
+  "grn_qty"
  ],
  "fields": [
   {
@@ -50,7 +60,6 @@
   {
    "fieldname": "unit_price",
    "fieldtype": "Float",
-   "in_list_view": 1,
    "label": "Unit Price",
    "precision": "2"
   },
@@ -59,11 +68,6 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Key Qty"
-  },
-  {
-   "fieldname": "gst_amount",
-   "fieldtype": "Currency",
-   "label": "GST Amount"
   },
   {
    "default": "0",
@@ -80,30 +84,86 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "hsc_sac",
-   "fieldtype": "Float",
-   "label": "HSC / SAC"
-  },
-  {
    "fieldname": "packing_standard",
    "fieldtype": "Float",
    "label": "Packing Standard"
   },
   {
-   "fieldname": "gst_percent",
-   "fieldtype": "Data",
-   "label": "GST Percent"
-  },
-  {
    "fieldname": "basic_amount",
    "fieldtype": "Currency",
    "label": "Basic Amount"
+  },
+  {
+   "fieldname": "cgst",
+   "fieldtype": "Percent",
+   "label": "CGST"
+  },
+  {
+   "fieldname": "sgst",
+   "fieldtype": "Percent",
+   "label": "SGST"
+  },
+  {
+   "fieldname": "gst_amount",
+   "fieldtype": "Currency",
+   "label": "GST Amount"
+  },
+  {
+   "fieldname": "igst",
+   "fieldtype": "Percent",
+   "label": "IGST"
+  },
+  {
+   "fieldname": "hsn_code",
+   "fieldtype": "Data",
+   "label": "HSN Code"
+  },
+  {
+   "fieldname": "section_break_17",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "grn",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "GRN"
+  },
+  {
+   "fieldname": "grn_no",
+   "fieldtype": "Data",
+   "label": "GRN No"
+  },
+  {
+   "fieldname": "column_break_20",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "grn_date",
+   "fieldtype": "Date",
+   "label": "GRN Date"
+  },
+  {
+   "fieldname": "grn_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "GRN Qty"
+  },
+  {
+   "fieldname": "po_qty",
+   "fieldtype": "Float",
+   "label": "PO Qty"
+  },
+  {
+   "fieldname": "tcs",
+   "fieldtype": "Percent",
+   "label": "TCS"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-02-21 11:49:38.380930",
+ "modified": "2022-05-08 23:05:17.775257",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Invoice Items",

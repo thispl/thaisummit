@@ -14,20 +14,20 @@ def mark_checkin(employee=None):
     qr_scanned_by += frappe.get_value('Employee',{'user_id':frappe.session.user},'employee_name')
     nowtime = datetime.now()
     shift_date = date.today()
-    shift1_time = [time(hour=6, minute=0, second=0),time(hour=13, minute=0, second=0)]
-    shift2_time = [time(hour=14, minute=00, second=0),time(hour=19, minute=00, second=0)]
-    shift2_cont_time = [time(hour=22, minute=1, second=0),time(hour=23, minute=59, second=0)]
-    shift3_time = [time(hour=0, minute=0, second=1),time(hour=5, minute=0, second=0)]
+    shift1_time = [time(hour=7, minute=0, second=0),time(hour=13, minute=00, second=0)]
+    shift2_time = [time(hour=15, minute=30, second=0),time(hour=19, minute=30, second=0)]
+    shift3_time = [time(hour=00, minute=0, second=1),time(hour=4, minute=0, second=0)]
+    shiftpp2_time = [time(hour=19, minute=00, second=0),time(hour=23, minute=0, second=0)]
     # shiftpp1_time = [time(hour=7, minute=0, second=0),time(hour=10, minute=0, second=0)]
-    shiftpp2_time = [time(hour=19, minute=30, second=0),time(hour=22, minute=0, second=0)]
+    # shift2_cont_time = [time(hour=22, minute=1, second=0),time(hour=22, minute=59, second=0)]
     curtime = time(hour=nowtime.hour, minute=nowtime.minute, second=nowtime.second)
     shift_type = 'NA'
     if is_between(curtime,shift1_time):
         shift_type = '1'
     if is_between(curtime,shift2_time):
         shift_type = '2'
-    if is_between(curtime,shift2_cont_time):
-        shift_type = '2'
+    # if is_between(curtime,shift2_cont_time):
+    #     shift_type = '2'
     if is_between(curtime,shift3_time):
         shift_type = '3'
         shift_date = shift_date + timedelta(days=-1)

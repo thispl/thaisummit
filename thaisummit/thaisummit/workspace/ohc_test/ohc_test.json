@@ -1,0 +1,32 @@
+{
+ "category": "Modules",
+ "charts": [],
+ "creation": "2022-06-21 16:23:58.135980",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "for_user": "firstaid@thaisummit.co.in",
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "OHC Test",
+ "links": [],
+ "modified": "2022-06-21 16:56:22.639889",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "OHC Test",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "First Aid",
+   "link_to": "First Aid",
+   "type": "DocType"
+  }
+ ]
+}

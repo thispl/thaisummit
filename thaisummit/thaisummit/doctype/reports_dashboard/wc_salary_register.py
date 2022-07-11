@@ -174,7 +174,6 @@ def get_data(args):
                 row.append(earning_component_amount)
             else:
                 row.append('')
-        frappe.log_error(title = 'ss.gross_pay',message=ss.gross_pay)
         row += [ss.gross_pay]
         total_deduction =0
         for dc in dedcution_comp:

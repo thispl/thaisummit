@@ -1,0 +1,55 @@
+{
+ "actions": [],
+ "creation": "2022-06-02 13:05:52.224198",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "menu",
+  "head_count",
+  "price",
+  "amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "menu",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Menu",
+   "options": "Food Menu"
+  },
+  {
+   "default": "0",
+   "fieldname": "head_count",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Head Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "price",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Price"
+  },
+  {
+   "default": "0",
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-06-04 15:48:22.768205",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Food Plan Child",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

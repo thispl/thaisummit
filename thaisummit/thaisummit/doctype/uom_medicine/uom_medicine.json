@@ -1,0 +1,51 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "field:uom",
+ "creation": "2022-06-01 14:29:30.825978",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "medicine_uom_details_section",
+  "uom"
+ ],
+ "fields": [
+  {
+   "fieldname": "uom",
+   "fieldtype": "Data",
+   "label": "UOM",
+   "unique": 1
+  },
+  {
+   "fieldname": "medicine_uom_details_section",
+   "fieldtype": "Section Break",
+   "label": "Medicine UOM Details"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-06-01 14:31:15.419969",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "UOM Medicine",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "ASC",
+ "track_changes": 1
+}

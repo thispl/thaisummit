@@ -11,8 +11,8 @@ from frappe.utils import cint, getdate, get_datetime
 
 class TAGMaster(Document):
     def validate(self):
-        if self.required_quantity and self.sap_quantity:
-            self.difference = int(self.required_quantity) - int(self.sap_quantity)
+    #     if self.required_quantity and self.sap_quantity:
+    #         self.difference = int(self.required_quantity) - int(self.sap_quantity)
         if self.required_quantity and self.sap_quantity and self.readiness_qty:
             self.readiness_diff = int(self.readiness_qty) - int(self.required_quantity)
         

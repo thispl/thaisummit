@@ -9,7 +9,9 @@
  "field_order": [
   "warehouse",
   "column_break_2",
-  "invoice_key"
+  "invoice_key",
+  "fg_req",
+  "iym"
  ],
  "fields": [
   {
@@ -30,11 +32,25 @@
    "in_standard_filter": 1,
    "label": "Invoice Key",
    "options": "\nY\nN"
+  },
+  {
+   "fieldname": "fg_req",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "FG REQ",
+   "options": "\nY\nN"
+  },
+  {
+   "fieldname": "iym",
+   "fieldtype": "Select",
+   "label": "IYM",
+   "options": "\nY\nN"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-02-05 17:47:18.560927",
+ "modified": "2022-04-15 10:09:48.441312",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Inventory Control Area",

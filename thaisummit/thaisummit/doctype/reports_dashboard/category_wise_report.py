@@ -34,8 +34,8 @@ from six import BytesIO, string_types
 def download(f_date,t_date,emp_type):
     args = {'from_date':f_date,'to_date':t_date,'employee_type':emp_type}
     filename = 'Payroll Cross Check Report'
-    # build_xlsx_response(filename)
-    enqueue(build_xlsx_response, queue='default', timeout=6000, event='build_xlsx_response',filename=filename,args=args)
+    build_xlsx_response(filename,args)
+    # enqueue(build_xlsx_response, queue='default', timeout=6000, event='build_xlsx_response',filename=filename,args=args)
 
 
 # return xlsx file object
@@ -50,6 +50,7 @@ def make_xlsx(data,args, sheet_name=None, wb=None, column_widths=None):
     ws.append(header)
 
     data = get_data(args)
+    # frappe.log_error(title='xlsx',message=data)
     for row in data:
         ws.append(row)
 
@@ -57,6 +58,7 @@ def make_xlsx(data,args, sheet_name=None, wb=None, column_widths=None):
 
     xlsx_file = BytesIO()
     wb.save(xlsx_file)
+    
     return xlsx_file
 
 

@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "creation": "2022-06-13 17:18:28.618884",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "medicine",
+  "quantity",
+  "uom"
+ ],
+ "fields": [
+  {
+   "fieldname": "medicine",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Medicine",
+   "options": "Medicine Details"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": " Quantity"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "UOM",
+   "options": "UOM Medicine"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-06-13 17:19:29.946859",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Medicine Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

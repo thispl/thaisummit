@@ -43,8 +43,8 @@ class Forecast(Document):
             m = date.strftime('%b')
             data += '<td style="background-color:#fafa13; padding:1px; border: 1px solid black; font-size:12px;"><center><b>%s %s</b></center></td>'%(d,m)
         data += "</tr>"
-        parts = frappe.get_all('TSAI Part Master',{'mat_type':'FG'},['*'],order_by="mat_no")
-        # parts = frappe.db.sql("select * from `tabForecast Data` where date between '%s' and '%s' group by mat_no order by mat_no"%(self.from_date,self.to_date),as_dict=True)
+        parts = frappe.get_all('TSAI Part Master',{'mat_type':'FG','name':('like','1%')},['*'],order_by="mat_no")
+        # parts = frappe.db.sql("select * from `tabTSAI Part Master` where mat_type = 'FG' order by mat_no",as_dict=True)
         i = 1
         total_qty = 0
         for p in parts:
@@ -76,23 +76,31 @@ class Forecast(Document):
         return data, summary
 
 
+# @frappe.whitelist()
+# def download():
+#     filename = 'Forecast'
+#     test = build_xlsx_response(filename)
+
 @frappe.whitelist()
-def download():
+def download(f_date,t_date):
+    args = {'from_date':f_date,'to_date':t_date}
     filename = 'Forecast'
-    test = build_xlsx_response(filename)
+    # build_xlsx_response(filename)
+    enqueue(build_xlsx_response, queue='default', timeout=6000, event='build_xlsx_response',filename=filename,args=args)
+
 
 
 # return xlsx file object
-def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
-    args = frappe.local.form_dict
+def make_xlsx(data,args, sheet_name=None, wb=None, column_widths=None):
+    # args = frappe.local.form_dict
     column_widths = column_widths or []
     if wb is None:
         wb = openpyxl.Workbook()
 
     ws = wb.create_sheet(sheet_name, 0)
     header = ["MAT NO","PART N0","PART NAME","CUSTOMER"]
-    no_of_days = date_diff(add_days(args.to_date, 1), args.from_date)
-    dates = [add_days(args.from_date, i) for i in range(0, no_of_days)]
+    no_of_days = date_diff(add_days(args["to_date"], 1), args["from_date"])
+    dates = [add_days(args["from_date"], i) for i in range(0, no_of_days)]
     for date in dates:
         date = datetime.strptime(str(date),'%Y-%m-%d')
         d = date.strftime('%d')
@@ -120,15 +128,34 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
     return xlsx_file    
 
 
-def build_xlsx_response(filename):
-    xlsx_file = make_xlsx(filename)
-    frappe.response['filename'] = filename + '.xlsx'
-    frappe.response['filecontent'] = xlsx_file.getvalue()
-    frappe.response['type'] = 'binary'
+# def build_xlsx_response(filename):
+#     xlsx_file = make_xlsx(filename)
+#     frappe.response['filename'] = filename + '.xlsx'
+#     frappe.response['filecontent'] = xlsx_file.getvalue()
+#     frappe.response['type'] = 'binary'
+
+def build_xlsx_response(filename,args):
+    xlsx_file = make_xlsx(filename,args)
+    ret = frappe.get_doc({
+            "doctype": "File",
+            "attached_to_name": '',
+            "attached_to_doctype": 'Forecast',
+            "attached_to_field": 'downloaded_forecast',
+            "file_name": filename + '.xlsx',
+            "is_private": 0,
+            "content": xlsx_file.getvalue(),
+            "decode": False
+        })
+    ret.save(ignore_permissions=True)
+    frappe.db.commit()
+    frappe.log_error(message=ret)
+    attached_file = frappe.get_doc("File", ret.name)
+    frappe.db.set_value('Forecast',None,'downloaded_forecast',attached_file.file_url)
 
 def get_parts(dates):
     data = []
-    parts = frappe.get_all('TSAI Part Master',{'mat_type':'FG'},['*'],order_by="mat_no")
+    parts = frappe.get_all('TSAI Part Master',{'mat_type':'FG','name':('like','1%')},['*'],order_by="mat_no")
+    # parts = frappe.get_all('TSAI Part Master',{'mat_type':'FG'},['*'],order_by="mat_no")
     for p in parts:
         row = [p.mat_no,p.parts_no,p.parts_name,p.customer]
         for date in dates:

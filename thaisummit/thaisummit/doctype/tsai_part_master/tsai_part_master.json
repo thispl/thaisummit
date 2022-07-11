@@ -15,10 +15,12 @@
   "model",
   "customer",
   "column_break_3",
+  "mrp_daily_order",
   "mrp_sales_price",
   "mrp_purchase_price",
   "kanban_group",
   "mat_type",
+  "direct_part",
   "section_break_16",
   "manpower_std",
   "packing_std",
@@ -28,7 +30,8 @@
   "min_day",
   "max_day",
   "parts_weight",
-  "scrap_weight"
+  "scrap_weight",
+  "transfer_rate"
  ],
  "fields": [
   {
@@ -142,11 +145,27 @@
    "fieldtype": "Float",
    "label": "Scrap Weight",
    "precision": "3"
+  },
+  {
+   "default": "0",
+   "fieldname": "direct_part",
+   "fieldtype": "Check",
+   "label": "Direct Part"
+  },
+  {
+   "fieldname": "mrp_daily_order",
+   "fieldtype": "Int",
+   "label": "MRP Daily Order"
+  },
+  {
+   "fieldname": "transfer_rate",
+   "fieldtype": "Currency",
+   "label": "Transfer Rate"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-11-09 16:15:01.109461",
+ "modified": "2022-04-17 19:30:54.739574",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI Part Master",

@@ -63,7 +63,8 @@ class TAGSlot(Document):
 def get_sap_qty(parts_no):
     avl_qty = 0
     mat_no = frappe.get_value('Part Master', parts_no,"mat_no")
-    url = "http://182.156.241.14/StockDetail/Service1.svc/GetItemInventory"
+    # url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+    url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
     payload = json.dumps({
     "ItemCode": mat_no
     })

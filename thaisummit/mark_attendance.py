@@ -20,13 +20,12 @@ from frappe.utils.background_jobs import enqueue
 
 @frappe.whitelist()
 def mark_attendance():
-    i = 1
-    for d in range(200):
-        from_date = add_days('2021-06-01',i)
-        print(from_date)
+    i = 0
+    for d in range(7):
+        from_date = add_days('2022-05-02',i)
         i += 1
-        mark_overtime(from_date)
-        # mark_att(from_date)
+        # mark_overtime(from_date)
+        mark_att(from_date)
         # mark_shift_status(from_date)
         # enqueue(mark_att, queue='default', timeout=6000, event='mark_att',
         #                 from_date=from_date)
@@ -42,7 +41,6 @@ def mark_att_monthly_hooks():
     else:
         from_date = add_days(get_first_day(today()),25)
     for s in range(31):
-        print(from_date)
         mark_att(from_date)
         # mark_shift_status(from_date)
         # mark_overtime(from_date)
@@ -56,7 +54,6 @@ def mark_shift_status():
     else:
         from_date = add_days(get_first_day(today()),25)
     for s in range(31):
-        print(from_date)
         # mark_att(from_date)
         # mark_shift_status(from_date)
         # mark_overtime(from_date)
@@ -71,12 +68,10 @@ def mark_att_daily_hooks():
 
 @frappe.whitelist()
 def mark_att(from_date):
-    # frappe.errprint('mark')
     # from_date = '2022-02-18'
     mark_on_duty(from_date)
     checkins = frappe.db.sql(
         """select * from `tabEmployee Checkin` where skip_auto_attendance = 0 and date(time) = '%s' order by time """%(from_date),as_dict=1)
-    # frappe.errprint(checkins)
     if checkins:
         frappe.errprint('chk')
         for c in checkins:
@@ -85,14 +80,14 @@ def mark_att(from_date):
                 frappe.db.set_value("Employee Checkin",
                                     c.name, "skip_auto_attendance", "1")
         mark_qr_checkin(from_date)
-        frappe.errprint('qr')
+        # frappe.errprint('qr')
         mark_permission(from_date)
-        frappe.errprint('per')
+        # frappe.errprint('per')
         mark_absent(from_date)
         mark_overtime(from_date)
-        frappe.errprint('ot')
+        # frappe.errprint('ot')
         mark_shift_status(from_date)
-        print('success')
+        # print('success')
         frappe.msgprint("Attendance Marked Successfully")
         return "ok"
         
@@ -117,19 +112,19 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
         max_in_time = ''
         min_in_time1 = datetime.strptime('06:00', '%H:%M').time()
         max_in_time1 = datetime.strptime('13:00', '%H:%M').time()
-        min_in_time2 = datetime.strptime('14:30', '%H:%M').time()
+        min_in_time2 = datetime.strptime('13:00', '%H:%M').time()
         max_in_time2 = datetime.strptime('18:30', '%H:%M').time()
         min_in_time3 = datetime.strptime('00:01', '%H:%M').time()
         max_in_time3 = datetime.strptime('03:00', '%H:%M').time()
         min_in_timepp1 = datetime.strptime('06:00', '%H:%M').time()
         max_in_timepp1 = datetime.strptime('10:00', '%H:%M').time()
         min_in_timepp2 = datetime.strptime('18:00', '%H:%M').time()
-        max_in_timepp2 = datetime.strptime('22:00', '%H:%M').time()
-        late1 = datetime.strptime('08:10', '%H:%M').time()
-        late2 = datetime.strptime('16:40', '%H:%M').time()
-        late3 = datetime.strptime('01:10', '%H:%M').time()
-        latepp1 = datetime.strptime('08:10', '%H:%M').time()
-        latepp2 = datetime.strptime('20:10', '%H:%M').time()
+        max_in_timepp2 = datetime.strptime('23:00', '%H:%M').time()
+        # late1 = datetime.strptime('08:10', '%H:%M').time()
+        # late2 = datetime.strptime('16:40', '%H:%M').time()
+        # late3 = datetime.strptime('01:10', '%H:%M').time()
+        # latepp1 = datetime.strptime('08:10', '%H:%M').time()
+        # latepp2 = datetime.strptime('20:10', '%H:%M').time()
         late = 0
         status = 'Present'
         if max_in_time1 >= att_time >= min_in_time1:
@@ -139,41 +134,41 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
                 shift = '1'
             min_in_time = datetime.strptime('06:00', '%H:%M').time()
             max_in_time = datetime.strptime('13:00', '%H:%M').time()
-            if datetime.strptime('08:01', '%H:%M').time() < att_time < datetime.strptime('08:10', '%H:%M').time():
+            if datetime.strptime('08:01', '%H:%M').time() < att_time:
                 late = 1
-            elif att_time > datetime.strptime('08:10', '%H:%M').time():
-                status = 'Half Day'
+            # elif att_time > datetime.strptime('08:10', '%H:%M').time():
+            #     status = 'Half Day'
         elif max_in_time2 >= att_time >= min_in_time2:
             shift = '2'
-            min_in_time = datetime.strptime('14:30', '%H:%M').time()
+            min_in_time = datetime.strptime('13:00', '%H:%M').time()
             max_in_time = datetime.strptime('18:30', '%H:%M').time()
-            if datetime.strptime('16:31', '%H:%M').time() < att_time <= datetime.strptime('16:40', '%H:%M').time():
+            if datetime.strptime('16:31', '%H:%M').time() < att_time:
                 late = 1
-            elif att_time > datetime.strptime('16:40', '%H:%M').time():
-                status = 'Half Day'
-                print(status)
+            # elif att_time > datetime.strptime('16:40', '%H:%M').time():
+            #     status = 'Half Day'
+            #     print(status)
         elif max_in_time3 >= att_time >= min_in_time3:
             shift = '3'
             att_date = add_days(att_date,-1)
             min_in_time = datetime.strptime('00:01', '%H:%M').time()
             max_in_time = datetime.strptime('03:00', '%H:%M').time()
-            if datetime.strptime('01:01', '%H:%M').time() < att_time <= datetime.strptime('01:10', '%H:%M').time():
+            if datetime.strptime('01:01', '%H:%M').time() < att_time:
                 late = 1
-            elif att_time > datetime.strptime('01:10', '%H:%M').time():
-                status = 'Half Day'
+            # elif att_time > datetime.strptime('01:10', '%H:%M').time():
+            #     status = 'Half Day'
         elif max_in_timepp2 >= att_time >= min_in_timepp2:
             shift = 'PP2'
             min_in_time = datetime.strptime('18:30', '%H:%M').time()
-            max_in_time = datetime.strptime('22:00', '%H:%M').time()
-            if datetime.strptime('20:01', '%H:%M').time() < att_time <= datetime.strptime('20:10', '%H:%M').time():
+            max_in_time = datetime.strptime('23:00', '%H:%M').time()
+            if datetime.strptime('20:01', '%H:%M').time() < att_time:
                 late = 1
-            elif att_time > datetime.strptime('20:10', '%H:%M').time():
-                status = 'Half Day'
+            # elif att_time > datetime.strptime('20:10', '%H:%M').time():
+            #     status = 'Half Day'
         if late == 1:
-            count = frappe.db.sql("select count(*) as count from `tabAttendance` where employee = '%s' and docstatus != 2 and late_entry =1 and attendance_date between '%s' and '%s' "%(employee,month_start_date,month_end_date),as_dict = True)
-            if count[0].count:
-                if int(count[0].count) >= 2:
-                    status = 'Half Day'
+            # count = frappe.db.sql("select count(*) as count from `tabAttendance` where employee = '%s' and docstatus != 2 and late_entry =1 and attendance_date between '%s' and '%s' "%(employee,month_start_date,month_end_date),as_dict = True)
+            # if count[0].count:
+            #     if int(count[0].count) >= 2:
+            status = 'Half Day'
         if min_in_time and max_in_time:
             att = frappe.db.exists("Attendance",{'employee':employee,'attendance_date':att_date,'docstatus': ['!=',2]})
             if not att:
@@ -221,9 +216,10 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
                         frappe.db.commit()
                         frappe.db.set_value("Employee Checkin",checkins[0].name, "attendance", att.name)
                         return att
+                    
 
     if log_type == 'OUT':
-        max_out = datetime.strptime('11:00', '%H:%M').time()
+        max_out = datetime.strptime('11:30', '%H:%M').time()
         if att_time < max_out:
             yesterday = add_days(att_date,-1)
             checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'OUT' and date(time) = '%s' and time(time) < '%s' order by time "%(employee,att_date,max_out),as_dict=True)
@@ -292,17 +288,38 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
 
 
 def mark_qr_checkin(from_date):
-    # from_date = '2021-07-05'
-    qr_checkins = frappe.db.sql("select name, employee,qr_shift,qr_scan_time,shift_date from `tabQR Checkin` where shift_date = '%s' and ot = 0 order by qr_scan_time "%(from_date),as_dict=True)
-    print(len(qr_checkins))
-    for qr in qr_checkins:
-        if frappe.db.exists('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee,'docstatus':'0'}):
-            att = frappe.get_doc('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee})
-            att.qr_shift = qr.qr_shift
-            att.qr_scan_time = qr.qr_scan_time
-            att.save(ignore_permissions=True)
-            frappe.db.commit()
-            frappe.db.set_value("QR Checkin",qr.name, "attendance", att.name)
+    # from_date = '2022-04-15'
+    hh = check_holiday(from_date)
+    if hh:
+        qr_checkins = frappe.db.sql("select name, employee,qr_shift,qr_scan_time,shift_date from `tabQR Checkin` where shift_date = '%s' and ot = 1 order by qr_scan_time "%(from_date),as_dict=True)
+        print(len(qr_checkins))
+        for qr in qr_checkins:
+            if frappe.db.exists('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee,'docstatus':'0'}):
+                att = frappe.get_doc('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee})
+                att.qr_shift = qr.qr_shift
+                att.qr_scan_time = qr.qr_scan_time
+                att.save(ignore_permissions=True)
+                frappe.db.commit()
+                frappe.db.set_value("QR Checkin",qr.name, "attendance", att.name)
+    else:
+        qr_checkins = frappe.db.sql("select name, employee,qr_shift,qr_scan_time,shift_date from `tabQR Checkin` where shift_date = '%s' and ot = 0 order by qr_scan_time "%(from_date),as_dict=True)
+        for qr in qr_checkins:
+            if frappe.db.exists('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee,'docstatus':'0'}):
+                att = frappe.get_doc('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee})
+                att.qr_shift = qr.qr_shift
+                att.qr_scan_time = qr.qr_scan_time
+                att.save(ignore_permissions=True)
+                frappe.db.commit()
+                frappe.db.set_value("QR Checkin",qr.name, "attendance", att.name)
+
+def check_holiday(date):
+    holiday = frappe.db.sql("""select `tabHoliday`.holiday_date,`tabHoliday`.weekly_off from `tabHoliday List` 
+    left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(date),as_dict=True)
+    if holiday:
+        if holiday[0].weekly_off == 1:
+            return "WW"
+        else:
+            return "HH"
 
 # def mark_shift_status_individual(att):
 #     late = ''
@@ -406,7 +423,9 @@ def shift_status_single_day(doc,method):
 @frappe.whitelist()
 def mark_shift_status(from_date):
     # from_date = '2021-09-09'
-    atts = frappe.get_all('Attendance',{'attendance_date':from_date},['*'])
+    to_date = from_date
+    from_date = add_days(from_date,-1)
+    atts = frappe.get_all('Attendance',{'attendance_date':('between',(from_date,to_date))},['*'])
     for att in atts:
         late = ''
         shift_status = ''
@@ -699,7 +718,6 @@ def mark_overtime(from_date):
                     frappe.db.set_value('Overtime Request',ot.name,'total_wh',twh)
                     frappe.db.set_value('Overtime Request',ot.name,'workflow_state','Pending for HOD')
                     
-
                     from_time = datetime.strptime(str(ot.from_time), "%H:%M:%S").time()
                     to_time = frappe.db.get_value('Overtime Request',ot.name,"to_time")
                     to_time = datetime.strptime(str(to_time), "%H:%M:%S").time()
@@ -744,9 +762,14 @@ def mark_overtime(from_date):
                             frappe.throw('From Time should be lesser that To Time')
                         else:
                             t_diff = to_datetime - from_datetime
-                            time_diff = datetime.strptime(str(t_diff), '%H:%M:%S')
+                            try:
+                                time_diff = datetime.strptime(str(t_diff), '%H:%M:%S')
+                            except:
+                                time_diff = datetime.strptime(str('23:59:00'), '%H:%M:%S')
+                            frappe.errprint(['hi',time_diff])
                             if time_diff.hour > 24:
                                 frappe.throw('OT cannot applied for more than 24 hours')
+                            
                             ot_hours = time(0,0,0)
                             if time_diff.hour >= 1:
                                 if time_diff.minute <= 29:
@@ -766,6 +789,8 @@ def mark_overtime(from_date):
                                         ot_hours = time(time_diff.hour,30,0)
                             if time_diff.hour > 13:
                                 ot_hours = time(time_diff.hour-1,0,0)
+                            if time_diff.hour >= 23:
+                                ot_hours = time(23,0,0)
                                 # if shift != '3':
                                 #     if time_diff.minute <= 29:
                                 #         ot_hours = time(time_diff.hour-1,30,0)

@@ -1,7 +1,7 @@
 {% extends "templates/web.html" %}
 {% block title %} INVOICE KEY {% endblock %}
 {% block head_include %}
-<link href="https://unpkg.com/frappe-datatable/dist/frappe-datatable.min.css" rel="stylesheet">
+<link href="https://unpkg.com/frappe-datatable@0.0.5/dist/frappe-datatable.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block script %}
@@ -12,65 +12,94 @@
 <script src="https://unpkg.com/clusterize.js@0.18.0/clusterize.min.js"></script>
 <!-- include the lib -->
 <script src="https://unpkg.com/frappe-datatable@latest"></script>
+<!-- <script src="https://unpkg.com/frappe-datatable@0.0.5/dist/frappe-datatable.min.js"></script> -->
 <script>
   window.cols = [
     {
-      name: "MAT No", editable: false
+      name: "MAT No", editable: false, width: 100,
     },
     {
-      name: "Parts No", editable: false
+      name: "Parts No", editable: false, width: 150, hide: true
     },
     {
-      name: "Parts Name", editable: false
-    }, {
-      name: "PO No", editable: false
-    }, {
+      name: "Parts Name", editable: false, width: 200,
+    },
+    {
+      name: "PO No", editable: false, align: 'center'
+    },
+    {
+      name: "PO Entry", editable: false, align: 'center'
+    },
+    {
       name: "PO Date", editable: false
-    }, {
-      name: "Delivery date", editable: false
-    }, {
-      name: "Supplier Name", editable: false
-    }, {
+    },
+    // {
+    //   name: "Delivery date", editable: false
+    // }, {
+    //   name: "Supplier Name", editable: false
+    // }, 
+    {
       name: "UOM", editable: false
-    }, {
-      name: "Unit Price", editable: false
-    }, {
-      name: "PO Qty", editable: false,
-    }, {
-      name: "Open Qty", editable: false
-    }, {
-      name: "%", editable: false
-    }, {
-      name: "Packing", editable: false
-    }, {
-      name: "Daily Order", editable: false
-    }, {
-      name: "Max Qty", editable: false
-    }, {
-      name: "Min Qty", editable: false
-    }, {
-      name: "Stock Qty", editable: false
-    }, {
-      name: "In transit Qty", editable: false
-    }, {
-      name: "Total Qty", editable: false
-    }, {
-      name: "Req Qty", editable: false,
-    }, {
-      name: "Key Qty", editable: true,
-    }, {
-      name: "Basic Amount", editable: false,
     },
     {
-      name: "GST %", editable: false,
+      name: "Unit Price", editable: false, align: 'center'
     },
     {
-      name: "GST Amount", editable: false,
+      name: "HSN", editable: false, align: 'center'
     },
-    { name: "Invoice Amount", editable: false },
-
+    // {
+    //   name: "PO Qty", editable: false,
+    // }, 
+    {
+      name: "Open Qty", editable: false, align: 'center'
+    }, {
+      name: "%", editable: false, align: 'center', align: 'center'
+    }, {
+      name: "Packing", editable: false, align: 'center', align: 'center'
+    },
+    // {
+    //   name: "Daily Order", editable: false
+    // },
+    // {
+    //   name: "Share %", editable: false, align:'center'
+    // },
+    // , {
+    //   name: "Max Qty", editable: false
+    // }, {
+    //   name: "Min Qty", editable: false
+    // }, {
+    //   name: "Stock Qty", editable: false
+    // }, {
+    //   name: "In transit Qty", editable: false
+    // }, {
+    //   name: "Total Qty", editable: false
+    // }, 
+    {
+      name: "Req Qty", editable: false, align: 'center',
+    }, {
+      name: "Key Qty", editable: true, align: 'center',
+    }, {
+      name: "Basic Amount", editable: false, align: 'center',
+    },
+    {
+      name: "CGST %", editable: false, align: 'center',
+    },
+    {
+      name: "SGST %", editable: false, align: 'center',
+    }, {
+      name: "IGST %", editable: false, align: 'center',
+    },
+    {
+      name: "TCS %", editable: false, align: 'center',
+    },
+    {
+      name: "GST Amount", editable: false, align: 'center',
+    },
+    { name: "Invoice Amount", editable: false, align: 'center' },
   ]
   $(document).ready(function () {
+    var back = document.getElementById("back");
+    back.style.display = 'none'
     var download = document.getElementById("download");
     download.style.display = 'none'
     var invoice_no = document.getElementById("invoice_no");
@@ -96,7 +125,8 @@
       options = {
         columns: window.cols,
         data: r.message,
-        // layout: 'fixed:50p',
+        layout: 'fixed',
+        freezeMessage: 'Loading',
         getEditor(colIndex, rowIndex, value, parent, column, row, data) {
           const $input = document.createElement('input');
           $input.type = 'int';
@@ -110,68 +140,104 @@
             },
             // called when cell value is set
             setValue(value) {
-              var up = window.dt.getCell(9, rowIndex);
-              var gst_percent = window.dt.getCell(23, rowIndex)
-              if (colIndex == 21) {
+              var up = window.dt.getCell(8, rowIndex);
+              var cgst = window.dt.getCell(16, rowIndex)['content']
+              var sgst = window.dt.getCell(17, rowIndex)['content']
+              var igst = window.dt.getCell(18, rowIndex)['content']
+              var tcs = window.dt.getCell(20, rowIndex)['content']
+              var open_qty = window.dt.getCell(10, rowIndex)['content']
+
+              var gst_percent = cgst + sgst + igst + tcs
+              if (colIndex == 14) {
                 var basic_amount = 0
                 var gst_amount = 0
                 if (parseFloat(value) > 0) {
-                  var basic_amount = Math.round(parseFloat(up['content']) * parseFloat(value), 2)
-                  var gst_amount = Math.round((parseFloat(gst_percent['content']) * basic_amount) / 100, 2)
+                  var basic_amount = parseFloat(up['content']) * parseFloat(value)
+                  var gst_amount = parseFloat(gst_percent * basic_amount) / 100
                 }
                 else {
-                  window.dt.cellmanager.updateCell(22, rowIndex, 0)
+                  window.dt.cellmanager.updateCell(15, rowIndex, 0)
                 }
-                window.dt.cellmanager.updateCell(22, rowIndex, basic_amount)
-                window.dt.cellmanager.updateCell(24, rowIndex, gst_amount)
-                window.dt.cellmanager.updateCell(25, rowIndex, basic_amount + gst_amount)
+                window.dt.cellmanager.updateCell(15, rowIndex, basic_amount)
+                window.dt.cellmanager.updateCell(20, rowIndex, gst_amount)
+                // var invoice_amt = String(basic_amount + gst_amount).concat('.00')
+                var invoice_amt = basic_amount + gst_amount
+                window.dt.cellmanager.updateCell(21, rowIndex, invoice_amt)
 
-                var req_qty = window.dt.getCell(20, rowIndex);
-                var pack_std = window.dt.getCell(13, rowIndex);
+                var req_qty = window.dt.getCell(13, rowIndex);
+                var pack_std = window.dt.getCell(12, rowIndex);
                 if (parseFloat(value) > 0) {
-                  if (parseFloat(value) > parseFloat(req_qty['content'])) {
-                    window.dt.cellmanager.updateCell(21, rowIndex, 0)
-                    window.dt.cellmanager.updateCell(22, rowIndex, 0)
-                    window.dt.cellmanager.updateCell(24, rowIndex, 0)
-                    window.dt.cellmanager.updateCell(25, rowIndex, 0)
-                    alert("Key Qty cannot be greater than Req Qty")
-                  }
-                  else if (!Number.isInteger(parseFloat(value) / pack_std['content'])) {
-                    window.dt.cellmanager.updateCell(21, rowIndex, 0)
-                    window.dt.cellmanager.updateCell(22, rowIndex, 0)
-                    window.dt.cellmanager.updateCell(24, rowIndex, 0)
-                    window.dt.cellmanager.updateCell(25, rowIndex, 0)
-                    alert("Key Qty is not in Packing Std")
-                  }
-                  else {
-                    var po_list = []
-                    $.each(window.dt.datamanager.getRows(), function (i, d) {
-                      if (parseFloat(d[22]['content']) > 0) {
-                        if (po_list.length == 0) {
-                          po_list.push(d[4]['content'])
-                        }
-                        else {
-                          if (!po_list.includes(d[4]['content'])) {
-                            window.dt.cellmanager.updateCell(21, rowIndex, 0)
-                            window.dt.cellmanager.updateCell(22, rowIndex, 0)
-                            window.dt.cellmanager.updateCell(24, rowIndex, 0)
-                            window.dt.cellmanager.updateCell(25, rowIndex, 0)
-                            alert("Invoice cannot be raised by mutiple PO")
-                          }
-                          else {
-                            po_list.push(d[4]['content'])
-                          }
-                        }
-                      }
-                    })
-                    if (po_list.length > 10) {
-                      window.dt.cellmanager.updateCell(21, rowIndex, 0)
-                      window.dt.cellmanager.updateCell(22, rowIndex, 0)
-                      window.dt.cellmanager.updateCell(24, rowIndex, 0)
-                      window.dt.cellmanager.updateCell(25, rowIndex, 0)
-                      alert("Invoice cannot be raised for more than 10 Items")
+                  // if (parseFloat(value) > parseFloat(open_qty)) {
+                  opts = {
+                    method: "thaisummit.www.invoice_key.get_transit_qty",
+                    args: {
+                      mat_no: window.dt.getCell(1, rowIndex)['content'],
+                      po_no: window.dt.getCell(4, rowIndex)['content']
                     }
                   }
+                  frappe.call(opts).then(r => {
+                    var available_open_qty = parseFloat(open_qty) - parseFloat(r.message)
+                    // console.log(available_open_qty)
+                    // window.dt.cellmanager.updateCell(13, rowIndex, 0)
+                    // window.dt.cellmanager.updateCell(14, rowIndex, 0)
+                    // window.dt.cellmanager.updateCell(18, rowIndex, 0)
+                    // window.dt.cellmanager.updateCell(20, rowIndex, 0)
+                    if (parseFloat(value) > parseFloat(available_open_qty)) {
+                      console.log(window)
+                      window.dt.cellmanager.updateCell(14, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(15, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(20, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(21, rowIndex, 0)
+                      alert("Key Qty cannot be greater than PO Qty")
+                      
+                    }
+                    else if (parseFloat(value) > parseFloat(req_qty['content'])) {
+                      window.dt.cellmanager.updateCell(14, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(15, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(20, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(21, rowIndex, 0)
+                      alert("Key Qty cannot be greater than Req Qty")
+                    }
+                    else if (!Number.isInteger(parseFloat(value) / pack_std['content'])) {
+                      window.dt.cellmanager.updateCell(14, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(15, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(20, rowIndex, 0)
+                      window.dt.cellmanager.updateCell(21, rowIndex, 0)
+                      alert("Key Qty is not in Packing Std")
+                    }
+
+                    else {
+                      var po_list = []
+                      $.each(window.dt.datamanager.getRows(), function (i, d) {
+                        if (parseFloat(d[15]['content']) > 0) {
+                          if (po_list.length == 0) {
+                            po_list.push(d[4]['content'])
+                          }
+                          else {
+                            if (!po_list.includes(d[4]['content'])) {
+                              window.dt.cellmanager.updateCell(14, rowIndex, 0)
+                              window.dt.cellmanager.updateCell(15, rowIndex, 0)
+                              window.dt.cellmanager.updateCell(20, rowIndex, 0)
+                              window.dt.cellmanager.updateCell(21, rowIndex, 0)
+                              alert("Invoice cannot be raised by mutiple PO")
+                            }
+                            else {
+                              po_list.push(d[4]['content'])
+                            }
+                          }
+                        }
+                      })
+                      if (po_list.length > 10) {
+                        window.dt.cellmanager.updateCell(14, rowIndex, 0)
+                        window.dt.cellmanager.updateCell(15, rowIndex, 0)
+                        window.dt.cellmanager.updateCell(20, rowIndex, 0)
+                        window.dt.cellmanager.updateCell(21, rowIndex, 0)
+                        alert("Invoice cannot be raised for more than 10 Items")
+                      }
+                    }
+                  })
+                  // }
+
                 }
 
               }
@@ -185,6 +251,8 @@
       }
 
       window.dt = new DataTable(container, options);
+      var back = document.getElementById("back");
+      back.style.display = 'block'
       var download = document.getElementById("download");
       download.style.display = 'block'
       var submit = document.getElementById("submit");
@@ -206,9 +274,9 @@
       frappe.call(opts).then(r => {
         if (r.message) {
           document.getElementById('invoice_no').value = r.message
+          document.getElementById('invoice_no').readOnly = "readonly"
         }
       })
-
     });
   })
 
@@ -218,29 +286,24 @@
     var irn = document.getElementById("irn_no").value;
     var invoice_no = document.getElementById("invoice_no").value;
 
-    if (!(qr && irn)) {
-      alert("kindly fill QR Code & IRN No")
+    const table = window.dt.datamanager.getRows();
+    opts = {
+      method: "thaisummit.www.invoice_key.submit_po",
+      args: {
+        table: table,
+        qr_code: qr,
+        irn_no: irn,
+        invoice_no: invoice_no
+      },
+      freeze: true,
+      freeze_message: 'Submitting....',
     }
-    else {
-      const table = window.dt.datamanager.getRows();
-      opts = {
-        method: "thaisummit.www.invoice_key.submit_po",
-        args: {
-          table: table,
-          qr_code: qr,
-          irn_no: irn,
-          invoice_no : invoice_no
-        },
-        freeze: true,
-        freeze_message: 'Submitting....',
+    frappe.call(opts).then(r => {
+      if (r.message == 'ok') {
+        alert("Invoice Submitted Successfully")
+        window.location.reload()
       }
-      frappe.call(opts).then(r => {
-        if (r.message == 'ok') {
-          alert("Invoice Submitted Successfully")
-          window.location.reload()
-        }
-      })
-    }
+    })
   }
 
   function download_excel() {
@@ -250,6 +313,10 @@
       cmd: "thaisummit.www.invoice_key.download_excel",
     });
   }
+
+  document.getElementById("back").onclick = function () {
+    location.href = "/app/pickup-plan";
+  };
 
 </script>
 {% endblock %}
@@ -276,9 +343,14 @@
     <br>
     <button id="submit" class="btn" onclick="submit_po()">Submit</button>
   </div>
+  <div class="col-xs-1">
+    <br>
+    <button id="back" class="btn">Back</button>
+  </div>
 </div>
-
+<!-- <div class="container"> -->
 <div id="datatable"></div>
+<!-- </div> -->
 <style>
   .btn {
     transition-duration: 0.4s;
@@ -292,6 +364,14 @@
     background-color: white;
     /* Green */
     color: #4CAF50;
+  }
+
+  #datatable {
+    zoom: 70%
+  }
+
+  .row {
+    zoom: 80%
   }
 </style>
 

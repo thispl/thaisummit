@@ -1,0 +1,43 @@
+{
+ "actions": [],
+ "autoname": "field:route_name_and_no",
+ "creation": "2022-05-26 17:40:24.631754",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "route_name_and_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "route_name_and_no",
+   "fieldtype": "Data",
+   "label": "Route Name and No",
+   "unique": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-05-26 19:22:49.242025",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Bus Route",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,84 @@
+{
+ "actions": [],
+ "creation": "2022-03-21 15:02:40.176323",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "invoice_no",
+  "supplier_name",
+  "in_time",
+  "std_out_time",
+  "planned_out_time",
+  "out_bin",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Supplier Name",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "std_out_time",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Std Out Mins",
+   "read_only": 1
+  },
+  {
+   "fieldname": "invoice_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Invoice No",
+   "options": "TSAI Invoice",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "in_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "IN Time",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "out_bin",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "No of Bins",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "planned_out_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Planned OUT",
+   "read_only": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "remarks",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Remarks"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-05-05 09:16:10.309186",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Window OUT Child",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

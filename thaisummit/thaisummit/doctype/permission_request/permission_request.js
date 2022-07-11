@@ -62,7 +62,8 @@ frappe.ui.form.on('Permission Request', {
 					"method":"thaisummit.utils.get_server_date" ,
 					callback(r){
 						if (r.message > date) {
-							frappe.throw("Permission should be applied within 3 days")
+							frappe.msgprint("Permission should be applied within 3 days")
+							frappe.validated = false;
 						}
 					}
 				})
@@ -90,7 +91,8 @@ frappe.ui.form.on('Permission Request', {
 					"method":"thaisummit.utils.get_server_date" ,
 					callback(r){
 						if (r.message > date) {
-							frappe.throw("Permission should be applied within 3 days")
+							frappe.msgprint("Permission should be applied within 3 days")
+							frappe.validated = false;
 						}
 					}
 				})

@@ -1,0 +1,95 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "creation": "2022-03-01 10:28:27.979744",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "invoice_key",
+  "column_break_2",
+  "print_invoice",
+  "column_break_4",
+  "invoice_detail",
+  "column_break_6",
+  "invoice_status",
+  "section_break_4",
+  "pickup_plan",
+  "section_break_8",
+  "download"
+ ],
+ "fields": [
+  {
+   "fieldname": "pickup_plan",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "invoice_key",
+   "fieldtype": "Button",
+   "label": "Invoice Key"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "print_invoice",
+   "fieldtype": "Button",
+   "label": "Print Invoice"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "download",
+   "fieldtype": "Button",
+   "label": "Download"
+  },
+  {
+   "fieldname": "invoice_detail",
+   "fieldtype": "Button",
+   "label": "Invoice Detail"
+  },
+  {
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "invoice_status",
+   "fieldtype": "Button",
+   "label": "Invoice Status"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-03-16 12:19:08.765433",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Pickup Plan",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

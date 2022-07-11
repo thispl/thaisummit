@@ -1,0 +1,109 @@
+{
+ "cards_label": "Settings & Master",
+ "category": "Modules",
+ "charts": [],
+ "creation": "2022-03-19 16:40:07.932125",
+ "developer_mode_only": 0,
+ "disable_user_customization": 1,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "for_user": "",
+ "hide_custom": 0,
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "BOP Web Portal",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Inventory Control Area",
+   "link_to": "Inventory Control Area",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2022-07-07 11:13:28.725407",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "BOP Web Portal",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "Part Master",
+   "link_to": "Part Master Data",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Supplier Master",
+   "link_to": "TSAI Supplier",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Forecast",
+   "link_to": "Forecast",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Pickup Plan",
+   "link_to": "Pickup Plan",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Cancel Invoice",
+   "link_to": "Cancel Invoice",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Supplier Daily Order",
+   "link_to": "Supplier Daily Order",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Shares of Business",
+   "link_to": "Shares of Business",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "GRN Upload",
+   "link_to": "GRN Upload",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Print Invoice",
+   "link_to": "Print Invoice",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Delivery Plan vs Actual",
+   "link_to": "Delivery Plan vs Actual",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Invoice GRN Detail",
+   "link_to": "Invoice GRN Detail",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "GRN Pending Report",
+   "link_to": "GRN Pending Report",
+   "type": "Report"
+  }
+ ]
+}

@@ -1,0 +1,459 @@
+{
+ "actions": [],
+ "autoname": "FP.####",
+ "creation": "2022-05-21 15:32:34.987326",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "break_fast_section",
+  "bf_head_count",
+  "column_break_4",
+  "bf_price",
+  "column_break_6",
+  "bf_amount",
+  "lunch_section",
+  "lu_head_count",
+  "column_break",
+  "lunch_briyani_veg_section",
+  "lbv_head_count",
+  "column_break_10",
+  "lbv_price",
+  "column_break_12",
+  "lbv_amount",
+  "lunch_briyani_non_veg_section",
+  "lbnv_head_count",
+  "column_break_16",
+  "lbnv_price",
+  "column_break_18",
+  "lbnv_amount",
+  "lunch_special_veg_section",
+  "lsv_head_count",
+  "column_break_22",
+  "lsv_price",
+  "column_break_24",
+  "lsv_amount",
+  "lunch_special_non_veg_section",
+  "lsnv_head_count",
+  "column_break_28",
+  "lsnv_price",
+  "column_break_30",
+  "lsnv_amount",
+  "dinner_briyani_veg_section",
+  "dbv_head_count",
+  "column_break_34",
+  "dbv_price",
+  "column_break_36",
+  "dbv_amount",
+  "dinner_briyani_non_veg_section",
+  "dbnv_head_count",
+  "column_break_40",
+  "dbnv_price",
+  "column_break_42",
+  "dbnv_amount",
+  "dinner_special_veg_section",
+  "dsv_head_count",
+  "column_break_46",
+  "dsv_price",
+  "column_break_48",
+  "dsv_amount",
+  "dinner_special_non_veg_section",
+  "dsnv_head_count",
+  "column_break_52",
+  "dsnv_price",
+  "column_break_54",
+  "dsnv_amount",
+  "supper_dates_section",
+  "sd_head_count",
+  "column_break_58",
+  "sd_price",
+  "column_break_60",
+  "sd_amount",
+  "supper_special_food_section",
+  "ssf_head_count",
+  "column_break_64",
+  "ssf_price",
+  "column_break_66",
+  "ssf_amount",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "bold": 1,
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bf_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "bf_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "bf_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "bold": 1,
+   "fieldname": "break_fast_section",
+   "fieldtype": "Section Break",
+   "label": "Break Fast"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "bold": 1,
+   "fieldname": "lunch_briyani_veg_section",
+   "fieldtype": "Section Break",
+   "label": "Lunch Briyani Veg",
+   "no_copy": 1,
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "lbv_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lbv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lbv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "lunch_briyani_non_veg_section",
+   "fieldtype": "Section Break",
+   "label": "Lunch Briyani Non Veg"
+  },
+  {
+   "fieldname": "lbnv_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lbnv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_18",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lbnv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "lunch_special_veg_section",
+   "fieldtype": "Section Break",
+   "label": "Lunch Special Veg"
+  },
+  {
+   "fieldname": "lsv_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break_22",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lsv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_24",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lsv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "bold": 1,
+   "fieldname": "lunch_special_non_veg_section",
+   "fieldtype": "Section Break",
+   "label": "Lunch Special Non Veg"
+  },
+  {
+   "fieldname": "lsnv_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break_28",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lsnv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_30",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lsnv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "bold": 1,
+   "fieldname": "dinner_briyani_veg_section",
+   "fieldtype": "Section Break",
+   "label": "Dinner Briyani Veg"
+  },
+  {
+   "fieldname": "dbv_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break_34",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dbv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_36",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dbv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "bold": 1,
+   "fieldname": "dinner_briyani_non_veg_section",
+   "fieldtype": "Section Break",
+   "label": "Dinner Briyani Non Veg"
+  },
+  {
+   "fieldname": "dbnv_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break_40",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dbnv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_42",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dbnv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "bold": 1,
+   "fieldname": "dinner_special_veg_section",
+   "fieldtype": "Section Break",
+   "label": "Dinner Special Veg"
+  },
+  {
+   "fieldname": "dsv_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break_46",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dsv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_48",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dsv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "bold": 1,
+   "fieldname": "dinner_special_non_veg_section",
+   "fieldtype": "Section Break",
+   "label": "Dinner Special Non Veg"
+  },
+  {
+   "fieldname": "dsnv_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break_52",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dsnv_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_54",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dsnv_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "bold": 1,
+   "fieldname": "supper_dates_section",
+   "fieldtype": "Section Break",
+   "label": "Supper Dates"
+  },
+  {
+   "fieldname": "sd_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break_58",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sd_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "column_break_60",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sd_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "column_break_64",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_66",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Food Plan",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "supper_special_food_section",
+   "fieldtype": "Section Break",
+   "label": "Supper Special Food"
+  },
+  {
+   "fieldname": "ssf_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "ssf_price",
+   "fieldtype": "Currency",
+   "label": "Price"
+  },
+  {
+   "fieldname": "ssf_amount",
+   "fieldtype": "Currency",
+   "label": "Amount"
+  },
+  {
+   "fieldname": "lunch_section",
+   "fieldtype": "Section Break",
+   "label": "Lunch"
+  },
+  {
+   "fieldname": "lu_head_count",
+   "fieldtype": "Int",
+   "label": "Head Count"
+  },
+  {
+   "fieldname": "column_break",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2022-07-05 14:23:23.260112",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Food Plan",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

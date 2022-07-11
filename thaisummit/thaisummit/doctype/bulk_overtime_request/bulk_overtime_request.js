@@ -183,7 +183,8 @@ frappe.ui.form.on('Bulk OT', {
 			    "method":"thaisummit.utils.get_server_date" ,
 			    callback(r){
 				    if (r.message > date) {
-						frappe.throw("Overtime should be applied within 3 days")
+						frappe.msgprint("OT should be applied within 3 days")
+						frappe.validated = false;
 						child.ot_date = ''
 						frm.refresh_field('employees')
 					}

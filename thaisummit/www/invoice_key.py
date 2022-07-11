@@ -30,27 +30,31 @@ def get_data():
     # supplier_code = ''
     # if 'System Manager' not in frappe.get_roles(frappe.session.user):
     supplier_code = frappe.db.get_value(
-        'TSAI Supplier', {'user': frappe.session.user}, 'user_name')
+        'TSAI Supplier', {'email': frappe.session.user}, 'name')
     if supplier_code:
-        url = "http://182.156.241.14/StockDetail/Service1.svc/GetPOLineDetails"
+        url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
         date = datetime.strptime(today(), '%Y-%m-%d')
         date = datetime.strftime(date, "%Y%m%d")
         payload = json.dumps({
             "Fromdate": "",
             "Todate": "",
             "SupplierCode": supplier_code,
-            "DeliveryDate": date
+            "DeliveryDate": date,
+            # "DeliveryDate": '20220228'
         })
         headers = {
             'Content-Type': 'application/json'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
-        pos = json.loads(response.text)
+        try:
+            pos = json.loads(response.text)
+        except :
+            frappe.msgprint("Unable to display Invoice Key due to API Issue")
         data = []
         for po in pos:
             if frappe.db.exists('TSAI Part Master', po['Mat_No']):
                 pr_name = frappe.db.get_value(
-                    'Prepared Report', {'report_name': 'Daily Order'}, 'name')
+                    'Prepared Report', {'report_name': 'Supplier Daily Order','status':'Completed'}, 'name')
                 attached_file_name = frappe.db.get_value(
                     "File",
                     {"attached_to_doctype": 'Prepared Report',
@@ -71,9 +75,7 @@ def get_data():
                         min_qty = do['min_qty']
                         max_qty = do['max_qty']
 
-                in_transit_qty = 0
-
-                url = "http://182.156.241.14/StockDetail/Service1.svc/GetItemInventory"
+                url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
                 payload = json.dumps({
                     "ItemCode": po['Mat_No']
                 })
@@ -85,67 +87,67 @@ def get_data():
                 stock = 0
                 if response:
                     stocks = json.loads(response.text)
-                    ica = frappe.db.sql(
-                        "select warehouse from `tabInventory Control Area` where invoice_key = 'Y' ", as_dict=True)
+                    if stocks:
+                        ica = frappe.db.sql(
+                            "select warehouse from `tabInventory Control Area` where invoice_key = 'Y' ", as_dict=True)
 
-                    wh_list = [d['warehouse'] for d in ica if 'warehouse' in d]
+                        wh_list = [d['warehouse'] for d in ica if 'warehouse' in d]
+                        df = pd.DataFrame(stocks)
+                        df = df[df['Warehouse'].isin(wh_list)]
+                        stock = pd.to_numeric(df["Qty"]).sum()
 
-                    df = pd.DataFrame(stocks)
-                    df = df[df['Warehouse'].isin(wh_list)]
-                    stock = pd.to_numeric(df["Qty"]).sum()
+                in_transit_qty_po = frappe.db.sql("""select sum(`tabInvoice Items`.key_qty) as key_qty from `tabTSAI Invoice`
+                        left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent
+                        where `tabTSAI Invoice`.status = 'OPEN' and `tabTSAI Invoice`.po_no = '%s' and `tabInvoice Items`.mat_no = '%s' and `tabTSAI Invoice`.supplier_code = '%s' and `tabInvoice Items`.grn = 0 """ % (po['PoNo'],po['Mat_No'],supplier_code), as_dict=True)[0].key_qty or 0
 
-                t_qty = stock+in_transit_qty
+                in_transit_qty = frappe.db.sql("""select sum(`tabInvoice Items`.key_qty) as key_qty from `tabTSAI Invoice`
+                        left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent
+                        where `tabTSAI Invoice`.status = 'OPEN' and `tabInvoice Items`.mat_no = '%s' and `tabTSAI Invoice`.supplier_code = '%s' and `tabInvoice Items`.grn = 0 """ % (po['Mat_No'],supplier_code), as_dict=True)[0].key_qty or 0
+                t_qty = stock + in_transit_qty
                 req_qty = 0
                 open_qty = float(po['Open_Qty'])
+                if open_qty > 0:
+                    open_percent = round((open_qty/float(po['Po_Qty']))*100)
+                else:
+                    open_percent = 0
                 packing_std = frappe.db.get_value(
                     "TSAI Part Master", po['Mat_No'], 'packing_std')
                 po_date = pd.to_datetime(po['Po_Date']).date()
                 delivery_date = pd.to_datetime(po['Delivery_Date']).date()
+                share = frappe.db.get_value('Shares of Business Entry',{'supplier_code':supplier_code,'mat_no':po['Mat_No']},'share_of_business') or '-'
+                # if open_qty > 0:
+                if t_qty < min_qty:
+                    try:
+                        req_qty = math.ceil((max_qty - t_qty)/packing_std)*packing_std
+                    except:
+                        req_qty = 0
+                    if req_qty < 0:
+                        req_qty = 0
+                
+                mrp_daily_order = frappe.db.get_value(
+                    "TSAI Part Master", po['Mat_No'], 'mrp_daily_order')
                 if open_qty > 0:
-                    if t_qty < max_qty:
-                        grn_qty = frappe.db.sql("""select sum(`tabInvoice Items`.key_qty) as key_qty from `tabTSAI Invoice`
-                        left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent
-                        where `tabTSAI Invoice`.po_no = '%s' and `tabInvoice Items`.mat_no = '%s' """ % (po['PoNo'], po['Mat_No']), as_dict=True)[0].key_qty or 0
-                        req_qty = math.floor((max_qty - t_qty - grn_qty)/packing_std)*packing_std
-                data.append([po['Mat_No'], po['Part_No'], po['Part_Name'], po['PoNo'], po_date, delivery_date, po['Supplier_name'], po['Uom'], round(float(po['Unit_Pice']), 2), round(float(po['Po_Qty'])), open_qty, round(
-                    (open_qty/float(po['Po_Qty']))*100), packing_std, daily_order, max_qty, min_qty, stock, in_transit_qty, t_qty, req_qty, '', '', float(po['GSTPercentage']), '', ''])
-    return data
-
-# @frappe.whitelist()
-# def validate_data(table):
-#     table = json.loads(table)
-#     errlist = ''
-#     for row in table:
-#         if float(row[21]['content'] or 0) > float(row[20]['content']):
-#             errlist += "Key Qty cannot be greater than Req Qty in row no. %s \n"%row[0]['content']
-#         if not (float(row[21]['content'] or 0) / float(row[13]['content'])).is_integer():
-#             errlist += "Key Qty of row no. %s is not in Packing Standard \n"%row[0]['content']
-#     if errlist:
-#         return errlist, 'err'
-
-#     res = []
-#     for row in table:
-#         up = 0
-#         key_qty = 0
-#         if row[9]['content'] and row[21]['content']:
-#             up = float(row[9]['content'])
-#             key_qty = float(row[21]['content'])
-#         basic_amount = round(up * key_qty,2)
-#         gst_amount = 0
-#         invoice_amount = basic_amount + gst_amount
-#         res.append([row[1]['content'],row[2]['content'],row[3]['content'],row[4]['content'],row[5]['content'],row[6]['content'],row[7]['content'],row[8]['content'],row[9]['content'],row[10]['content'],row[11]['content'],row[12]['content'],row[13]['content'],row[14]['content'],row[15]['content'],row[16]['content'],row[17]['content'],row[18]['content'],row[19]['content'],row[20]['content'],row[21]['content'],basic_amount,gst_amount,invoice_amount,row[25]['content']])
-#     return res, 'ok'
+                    if daily_order == 0:
+                        if t_qty == 0:
+                            try:
+                                req_qty = math.ceil((mrp_daily_order * min_qty)/packing_std)*packing_std
+                            except:
+                                req_qty = 0
+                        # if open_qty < req_qty:
+                        #     req_qty = math.floor(open_qty/packing_std)*packing_std
+                        
+                # data.append([po['Mat_No'], po['Part_No'], po['Part_Name'], po['PoNo'], po_date, delivery_date, po['Supplier_name'], po['Uom'], round(float(po['Unit_Pice']), 2), round(float(po['Po_Qty'])), open_qty, round(
+                #     (open_qty/float(po['Po_Qty']))*100), packing_std, daily_order, share, max_qty, min_qty, stock, in_transit_qty, t_qty, req_qty, '', '', float(po['GSTPercentage']), '', ''])
+                data.append([po['Mat_No'], po['Part_No'], po['Part_Name'],po['PoNo'],po['PoEntry'], po_date, po['Uom'],round(float(po['Unit_Pice']), 2),po['HSN_code'], open_qty, open_percent, packing_std, req_qty, '', '', float(po['CGST']),float(po['SGST']),float(po['IGST']), '', ''])
+        return data
 
 
 @frappe.whitelist()
 def submit_po(table, qr_code, irn_no, invoice_no):
     table = json.loads(table)
     supplier_code = frappe.db.get_value(
-        'TSAI Supplier', {'user': frappe.session.user}, 'user_name')
-
+        'TSAI Supplier', {'email': frappe.session.user}, 'name')
     inv = frappe.new_doc('TSAI Invoice')
-    inv.po_no = table[0][4]['content']
-    inv.po_date = table[0][5]['content']
     inv.qr_code = qr_code
     inv.irn_no = irn_no
     inv.invoice_no = invoice_no
@@ -155,33 +157,53 @@ def submit_po(table, qr_code, irn_no, invoice_no):
     total_basic = 0
     total_gst_amount = 0
     total_invoice_amount = 0
+    total_bin = 0
     for row in table:
-        if row[21]['content'] and row[22]['content']:
-            total_qty += int(row[21]['content'])
-            total_basic += int(row[22]['content'])
-            total_gst_amount += int(row[24]['content'])
-            total_invoice_amount += int(row[25]['content'])
+        if row[14]['content'] and row[15]['content']:
+            po_no = row[4]['content']
+            po_entry = row[5]['content']
+            po_date = row[6]['content']
+            total_qty += int(row[14]['content'])
+            total_basic += float(row[15]['content'])
+            total_gst_amount += float(row[20]['content'])
+            total_invoice_amount += float(row[21]['content'])
+            total_bin += float(row[14]['content'])/row[12]['content']
             inv.append('invoice_items', {
                 'mat_no': row[1]['content'],
                 'parts_no': row[2]['content'],
                 'parts_name': row[3]['content'],
-                'uom': row[8]['content'],
-                'unit_price': row[9]['content'],
-                'hsc_sac': '',
-                'packing_standard': row[13]['content'],
-                'key_qty': row[21]['content'],
-                'basic_amount': row[22]['content'],
-                'gst_percent': row[23]['content'],
-                'gst_amount': row[24]['content'],
-                'invoice_amount': row[25]['content']
+                'uom': row[7]['content'],
+                'unit_price': row[8]['content'],
+                'hsn_code': row[9]['content'],
+                'packing_standard': row[12]['content'],
+                'po_qty' : row[10]['content'],
+                'key_qty': row[14]['content'],
+                'basic_amount': row[15]['content'],
+                'cgst': row[16]['content'],
+                'sgst': row[17]['content'],
+                'igst': row[18]['content'],
+                'tcs' : row[19]['content'],
+                'gst_amount': row[20]['content'],
+                'invoice_amount': row[21]['content']
             })
+    inv.po_no = po_no
+    inv.po_entry = po_entry
+    inv.po_date = po_date
     inv.total_qty = total_qty
     inv.total_basic_amount = total_basic
-    inv.gst_percentage = table[0][23]['content']
+    inv.cgst = table[0][16]['content']
+    inv.sgst = table[0][17]['content']
+    inv.igst = table[0][18]['content']
+    inv.tcs = table[0][19]['content']
     inv.total_gst_amount = total_gst_amount
     inv.total_invoice_amount = total_invoice_amount
+    inv.total_bin = total_bin
     inv.save(ignore_permissions=True)
     frappe.db.commit()
+    invoice_no_type = frappe.db.get_value(
+        'TSAI Supplier', {'email': frappe.session.user}, 'invoice_no_type')
+    if invoice_no_type == 'Automatic':
+        frappe.db.set_value('TSAI Supplier',supplier_code,'current_running_no',invoice_no[-6:])
     return 'ok'
 
 
@@ -193,20 +215,32 @@ def get_dates(from_date, to_date):
 
 @frappe.whitelist()
 def get_invoice_no():
-    supplier_code = frappe.db.get_value(
-        'TSAI Supplier', {'user': frappe.session.user}, 'user_name')
-    inv_no = frappe.db.sql("select max(creation),name from `tabTSAI Invoice` where supplier_code = '%s' " %
-                           supplier_code, as_dict=True)[0].name
-    invoice_no = str(supplier_code) + "21220000" + str(int(inv_no[-5:])+1)
-    return invoice_no
+    invoice_no_type = frappe.db.get_value(
+        'TSAI Supplier', {'email': frappe.session.user}, 'invoice_no_type')
+    if invoice_no_type == 'Automatic':
+        supplier_code = frappe.db.get_value(
+            'TSAI Supplier', {'email': frappe.session.user}, 'name')
+        cur_no = frappe.db.get_value("TSAI Supplier",{'name':supplier_code},'current_running_no')
+        
+        no = "0000" + str(int(cur_no) + 1)
+        date = datetime.strptime(today(), '%Y-%m-%d')
+        month = datetime.strftime(date, "%m")
+        year = datetime.strftime(date, "%Y")
+        if int(month) <= 3 :
+            invoice_no = str(supplier_code) + str(int(year[-2:])-1)+str(year[-2:]) + no[-5:]
+        else:
+            invoice_no = str(supplier_code) + str(year[-2:])+str(int(year[-2:])+1) + no[-5:]
+        return invoice_no
+    else:
+        return ''
 
 
 @frappe.whitelist()
 def download_excel():
     supplier_code = frappe.db.get_value(
-        'TSAI Supplier', {'user': frappe.session.user}, 'user_name')
+        'TSAI Supplier', {'email': frappe.session.user}, 'name')
     if supplier_code:
-        url = "http://182.156.241.14/StockDetail/Service1.svc/GetPOLineDetails"
+        url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
         date = datetime.strptime(today(), '%Y-%m-%d')
         date = datetime.strftime(date, "%Y%m%d")
         payload = json.dumps({
@@ -224,7 +258,7 @@ def download_excel():
         for po in pos:
             if frappe.db.exists('TSAI Part Master', po['Mat_No']):
                 pr_name = frappe.db.get_value(
-                    'Prepared Report', {'report_name': 'Daily Order'}, 'name')
+                    'Prepared Report', {'report_name': 'Supplier Daily Order','status':'Completed'}, 'name')
                 attached_file_name = frappe.db.get_value(
                     "File",
                     {"attached_to_doctype": 'Prepared Report',
@@ -245,9 +279,8 @@ def download_excel():
                         min_qty = do['min_qty']
                         max_qty = do['max_qty']
 
-                in_transit_qty = 0
 
-                url = "http://182.156.241.14/StockDetail/Service1.svc/GetItemInventory"
+                url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
                 payload = json.dumps({
                     "ItemCode": po['Mat_No']
                 })
@@ -259,28 +292,60 @@ def download_excel():
                 stock = 0
                 if response:
                     stocks = json.loads(response.text)
-                    ica = frappe.db.sql(
-                        "select warehouse from `tabInventory Control Area` where invoice_key = 'Y' ", as_dict=True)
+                    if stocks:
+                        ica = frappe.db.sql(
+                            "select warehouse from `tabInventory Control Area` where invoice_key = 'Y' ", as_dict=True)
 
-                    wh_list = [d['warehouse'] for d in ica if 'warehouse' in d]
+                        wh_list = [d['warehouse'] for d in ica if 'warehouse' in d]
 
-                    df = pd.DataFrame(stocks)
-                    df = df[df['Warehouse'].isin(wh_list)]
-                    stock = pd.to_numeric(df["Qty"]).sum()
+                        df = pd.DataFrame(stocks)
+                        df = df[df['Warehouse'].isin(wh_list)]
+                        stock = pd.to_numeric(df["Qty"]).sum()
+                
+                in_transit_qty_po = frappe.db.sql("""select sum(`tabInvoice Items`.key_qty) as key_qty from `tabTSAI Invoice`
+                        left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent
+                        where `tabTSAI Invoice`.status = 'OPEN' and `tabTSAI Invoice`.po_no = '%s' and `tabInvoice Items`.mat_no = '%s' and `tabTSAI Invoice`.supplier_code = '%s' and `tabInvoice Items`.grn = 0 """ % (po['PoNo'],po['Mat_No'],supplier_code), as_dict=True)[0].key_qty or 0
 
-                t_qty = stock+in_transit_qty
+                in_transit_qty = frappe.db.sql("""select sum(`tabInvoice Items`.key_qty) as key_qty from `tabTSAI Invoice`
+                        left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent
+                        where `tabTSAI Invoice`.status = 'OPEN' and `tabInvoice Items`.mat_no = '%s' and `tabTSAI Invoice`.supplier_code = '%s' and `tabInvoice Items`.grn = 0 """ % (po['Mat_No'],supplier_code), as_dict=True)[0].key_qty or 0
+
+                t_qty = stock + in_transit_qty
                 req_qty = 0
                 open_qty = float(po['Open_Qty'])
+                if open_qty > 0:
+                    open_percent = round((open_qty/float(po['Po_Qty']))*100)
+                else:
+                    open_percent = 0
                 packing_std = frappe.db.get_value(
                     "TSAI Part Master", po['Mat_No'], 'packing_std')
+                mrp_daily_order = frappe.db.get_value(
+                    "TSAI Part Master", po['Mat_No'], 'mrp_daily_order')
                 po_date = pd.to_datetime(po['Po_Date']).date()
                 delivery_date = pd.to_datetime(po['Delivery_Date']).date()
+                share = frappe.db.get_value('Shares of Business Entry',{'supplier_code':supplier_code,'mat_no':po['Mat_No']},'share_of_business') or '-'
+                # if open_qty > 0:
+                if t_qty < min_qty:
+                    try:
+                        req_qty = math.ceil((max_qty - t_qty)/packing_std)*packing_std
+                    except:
+                        req_qty = 0
+                    if req_qty < 0:
+                        req_qty = 0
+                    
+                mrp_daily_order = frappe.db.get_value(
+                    "TSAI Part Master", po['Mat_No'], 'mrp_daily_order')
                 if open_qty > 0:
-                    if t_qty < max_qty:
-                        req_qty = math.floor(
-                            (max_qty - t_qty)/packing_std)*packing_std
-                data.append([po['Mat_No'], po['Part_No'], po['Part_Name'], po['PoNo'], po_date, delivery_date, po['Supplier_name'], po['Uom'], round(float(po['Unit_Pice']), 2), round(float(po['Po_Qty'])), open_qty, round(
-                    (open_qty/float(po['Po_Qty']))*100), packing_std, daily_order, max_qty, min_qty, stock, in_transit_qty, t_qty, req_qty, '', '', float(po['GSTPercentage']), '', ''])
+                    if daily_order == 0:
+                        if t_qty == 0:
+                            try:
+                                req_qty = math.ceil((mrp_daily_order * min_qty)/packing_std)*packing_std
+                            except:
+                                req_qty = 0
+                    # if open_qty < req_qty:
+                    #     req_qty = math.floor(open_qty/packing_std)*packing_std
+                        
+                data.append([po['Mat_No'], po['Part_No'], po['Part_Name'], po['PoNo'], po['PoEntry'], po_date, delivery_date, po['Supplier_name'], po['Uom'], round(float(po['Unit_Pice']), 2), po['HSN_code'], round(float(po['Po_Qty'])), open_qty,open_percent, packing_std, daily_order,share, max_qty, min_qty, in_transit_qty_po, t_qty, req_qty, '', '',float(po['CGST']),float(po['SGST']),float(po['IGST']),float(po['TCS']), '', ''])
 
     xlsx_file = make_xlsx(data)
     frappe.response['filename'] = 'Invoice_Key.xlsx'
@@ -296,8 +361,8 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
 
     ws = wb.create_sheet(sheet_name, 0)
 
-    cols = ["MAT No", "Parts No", "Parts Name", "PO No", "PO Date", "Delivery date", "Supplier Name", "UOM", "Unit Price", "PO Qty", "Open Qty", "%", "Packing",
-            "Daily Order", "Max Qty", "Min Qty", "Stock Qty", "In transit Qty", "Total Qty", "Req Qty", "Key Qty", "Basic Amount", "GST %", "GST Amount", "Invoice Amount"]
+    cols = ["MAT No", "Parts No", "Parts Name", "PO No", "PO Entry", "PO Date", "Delivery date", "Supplier Name", "UOM", "Unit Price", "HSN Code","PO Qty", "Open Qty", "%", "Packing",
+            "Daily Order","Share %" ,"Max Qty", "Min Qty", "In transit Qty", "Total Qty", "Req Qty", "Key Qty", "Basic Amount", "CGST %","SGST %","IGST %", "TCS %", "GST Amount", "Invoice Amount"]
     ws.append(cols)
 
     for row in data:
@@ -311,7 +376,7 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
 
 
 def get_stock(mat_no):
-    url = "http://182.156.241.14/StockDetail/Service1.svc/GetItemInventory"
+    url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
     payload = json.dumps({
         "ItemCode": mat_no
     })
@@ -330,10 +395,19 @@ def get_stock(mat_no):
     stock = pd.to_numeric(df["Qty"]).sum()
     return stock
 
+@frappe.whitelist()
+def get_transit_qty(po_no,mat_no):
+    supplier_code = frappe.db.get_value(
+            'TSAI Supplier', {'email': frappe.session.user}, 'name')
+    transit_qty = frappe.db.sql("""select sum(`tabInvoice Items`.key_qty) as key_qty from `tabTSAI Invoice`
+    left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent
+    where `tabTSAI Invoice`.status = 'OPEN' and `tabTSAI Invoice`.po_no = '%s'and `tabInvoice Items`.mat_no = '%s' and `tabTSAI Invoice`.supplier_code = '%s' and `tabInvoice Items`.grn = 0 """ % (po_no,mat_no,supplier_code), as_dict=True)[0].key_qty or 0
+    return transit_qty
+
 
 def test_do():
     pr_name = frappe.db.get_value(
-        'Prepared Report', {'report_name': 'Daily Order'}, 'name')
+        'Prepared Report', {'report_name': 'Supplier Daily Order','status':'Completed'}, 'name')
     attached_file_name = frappe.db.get_value(
         "File",
         {"attached_to_doctype": 'Prepared Report', "attached_to_name": pr_name},
@@ -349,7 +423,7 @@ def test_do():
 
 
 def test_po():
-    url = "http://182.156.241.14/StockDetail/Service1.svc/GetPOLineDetails"
+    url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
     date = str(today()).replace('-', '')
     payload = json.dumps({
         "Fromdate": "",
@@ -384,3 +458,4 @@ def test_po():
     #         })
     #         po.save(ignore_permissions=True)
     #         frappe.db.commit()
+
