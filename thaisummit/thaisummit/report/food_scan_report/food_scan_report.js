@@ -8,6 +8,7 @@ frappe.query_reports["Food Scan Report"] = {
             "label": __("From Date"),
             "fieldtype": "Date",
             "reqd": 1,
+            // "default": frappe.datetime.nowdate()
     
         },
         {
@@ -15,8 +16,22 @@ frappe.query_reports["Food Scan Report"] = {
             "label": __("To Date"),
             "fieldtype": "Date",
             "reqd": 1,
+            // "default": frappe.datetime.nowdate()
             
         },
+        {
+			"fieldname": "menu",
+			"label": __("Menu"),
+			"fieldtype": "Link",
+			"options": "Food Menu"
+		},
+        // {
+		// 	"fieldname": "employee",
+		// 	"label": __("Employee"),
+		// 	"fieldtype": "Link",
+        //     "options": "Employee"
+
+		// },
     ]
 };
 

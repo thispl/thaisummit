@@ -1,0 +1,114 @@
+{
+ "actions": [],
+ "autoname": "TBOM.####",
+ "creation": "2023-02-07 17:27:52.649584",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item",
+  "item_description",
+  "column_break_3",
+  "uom",
+  "item_quantity",
+  "section_break_5",
+  "whse",
+  "price",
+  "column_break_9",
+  "depth",
+  "bom_type",
+  "section_break_10",
+  "fm"
+ ],
+ "fields": [
+  {
+   "fieldname": "item",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Item"
+  },
+  {
+   "fieldname": "item_description",
+   "fieldtype": "Data",
+   "label": "Item Description"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "uom",
+   "fieldtype": "Data",
+   "label": "UOM"
+  },
+  {
+   "fieldname": "item_quantity",
+   "fieldtype": "Float",
+   "label": "Item Quantity"
+  },
+  {
+   "fieldname": "section_break_5",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "whse",
+   "fieldtype": "Data",
+   "label": "Whse"
+  },
+  {
+   "fieldname": "price",
+   "fieldtype": "Float",
+   "label": "Price",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "depth",
+   "fieldtype": "Int",
+   "label": "Depth"
+  },
+  {
+   "fieldname": "bom_type",
+   "fieldtype": "Data",
+   "label": "BOM Type"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "fm",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "FM"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-02-07 17:27:52.649584",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Test BOM",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

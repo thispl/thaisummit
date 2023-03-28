@@ -18,7 +18,6 @@ frappe.pages['food-scan-entry'].on_page_load = function(wrapper) {
 					user: this.get_value(),
 				},
 				callback: function (r) {
-					console.log(r.message)
 					party_details = r.message;
 					// page.main.html(frappe.render_template('food_scan_entry', {data : party_details}));
 				}

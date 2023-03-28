@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "autoname": "LSQ.#####",
+ "creation": "2022-08-02 09:21:18.741647",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "live_stock_date",
+  "mat_no",
+  "stock"
+ ],
+ "fields": [
+  {
+   "fieldname": "live_stock_date",
+   "fieldtype": "Date",
+   "label": "Live Stock Date"
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Link",
+   "label": "Mat No",
+   "options": "TSAI Part Master"
+  },
+  {
+   "default": "0",
+   "fieldname": "stock",
+   "fieldtype": "Float",
+   "label": "Stock"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-08-02 09:21:18.741647",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Live Stock Quantity",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

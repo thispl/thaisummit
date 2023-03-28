@@ -2,14 +2,40 @@ from email import message
 import frappe
 from frappe import _
 from erpnext.payroll.doctype.salary_slip.salary_slip import SalarySlip
+from erpnext.payroll.doctype.additional_salary.additional_salary import AdditionalSalary
 from erpnext.payroll.doctype.payroll_entry.payroll_entry import PayrollEntry
 from erpnext.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
 from erpnext.hr.doctype.leave_application.leave_application import LeaveApplication
+from erpnext.hr.doctype.employee.employee import Employee
 from erpnext.hr.doctype.compensatory_leave_request.compensatory_leave_request import CompensatoryLeaveRequest
-from frappe.utils import add_days, cint, cstr, flt, getdate, rounded, date_diff, money_in_words, formatdate, get_first_day
+from thaisummit.thaisummit.doctype.overtime_request.overtime_request import OvertimeRequest
+from frappe.utils import add_days, cint, cstr, flt, getdate, rounded, date_diff, money_in_words, formatdate, get_first_day,get_time
 from erpnext.hr.utils import validate_dates, validate_overlap, get_leave_period, \
     get_holidays_for_employee, create_additional_leave_ledger_entry
 from erpnext.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+
+class CustomAdditionalSalary(AdditionalSalary):
+    def before_save(self):
+        add_salary = frappe.db.count('Additional Salary',{'employee':self.employee,'salary_component':self.salary_component,'department':self.department,'payroll_date':self.payroll_date})
+        if add_salary >=1:
+            frappe.throw(_('Employee %s  have already Additional Salary'%(self.employee)))
+            message = ('Employee %s have already Additional Salary'%(self.employee))
+            frappe.log_error('Additional Salary',message)
+
+class CustomOvertimeRequest(OvertimeRequest):
+    
+    def before_save(self):
+        if self.shift == 'PP2':
+            self.from_time = get_time('04:00:00')
+            self.to_time = get_time('08:00:00')
+            self.ot_hours = get_time('03:30:00')
+
+class CustomEmployee(Employee):
+    def before_save(self):
+        if self.status == 'Active':
+            if self.ctc <= 0.0:
+                frappe.throw(_('Please Fill the Salary Components Details'))
+                frappe.log_error('Employe %s Please fill the salary Components'%(self.employee_number))
 
 
 class CustomSalarySlip(SalarySlip):
@@ -112,7 +138,7 @@ class CustomSalarySlip(SalarySlip):
                 status in ("Present","Half Day","Absent")
                 AND employee = %s
                 AND docstatus = 1
-                AND shift is not null
+                AND shift_status is not null
                 AND attendance_date between %s and %s
         ''', values=(self.employee, self.start_date, self.end_date), as_dict=1)
         od_attendances = frappe.db.sql('''
@@ -131,19 +157,18 @@ class CustomSalarySlip(SalarySlip):
         for d in present_attendances:
             # holiday = check_holiday(d.attendance_date)
             # if not holiday:
-            if d.shift_status in ("1","11",'1L1'):
+            if d.shift_status in ("11",'1L1'):
                 shift1 += 1
-            if d.shift_status in ('2','22'):
+            if d.shift_status in ('2','22', '2L2', '2W', '2LW'):
                 shift2 += 1
-            if d.shift_status in ('3','33'):
+            if d.shift_status in ('3','33', '3L3', '3W', '3LW'):
                 shift3 += 1
             if d.shift_status in ("PP1","PP1PP1","P1P1"):
                 shiftpp1 += 1
-            if d.shift_status in ("PP2","PP2PP2","P2P2"):
+            if d.shift_status in ("PP2","PP2PP2","P2P2"):   
                 shiftpp2 += 1
-            if d.shift_status in ('1','1L1','11','2','22','3','33','PP2','PP2PP2','0.5LL','0.5CL','0.5SL','0.5EL','0.5Leave Without Pay','0.5Casual Leave','0.5Earned Leave','0.5Casual Leave','0.5Sick Leave','0.5Compensatory Off','0.5Special Leave'):
+            if d.shift_status in ('11','22','33','1L1','2L2','3L3','1W','1LW','2W','2LW','3W','3LW','ODW','1H','1LH','0.5LL','0.5LLL','1H','2H','3H','1LH','2LH','3LH','0.5Leave Without Pay'):
                 transport_days += 1
-                # frappe.errprint(transport_days)
         self.shift_1 = shift1
         self.shift_2 = shift2
         self.shift_3 = shift3
@@ -152,6 +177,8 @@ class CustomSalarySlip(SalarySlip):
         self.transport_days = transport_days
         self.leave_days = leave_days
         self.transport_allowance = frappe.db.get_value('Designation',self.designation,'transport_allowance')
+        # frappe.db.set_value('Salary Slip',self.name,'transport_allowance',transport_allowance)
+        frappe.errprint(self.transport_allowance)
         if self.employee_type == 'WC':
             self.attendance_bonus_days = frappe.db.get_value('Payroll Settings',None,'wc_att_bonus')
         elif self.employee_type == 'BC':
@@ -176,7 +203,7 @@ def check_holiday(date):
 class CustomPayrollEntry(PayrollEntry):
     def get_filter_condition(filters):
         cond = ''
-        for f in ['company', 'branch', 'department', 'designation','employee_type']:
+        for f in ['company', 'branch', 'department', 'designation','employee_type','contractor']:
             if filters.get(f):
                 cond += " and t1." + f + " = " + frappe.db.escape(filters.get(f))
         return cond
@@ -188,8 +215,12 @@ class CustomPayrollEntry(PayrollEntry):
         filters['department'] = self.department
         filters['designation'] = self.designation
         filters['employee_type'] = self.employee_type
-
+        filters['contractor'] = self.contractor
         return filters
+
+    def before_save(self):  
+        if self.contractor == 'VAC':
+            frappe.throw(_('VAC Contractor Not Allowed for Payroll entry'))
 
 class CustomShiftAssignment(ShiftAssignment):
     def validate(self):

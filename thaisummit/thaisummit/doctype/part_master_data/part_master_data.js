@@ -29,6 +29,7 @@ frappe.ui.form.on('Part Master Data', {
 					freeze_message: 'Updating Master Data....',
 					callback(r) {
 						if (r.message) {
+							console.log('hi')
 							frappe.show_alert({
 								message: __('Master Data has been Updated in the background, check after few minutes'),
 								indicator: 'green'

@@ -1,9 +1,12 @@
 from codecs import ignore_errors
+from multiprocessing.spawn import old_main_modules
 from os import truncate
 from types import FrameType
 import frappe
 import json
+import re
 import datetime
+from frappe.utils.background_jobs import enqueue
 from frappe import permissions
 from frappe.utils.file_manager import get_file
 from frappe.utils.csvutils import read_csv_content
@@ -11,7 +14,7 @@ from frappe.utils.data import format_date, get_url_to_list
 from six.moves import range
 from six import string_types
 from frappe.utils import (getdate, cint, add_months, date_diff, add_days,
-                          nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime, format_date)
+                          nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime, format_date,get_time)
 from datetime import datetime
 from calendar import IllegalMonthError, month, monthrange
 from frappe import _, get_value, msgprint
@@ -23,8 +26,41 @@ import calendar
 from erpnext.hr.doctype.employee.employee import get_holiday_list_for_employee
 # from tabulate import tabulate
 from datetime import datetime
+from erpnext.hr.utils import get_holiday_dates_for_employee
 import pandas as pd
+from frappe.utils import getdate, cint, add_months, date_diff, add_days, nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime
+from frappe import _
 
+@frappe.whitelist()
+def get_opq(mat_number):
+    total_open_qty = 0
+    if frappe.db.exists('TSAI Part Master',{'mat_no':mat_number}):
+        url = "http://172.16.1.18/StockDetail/Service1.svc/GetOpenProductionOrder"
+        payload = json.dumps({
+            "ProductNo": mat_number,
+            "Fromdate": "",
+            "Todate": ""
+        })
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        response = requests.request(
+            "POST", url, headers=headers, data=payload)
+        openqty = 0
+        if response:
+            stocks = json.loads(response.text)
+            if stocks:
+                openqty = stocks[0]['OpenQty']
+                completed_qty = stocks[0]['CmpltQty']
+                planned_qty = stocks[0]['PlannedQty']
+                for stock in stocks:
+                    total_open_qty += cint(stock['OpenQty'])
+    return total_open_qty or 0
+
+@frappe.whitelist()
+def tag_mat_name(mat_number):
+    mat_name = frappe.db.sql("""select parts_name,parts_no,packing_std from `tabTSAI Part Master` where mat_no ='%s' """%(mat_number),as_dict=1)[0]
+    return mat_name['parts_name'],mat_name['parts_no'],mat_name['packing_std']
 
 def bulk_update_from_csv(filename):
     # below is the method to get file from Frappe File manager
@@ -96,6 +132,26 @@ def bulk_update_from_csv(filename):
                         od.submit()
                         frappe.db.commit()
 
+def bulk_update_emp(filename):
+    # below is the method to get file from Frappe File manager
+    from frappe.utils.file_manager import get_file
+    # Method to fetch file using get_doc and stored as _file
+    _file = frappe.get_doc("File", {"file_name": filename})
+    # Path in the system
+    filepath = get_file(filename)
+    # CSV Content stored as pps
+    pps = read_csv_content(filepath[1])
+    dates = datetime.now().date()
+    meal_type = 'Lunch Briyani Veg'
+    for pp in pps:
+        print([pp,dates,meal_type])
+        emp = frappe.new_doc('Employee Menu Preference')
+        emp.date = dates
+        emp.employee = pp[0]
+        emp.meal_type = meal_type
+        emp.save(ignore_permissions=True)
+        frappe.db.commit()
+
 
 def bulk_update_from_csv1(filename):
     # below is the method to get file from Frappe File manager
@@ -123,7 +179,6 @@ def bulk_update_from_csv1(filename):
                 frappe.db.set_value('Attendance', att, 'qr_shift', pp[2])
                 print(doc.name)
                 frappe.db.set_value("QR Checkin", doc.name, 'attendance', att)
-
 
 def qr_checkin_manual():
     emps = ["T0119",
@@ -292,6 +347,20 @@ def create_user(employee_number, employee_name):
     frappe.db.commit()
     return user.email
 
+
+@frappe.whitelist()
+def api_test():
+    url = "http://apioso.thaisummit.co.th:10401/api/FGQuantity"
+    payload = json.dumps({
+                "ItemCode": "10000089"
+            })
+    headers = {
+        'Content-Type': 'application/json',
+        'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==w!AWwb&DU'
+    }
+    response = requests.request(
+                "POST", url, headers=headers, data=payload)
+    frappe.errprint(response.status_code)
 
 @frappe.whitelist()
 def get_sap_qty():
@@ -714,7 +783,6 @@ def check_leave_balance(employee, leave_type):
         if la > balance:
             frappe.throw(
                 'There is not enough leave balance for Leave Type %s' % (leave_type))
-
 
 @frappe.whitelist()
 def application_allowed_from(date):
@@ -1158,7 +1226,6 @@ def update_approver(dept, hod, gm, ceo):
                                 'approver_name', approver_name)
     return 'ok'
 
-
 @frappe.whitelist()
 def check_qr(from_date, to_date, employee):
     emp_type = frappe.db.get_value("Employee", employee, 'employee_type')
@@ -1290,30 +1357,6 @@ def fetch_sap_stock():
 @frappe.whitelist()
 def test_hook():
     frappe.log_error(title='hooks', message='ok')
-
-
-def create_hooks():
-    job = frappe.db.exists('Scheduled Job Type', 'overall_invoice_key_download_evening')
-    if not job:
-        sjt = frappe.new_doc("Scheduled Job Type")
-        sjt.update({
-            "method": 'thaisummit.thaisummit.doctype.ekanban_settings.ekanban_settings.enqueue_overall_invoice_key_cron',
-            "frequency": 'Cron',
-            "cron_format": '05 16 * * *'
-        })
-        sjt.save(ignore_permissions=True)
-
-def create_hooks():
-    job = frappe.db.exists('Scheduled Job Type', 'open_production_qty')
-    if not job:
-        sjt = frappe.new_doc("Scheduled Job Type")
-        sjt.update({
-            "method": 'thaisummit.utils.get_open_production_qty',
-            "frequency": 'Cron',
-            "cron_format": '0,30 * * * *'
-        })
-        sjt.save(ignore_permissions=True)
-
 
 @frappe.whitelist()
 def fetch_sap_stock_bulk():
@@ -1719,7 +1762,6 @@ def delete_left_att(doc, method):
         except:
             frappe.delete_doc('Attendance', attendance.name)
 
-
 # def att_api():
 #     url = "http://182.156.241.11/api/resource/Employee Checkin"
 #     payload = 'data = {"employee": "TSAI0195","time":"2021-12-01 01:01"}'
@@ -1739,7 +1781,6 @@ def delete_left_att(doc, method):
 #     }
 #     response = requests.request('GET',url,headers=headers,verify='/etc/ssl/certs/nginx.crt')
 #     print(response.text)
-
 
 @frappe.whitelist(allow_guest=True)
 def mark_checkin(**args):
@@ -1781,13 +1822,11 @@ def leave_application(leave_day,emp,leave_type,name,reason,approve):
         doc.save(ignore_permissions=True)
         frappe.db.commit()
 
-@frappe.whitelist()
-def coff_leave(att_date,emp_id):
-    if frappe.db.exists('Attendance',{'attendance_date':att_date,'employee':emp_id}):
-        att = frappe.get_doc('Attendance',{'attendance_date':att_date,'employee':emp_id})
-        twh = att.out_time - att.in_time
-        time = datetime.strptime(str(twh),'%H:%M:%S').strftime('%H:%M')
-        return att.in_time,att.out_time,time,att.shift
+    # if frappe.db.exists('Attendance',{'attendance_date':att_date,'employee':emp_id}):
+    #     att = frappe.get_doc('Attendance',{'attendance_date':att_date,'employee':emp_id})
+    #     twh = att.out_time - att.in_time
+    #     time = datetime.strptime(str(twh),'%H:%M:%S').strftime('%H:%M')
+    #     return att.in_time,att.out_time,time,att.shift
     
 # @frappe.whitelist()
 # def fetch_bom_details():
@@ -1867,74 +1906,18 @@ def check_ot():
     for ot in ots:
         print(ot)
 
-# def check_timesheet():
-#     ots = frappe.get_all("Overtime Request",{'workflow_state':'Approved','ot_date':('between',('2021-11-26','2021-12-25'))},['*'])
-#     for ot in ots:
-#         t = frappe.db.count('Timesheet',{'employee':ot.employee,'start_date':ot.ot_date,'docstatus':'1'})
-#         if t == 2:
-#             print(ot.name)
-
-# def bulk_late():
-#     from frappe.utils.file_manager import get_file
-#     filepath = get_file('Late Report.csv')
-#     pps = read_csv_content(filepath[1])
-#     for pp in pps:
-#         # print(pd.to_datetime(pp[1]).date())
-#         att = frappe.db.exists('Attendance',{'employee':pp[0],'attendance_date':pd.to_datetime(pp[1]).date()})
-#         print(pp[0])
-#         print(att)
-#         frappe.db.set_value('Attendance',att,'status','Present')
-#         frappe.db.set_value('Attendance',att,'shift_status',pp[2])
-#         frappe.db.set_value('Attendance',att,'manually_corrected',1)
-# @frappe.whitelist()
-# def ot_request():
-#    ot = frappe.db.get_all('Overtime Request',{'ot_date':'2022-04-15','shift':'2','ot_hours':'14:00','employee':'SBE0868'},['name','employee','ot_hours'])
-#    for o in ot:
-#         if o:
-#             frappe.db.set_value('Overtime Request',o.name,'ot_hours','15:00:00')
-#             print('yes')
-
-# @frappe.whitelist()
-# def timesheet():
-#     ot = frappe.db.sql(""" delete from `tabOvertime Request` where ot_date = '2022-04-16' and ot_hours = '14:00' """)
-#     print(ot)
-#     # ot = frappe.db.get_all('Overtime Request',{'ot_date':'2022-04-15','shift':'2','ot_hours':'14:00','employee':'SBE0868'},['name','employee','ot_hours'])
-#     # for o in ot:
-#     #     time = frappe.db.get_all('Timesheet',{'overtime_request':o.name},['total_hours'])
-#     #     for t in time:
-#     #         print(t)
-
-
 @frappe.whitelist()
 def ot():
-    ot_request = frappe.db.sql(""" delete from `tabOvertime Request` where ot_date = '2022-04-24' and ot_hours = '14:00' """)
-    print(ot_request)
+    ot_request = frappe.db.get_all('Overtime Request',{'ot_date':'2022-07-01','workflow_state':'Draft'},['employee'])
+    for ot in ot_request:
+        print(ot)
+        att = frappe.db.get_all('Attendance',{'attendance_date':'2022-07-01','employee':ot.employee},['in_time','out_time',])
+        for a in att:
+            if a.in_time and a.out_time:
+                print(a.employee)
+            else:
+                print(a.employee)    
 
-# @frappe.whitelist()
-# def shift(current_time):
-#     if ('06:30') < current_time < ('10:00'):
-#         return '1 Shift'
-
-@frappe.whitelist()
-def checkins():
-#     first_aid = frappe.db.sql(""" select `tabMedicine Table`* from `tabFirst Aid` where date = '2022-06-13' """)
-#     print(first_aid)leave
-    # salary_slip = frappe.db.sql(""" select count (*)  from `tabSalary Slip` where start_date  between '2022-04-26' and '2022-05-25'  and employee_type = 'BC'  """)
-    # print(salary_slip)
-    # checkin = frappe.db.sql(""" select count(*) from `tabEmployee Checkin`  where date(time) = '2022-05-21' and employee_type like 'FT' """)
-    # print(checkin)
-    # checkin = frappe.db.sql(""" update `tabEmployee Checkin` set skip_auto_attendance = 0 where date(time) = '2022-05-21' and employee_type like 'FT' """)
-    # print(checkin)
-    # checkin = frappe.db.sql(""" select count(*) from   `tabQR Checkin` where created_date = '2022-05-21' and employee_type like 'FT' """)
-    # print(checkin)
-    # checkin = frappe.db.sql(""" update `tabQR Checkin` set attendance = '' where created_date = '2022-05-21' and employee_type like 'FT' """)
-    # print(checkin)
-    # checkin = frappe.db.sql(""" select count(*) from `tabAttendance` where attendance_date between '2022-06-09' and '2022-06-25' and employee = 'TSAI0259' """)
-    # print(checkin)
-    checkin = frappe.db.sql(""" delete from `tabAttendance` where attendance_date between  '2022-05-10' and '2022-06-28' and employee = 'TSAI0310' """)
-    print(checkin)
-    # shift = frappe.db.sql(""" delete from `tabShift Assignment` where start_date between '2022-06-06' and '2022-06-11' and department = 'Press-RE SPM' """)
-    # print(shift)
 
 @frappe.whitelist()
 def get_dates():
@@ -1945,19 +1928,221 @@ def get_dates():
             data+= i
             print(data)
 
-# @frappe.whitelist()
-# def shift_check():
-#     emp = frappe.db.get_value('Employee Checkin',{'employee':'NT0431','log_type':'OUT'},['time'])
-#     # print(emp)
-#     attendance = frappe.db.exists('Attendance',{'attendance_date':'2022-06-11','employee':'NT0431'})
-#     att = frappe.db.set_value('Attendance',attendance,'out_time',emp)
-#     print(attendance)
-#     # print(att)
+@frappe.whitelist()
+def mark_biometric_pin(doc,method):
+    employee_series = 0
+    if doc.employee_type == 'FT':
+        employee_series = 40
+       
+    elif doc.employee_type == 'NT':
+        employee_series = 20
+        
+    elif doc.employee_type == 'BC':
+        employee_series = 30
+       
+    elif doc.employee_type == 'WC':
+        employee_series = 10
+    
+    elif doc.employee_type == 'TH':
+        employee_series = 99
+       
+    elif doc.employee_type == 'CL':
+            employee_series = frappe.db.get_value("Contractor",{'name': doc.contractor},['employee_series'])        
+    number_seperation =re.sub('\D', '', doc.employee_number)
+    bio_metric_pin = str(employee_series) + str(number_seperation)
+    frappe.db.set_value("Employee",doc.name,'biometric_pin',bio_metric_pin)
+
+@frappe.whitelist()
+def scan_qr():
+    shift = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
+    shift_1 = [time(hour=shift[0].seconds//3600,minute=((shift[0].seconds//60)%60),second=0),time(hour=shift[1].seconds//3600,minute=((shift[1].seconds//60)%60),second=0)]
+    print(shift_1)
+
+
+@frappe.whitelist()
+def get_validation_dates():
+    validation_days  = frappe.db.get_single_value('HR Time Settings','on_duty_validation_dates')
+    # return validation_days
+    print(validation_days)
+    
+@frappe.whitelist()
+def ot_dept_count():
+    data = []
+    emp = []
+    # wh = 0
+    payroll_start_date = '2022-09-26'
+    payroll_end_date = '2022-10-25'
+    dept = frappe.db.get_all('Overtime Request',{'department':'HR&ADMIN','ot_date':('between',(payroll_start_date,payroll_end_date))},['*'])
+    for d in dept:
+        ftr = [3600,60,1]
+        try:
+            hr = sum([a*b for a,b in zip(ftr, map(int,str(d.ot_hours).split(':')))])
+            wh = round(hr/3600,1)
+            data.append(wh)
+            emp.append(d.employee)
+            # data +=wh
+        except:
+            wh = 0  
+            # data.append(wh)
+    print(sum(data))
+
+@frappe.whitelist()
+def checkin_delete():
+    print('checkin')
+    # checkin = frappe.db.sql(""" delete from `tabEmployee Checkin`  where date(time) between '2023-01-20' and '2023-01-20' """)
+    # print(checkin)
 
 # @frappe.whitelist()
-# def nt_att():
-#     att = frappe.db.sql(""" delete from `tabSalary Slip` where start_date between '2022-05-26'  and '2022-06-25' and employee_type = 'BC' """)
-#     print(att)
-#     # error_log = frappe.db.sql(""" delete from `tabError Log`""")
-#     # print(error_log)
- 
+# def get_canteen_time():
+#     break_fast_min_time = frappe.db.get_single_value('Canteen Settings','min_time')
+#     bk_min_time = datetime.strptime(str(break_fast_min_time),'%H:%M:%S').time()
+#     bk_hour = bk_min_time.hour
+#     print(type(bk_min_time))
+#     print(type(bk_hour))
+
+@frappe.whitelist()
+def enqueue_checkin_bulk_upload_csv(filename):
+    frappe.enqueue(
+        checkin_bulk_upload_csv, # python function or a module path as string
+        queue="long", # one of short, default, long
+        timeout=36000, # pass timeout manually
+        is_async=True, # if this is True, method is run in worker
+        now=False, # if this is True, method is run directly (not in a worker) 
+        job_name='Checkin Upload', # specify a job name
+        enqueue_after_commit=False, # enqueue the job after the database commit is done at the end of the request
+        filename=filename, # kwargs are passed to the method as arguments
+    )    
+def checkin_bulk_upload_csv(filename):
+    from frappe.utils.file_manager import get_file
+    _file = frappe.get_doc("File", {"file_name": filename})
+    filepath = get_file(filename)
+    pps = read_csv_content(filepath[1])
+    for pp in pps:
+        if not frappe.db.exists('Employee Checkin',{'biometric_pin':pp[0],'time':pp[1]}):
+            if frappe.db.exists('Employee',{'biometric_pin':pp[0]}):
+                print('Employee Checkin')
+                ec = frappe.new_doc('Employee Checkin')
+                ec.biometric_pin = pp[0]
+                ec.employee = frappe.db.get_value('Employee',{'biometric_pin':pp[0]},['employee_number'])
+                ec.time = pp[1]
+                ec.device_id = pp[2]
+                ec.log_type = pp[3]
+                ec.save(ignore_permissions=True)
+                frappe.db.commit()
+            else:
+                if not frappe.db.exists('Unregistered Employee Checkin',{'biometric_pin':pp[0],'time':pp[1]}):
+                    print('Unregistered Checkin')
+                    ec = frappe.new_doc('Unregistered Employee Checkin')
+                    ec.biometric_pin = pp[0]
+                    ec.biometric_time = pp[1]
+                    ec.locationdevice_id = pp[2]
+                    ec.log_type = pp[3]
+                    ec.save(ignore_permissions=True)
+                    frappe.db.commit()    
+    return 'ok'    
+
+
+# @frappe.whitelist()
+# def get_ot_amount():
+#     ot_req = frappe.db.sql("""select name,ot_hours,ot_basic,ot_amount from `tabOvertime Request` where ot_date  = '2023-02-01' and employee_type = 'CL' and name = 'OT-86876' """,as_dict=True)
+#     for ot in ot_req:
+#         ot_hr = get_time(ot.ot_hours)
+#         ftr = [3600,60,1]
+#         hr = sum([a*b for a,b in zip(ftr, map(int,str(ot_hr).split(':')))])
+#         ot_hrs = round(hr/3600,1)
+#         ot_amount = ot_hrs * ot.ot_basic
+#         frappe.db.set_value('Overtime Request',ot.name,'ot_amount',float(ot_amount))
+#         # print(ot.name)
+#         print(ot_hrs)
+#         print(float(ot_amount))
+
+def overtime_request_update():
+    ot = frappe.db.sql(""" select count(*) from `tabOvertime Request` where ot_date between '2023-02-26' and '2023-03-25' and workflow_state != 'Draft' and shift = 'PP2'  """)
+    print(ot)
+    ot_set = frappe.db.sql(""" update `tabOvertime Request` set ot_hours = '03:00' where ot_date between '2023-02-26' and '2023-03-25' and workflow_state != 'Draft' and shift = 'PP2'  """)
+    print(ot_set)
+
+@frappe.whitelist()
+def get_urc_to_ec():
+    urc = frappe.db.sql("""select biometric_pin,biometric_time,log_type,locationdevice_id,name from `tabUnregistered Employee Checkin`""",as_dict=True)
+    for uc in urc:
+        pin = uc.biometric_pin
+        time = uc.biometric_time
+        dev = uc.locationdevice_id
+        typ = uc.log_type
+        nam = uc.name
+        if frappe.db.exists('Employee',{'biometric_pin':pin}):
+            if frappe.db.exists('Employee Checkin',{'biometric_pin':pin,"time":time}):
+                print("HI")
+            else:
+                print("HII")
+                ec = frappe.new_doc('Employee Checkin')
+                ec.biometric_pin = pin
+                ec.employee = frappe.db.get_value('Employee',{'biometric_pin':pin},['employee_number'])
+                ec.time = time
+                ec.device_id = dev
+                ec.log_type = typ
+                ec.save(ignore_permissions=True)
+                frappe.db.commit()
+                print("Created")
+                attendance = frappe.db.sql(""" delete from `tabUnregistered Employee Checkin` where name = '%s' """%(nam))
+                print("Deleted")       
+        else:
+            print("hello")
+    return "ok"
+
+# @frappe.whitelist()
+# def get_ot_ti():
+#     # print("OT")
+#     oti = frappe.db.sql("""select employee,name,employee_type,ot_date,from_time,shift from`tabOvertime Request` where ot_date = '2023-02-11' and workflow_state = 'Draft' """,as_dict=True)
+#     # print(oti)
+#     for ot in oti:
+#         shift = ot.shift
+#         employee = ot.employee
+#         from_time = ot.from_time
+#         # print(shift)
+#         checkin = ''
+#         if shift == '1':
+#             print("HI")
+#             # print(from_time)
+#             checkin = frappe.db.sql(""" select time from `tabEmployee Checkin` where employee = '%s' and date(time) between '2023-02-11' and '2023-02-12' and log_type = 'OUT' order by time """%(employee))
+#             print(checkin)
+#         if shift == '2':
+#             print("HII")
+#             # print(from_time)
+#             checkin = frappe.db.sql(""" select time from `tabEmployee Checkin` where employee = '%s' and date(time) between '2023-02-11' and '2023-02-12' and log_type = 'OUT' order by time """%(employee))
+#             print(checkin)
+#         if shift == '3':
+#             print("HIII")
+#             # print(from_time)
+#             checkin = frappe.db.sql(""" select time from `tabEmployee Checkin` where employee = '%s' and date(time) = '2023-02-12' and log_type = 'OUT'  order by time """%(employee))
+#             print(checkin)
+
+
+@frappe.whitelist()
+def qr_checkins_salary_update():
+    enqueue(qr_checkin_salary_set, queue='default', timeout=6000, event='qr_checkin_salary_set')
+
+
+@frappe.whitelist()
+def qr_checkin_salary_set():
+    per_day_basic = 0
+    per_day_ctc = 0
+    start_date = '2022-11-26'
+    end_date = '2022-12-25'
+    employees = frappe.get_all('Employee',{'status':'Active','name':'MOE0287'},['*'])
+    for emp in employees:
+        for single_date in range(date_diff(end_date, start_date)+1):
+            current_date = add_days(start_date, single_date)
+            qr_id = frappe.db.get_value('QR Checkin',{'employee':emp.name,'shift_date':current_date},['name'])
+            basic = frappe.db.set_value('QR Checkin',qr_id,'basic',emp.basic)
+            ctc = frappe.get_value('Employee',{'staus':'Active','name':q.employee},['ctc'])
+    #     holidays = len(get_holiday_dates_for_employee(q.employee,start_date,end_date))
+    #     total_working_days = date_diff(end_date,start_date) - holidays
+    #     if emp.employee_type != 'CL':
+    #         per_day_basic = basic / total_working_days
+    #         per_day_ctc = ctc / total_working_days   
+    #     else:
+    #         per_day_basic = basic
+    #         per_day_ctc = ctc
+    #     qr_checkins = frappe.get_doc('QR Checkin',{'name':q.})    

@@ -55,7 +55,7 @@ frappe.ui.form.on('Permission Request', {
 		// }
 	},
 	attendance_date(frm) {
-		if (!frappe.user.has_role('System Manager')) {
+		if (!frappe.user.has_role('HR GM')) {
 			if (frm.doc.attendance_date) {
 				var date = frappe.datetime.add_days(frm.doc.attendance_date, 3)
 				frappe.call({
@@ -84,7 +84,7 @@ frappe.ui.form.on('Permission Request', {
 		// }
 	},
 	validate(frm) {
-		if (!frappe.user.has_role('System Manager')) {
+		if (!frappe.user.has_role('HR GM')) {
 			if (frm.doc.attendance_date) {
 				var date = frappe.datetime.add_days(frm.doc.attendance_date, 3)
 				frappe.call({
@@ -109,10 +109,10 @@ frappe.ui.form.on('Permission Request', {
 				"method": "frappe.client.get",
 				"args": {
 					doctype: "Shift Type",
-					fieldname: ["name", "start_time", "end_time"],
 					filters: {
 						name: frm.doc.shift
-					}
+					},
+					fieldname: ["name", "start_time", "end_time"]
 				},
 				callback(r) {
 					frm.set_value("session", 'First Half')
@@ -133,10 +133,10 @@ frappe.ui.form.on('Permission Request', {
 					"method": "frappe.client.get",
 					"args": {
 						doctype: "Shift Type",
-						fieldname: ["name", "start_time", "end_time"],
 						filters: {
 							name: frm.doc.shift
-						}
+						},
+						fieldname: ["name", "start_time", "end_time"],
 					},
 					callback(r) {
 						frm.set_value("to_time", r.message.end_time)

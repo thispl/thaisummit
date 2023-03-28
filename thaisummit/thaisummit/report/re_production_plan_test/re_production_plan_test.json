@@ -1,0 +1,33 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2023-02-09 13:13:24.748308",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "TS_logo",
+ "modified": "2023-02-09 13:13:24.748308",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "RE Production Plan Test",
+ "owner": "Administrator",
+ "prepared_report": 1,
+ "ref_doctype": "TSAI Part Master",
+ "report_name": "RE Production Plan Test",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "E-Kanban User"
+  },
+  {
+   "role": "Supplier"
+  }
+ ]
+}

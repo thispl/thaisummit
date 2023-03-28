@@ -26,21 +26,25 @@ frappe.ui.form.on('First Aid',{
         }
 
     },
+    refresh(frm){
+		frappe.db.get_value("Employee",{'id_no':frappe.session.user},['employee','employee_name'], (r) => {
+			if (r){
+				frm.set_value('employee',r.employee)
+				frm.set_value('employee_name',r.employee_name)
+			}
+		})
+    },
     id_no(frm){
-        frappe.call({
-            'method':'thaisummit.utils.get_previous_entry',
-              'args':
-                    {
-                        id_no : frm.doc.id_no
-                    },
-                callback(r){
-                id_no= frappe.db.exists('First Aid',{'date':date})
-                if()
-                {
-
-                }
-               }
-        });
+		frappe.call({
+            method:'thaisummit.thaisummit.doctype.first_aid.first_aid.get_previous_entry',
+            args:{
+                emp:frm.doc.id_no,
+                name:frm.doc.name,
+            },
+            callback(r){
+                frm.fields_dict.previous_entry.$wrapper.empty().append(r.message)
+            }
+        })
     },
 
     refresh(frm) {
@@ -54,8 +58,5 @@ frappe.ui.form.on('First Aid',{
                 )
             })
         }
-       
     },
-
-    
 })

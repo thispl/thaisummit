@@ -24,6 +24,10 @@ frappe.ui.form.on('Approval', {
 		$('*[data-fieldname="mp_approval"]').find('.grid-remove-all-rows').hide();
 		$('*[data-fieldname="mp_approval"]').find('.grid-add-row').remove()
 
+		$('*[data-fieldname="guest_entry_approval"]').find('.grid-remove-rows').hide();
+		$('*[data-fieldname="guest_entry_approval"]').find('.grid-remove-all-rows').hide();
+		$('*[data-fieldname="guest_entry_approval"]').find('.grid-add-row').remove()
+
 
 		if (frappe.user.has_role(['HOD', 'GM', 'HR GM', 'CEO'])) {
 			/* OD button start*/
@@ -262,6 +266,46 @@ frappe.ui.form.on('Approval', {
 				}).addClass('btn-primary').css({ "margin-left": "10px", "margin-right": "10px" })
 
 			/* MP button end*/
+			
+			/*Guest Entry Button Start*/
+
+			frm.fields_dict["guest_entry_approval"].grid.add_custom_button(__('Reject'),
+				function () {
+					$.each(frm.doc.guest_entry_approval, function (i, d) {
+						if (d.__checked == 1) {
+							frm.call('submit_doc', {
+								doctype: "Guest Entry",
+								name: d.guest_entry,
+								workflow_state: 'Rejected'
+							}).then(r => {
+								frm.get_field("guest_entry_approval").grid.grid_rows[d.idx - 1].remove();
+							})
+							frm.get_field("guest_entry_approval").grid.grid_rows[d.idx - 1].remove();
+						}
+					})
+				}).addClass('btn-danger')
+
+			frm.fields_dict["guest_entry_approval"].grid.add_custom_button(__('Approve'),
+				function () {
+					$.each(frm.doc.guest_entry_approval, function (i, d) {
+						if (d.__checked == 1) {
+							if (d.workflow_state == 'Pending for HOD') {
+								frappe.db.set_value('Guest Entry', d.miss_punch_application, 'workflow_state', 'Pending for HR GM')
+								frm.get_field("guest_entry_approval").grid.grid_rows[d.idx - 1].remove();
+							}
+							if (d.workflow_state == "Pending for HR GM") {
+								frm.call('submit_doc', {
+									doctype: "Guest Entry",
+									name: d.guest_entry,
+									workflow_state: 'Approved'
+								}).then(r => {
+									frm.get_field("guest_entry_approval").grid.grid_rows[d.idx - 1].remove();
+								})
+								frm.get_field("guest_entry_approval").grid.grid_rows[d.idx - 1].remove();
+							}
+						}
+					})
+				}).addClass('btn-primary').css({ "margin-left": "10px", "margin-right": "10px" })
 
 
 		}
@@ -271,6 +315,7 @@ frappe.ui.form.on('Approval', {
 
 		var workflow_state = ''
 		if (frappe.user.has_role('GM')) {
+			console.log('hello')
 			workflow_state = ['Pending for HOD', 'Pending for GM']
 		}
 		else if (frappe.user.has_role('HOD')) {
@@ -581,7 +626,43 @@ frappe.ui.form.on('Approval', {
 				}
 			})
 		}
-		/* MP fetch end*/
+		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
+			frappe.call({
+				"method": "frappe.client.get_list",
+				"args": {
+					"doctype": "Guest Entry",
+					"filters": [
+						['workflow_state', '=', 'Pending for HOD'],
+						['employee', '!=', r.name]
+					],
+					limit_page_length: 500
+				},
+				callback(r) {
+					$.each(r.message, function (i, d) {
+						frappe.call({
+							"method": "frappe.client.get",
+							"args": {
+								"doctype": "Guest Entry",
+								"name": d.name
+							},
+							callback(r) {
+								frm.add_child('guest_entry_approval', {
+									'from_date': r.message.from,
+									'to_sate': r.message.to,
+									'requster_id': r.message.requester_id,
+									'workflow_state': r.message.workflow_state,
+									'guest_id': r.message.name,
+									'party_name': r.message.party_name,
+								})
+								frm.refresh_field('guest_entry_approval')
+							}
+						})
+
+					})
+				}
+			})
+		})
+		/* Guest fetch end*/
 	},
 	od_approval_on_form_rendered: function (frm, cdt, cdn) {
 		frm.fields_dict['od_approval'].grid.wrapper.find('.grid-delete-row').hide();
@@ -622,5 +703,13 @@ frappe.ui.form.on('Approval', {
 		frm.fields_dict['mp_approval'].grid.wrapper.find('.grid-append-row').hide();
 		frm.fields_dict['mp_approval'].grid.wrapper.find('.grid-insert-row-below').hide();
 		frm.fields_dict['mp_approval'].grid.wrapper.find('.grid-insert-row').hide();
+	},
+	guest_entry_approval_on_form_rendered: function (frm, cdt, cdn) {
+		frm.fields_dict['guest_entry_approval'].grid.wrapper.find('.grid-delete-row').hide();
+		frm.fields_dict['guest_entry_approval'].grid.wrapper.find('.grid-duplicate-row').hide();
+		frm.fields_dict['guest_entry_approval'].grid.wrapper.find('.grid-move-row').hide();
+		frm.fields_dict['guest_entry_approval'].grid.wrapper.find('.grid-append-row').hide();
+		frm.fields_dict['guest_entry_approval'].grid.wrapper.find('.grid-insert-row-below').hide();
+		frm.fields_dict['guest_entry_approval'].grid.wrapper.find('.grid-insert-row').hide();
 	},
 });

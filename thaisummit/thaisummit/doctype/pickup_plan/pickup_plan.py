@@ -93,8 +93,8 @@ class PickupPlan(Document):
 
                         max_qty = 0
                         for do in dos:
-                            if do['item'] == po['Mat_No']:
-                                max_qty = do['max_qty']
+                            if str(do['item']) == po['Mat_No']:
+                                max_qty = cint(do['max_qty'])
 
                         open_qty = float(po['Open_Qty'])
                         in_transit_qty = 0
@@ -151,13 +151,13 @@ class PickupPlan(Document):
                         """%(x,po['Mat_No'],po['Part_No'],po['Part_Name'],model,packing_std,req_qty)
                         x += 1
                         for do in dos:
-                            if do['item'] == po['Mat_No']:
+                            if str(do['item']) == po['Mat_No']:
                                 tomorrow = add_days(today(),1)
                                 for i in range(7):
                                     dt = datetime.strptime(add_days(tomorrow,i),'%Y-%m-%d')
                                     day = datetime.strftime(dt,'%d')
                                     month = datetime.strftime(dt,'%b')
-                                    qty = do[day+'_'+month.lower()]
+                                    qty = cint(do[day+'_'+month.lower()])
                                     if qty == 0:
                                         qty = '-'
                                     row += '<td style="border: 1px solid black; font-size:13px;"><center>%s</center></td>'%qty
@@ -210,10 +210,10 @@ def download_excel():
                 min_qty = 0
                 max_qty = 0
                 for do in dos:
-                    if do['item'] == po['Mat_No']:
-                        daily_order = do['daily_order']
-                        min_qty = do['min_qty']
-                        max_qty = do['max_qty']
+                    if str(do['item']) == po['Mat_No']:
+                        daily_order = cint(do['daily_order'])
+                        min_qty = cint(do['min_qty'])
+                        max_qty = cint(do['max_qty'])
 
                 # pol_qty = frappe.db.get_value('PO Ledger',{'tsai_po':po.name},['sum(key_qty)']) or 0
                 # open_qty = po.po_qty - pol_qty
@@ -260,13 +260,13 @@ def download_excel():
                 
                 row = [po['Mat_No'],po['Part_No'],po['Part_Name'],model,packing_std,req_qty]
                 for do in dos:
-                    if do['item'] == po['Mat_No']:
+                    if str(do['item']) == po['Mat_No']:
                         tomorrow = add_days(today(),1)
                         for i in range(7):
                             dt = datetime.strptime(add_days(tomorrow,i),'%Y-%m-%d')
                             day = datetime.strftime(dt,'%d')
                             month = datetime.strftime(dt,'%b')
-                            qty = do[day+'_'+month.lower()]
+                            qty = cint(do[day+'_'+month.lower()])
                             row.append(qty)
                 data.append(row)
 

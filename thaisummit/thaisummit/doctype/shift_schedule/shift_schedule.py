@@ -22,7 +22,6 @@ class ShiftSchedule(Document):
         enqueue(self.enqueue_submit_schedule, queue='default', timeout=6000, event='enqueue_submit_schedule'
         ,ss=ss,workflow_state=workflow_state)
 
-
     @frappe.whitelist()
     def enqueue_submit_schedule(self,ss,workflow_state):
         if workflow_state == "Approved":
@@ -32,6 +31,7 @@ class ShiftSchedule(Document):
                 doc.submit()
                 frappe.db.commit()
             frappe.msgprint('Shift Schedule Approved Successfully')
+            
         elif workflow_state == "Rejected":
             sas = frappe.get_all("Shift Assignment",{'shift_schedule':ss,'docstatus':'0'})
             for sa in sas:
@@ -293,7 +293,6 @@ class ShiftSchedule(Document):
                 subject='Reg.Shift Schedule Approval',
                 message = content+table+data+regards)
 
-
     @frappe.whitelist()
     def validate_employees(self):
         err_list = ""
@@ -372,7 +371,6 @@ class ShiftSchedule(Document):
                 data_list += "<tr><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td><td style='background-color:#f0b27a; border: 1px solid black'>%s</td></tr>"%(pp[0],pp[1],pp[2],pp[3],pp[4],pp[5],pp[6],pp[7])
             else:
                 data_list += "<tr><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td><td style = 'border: 1px solid black'>%s</td></tr>"%(pp[0],pp[1],pp[2],pp[3],pp[4],pp[5],pp[6],pp[7])
-
         return data_list
 
     @frappe.whitelist()
@@ -493,10 +491,10 @@ def enqueue_shift_assignment(file,from_date,to_date,name):
 
 @frappe.whitelist()
 def manual_shift_assignment():
-    file = '/private/files/FZ (27-02).csv'
-    from_date = '2022-06-27' 
-    to_date = '2022-07-02'
-    name = "SC-3827"
+    file = '/private/files/shift.csv'
+    from_date = '2022-12-05' 
+    to_date = '2022-12-10'
+    name = "SC-5651"
     create_shift_assignment(file,from_date,to_date,name)
     
 @frappe.whitelist()
@@ -536,7 +534,6 @@ def get_template():
     w = add_header(w)
 
     w = add_data(w, args)
-    
 
     # write out response as a type csv
     frappe.response['result'] = cstr(w.getvalue())
@@ -564,7 +561,6 @@ def get_data(args):
         ]
         data.append(row)
     return data
-
 
 @frappe.whitelist()
 def writedata(w, data):
@@ -634,6 +630,145 @@ def shift_employees(doc,shift):
         data += '<tr><td></td><td></td></tr>'
     data = data + '</table>'
     return data
+
+
+# @frappe.whitelist()
+# def get_count(from_date,to_date,filename):
+#     from frappe.utils.file_manager import get_file
+#     # from_date = '2023-03-27'
+#     # to_date = '2023-04-01'
+#     # filename = '/private/files/19.03.2023 IYM PRESS SPM.csv'
+#     _file = frappe.get_doc("File", {"file_url":filename})
+#     filepath = get_file(filename)
+#     pps = read_csv_content(filepath[1])
+#     sr1_count = 0
+#     sr2_count = 0
+#     sr3_count = 0
+#     sr4_count = 0
+#     sr5_count = 0
+#     sr6_count = 0
+#     sr7_count = 0
+#     sr8_count = 0
+#     sr9_count = 0
+#     sr9b_count = 0
+#     sr10_count = 0
+#     sr12_count = 0
+#     for pp in pps:
+#         if pp[6] == 'R1':
+#             sr1_count += 1
+#         if pp[6] == 'R2':
+#             sr2_count += 1 
+#         if pp[6] == 'R3':
+#             sr3_count += 1 
+#         if pp[6] == 'R4':
+#             sr4_count += 1 
+#         if pp[6] == 'R5':
+#             sr5_count += 1 
+#         if pp[6] == 'R6':
+#             sr6_count += 1 
+#         if pp[6] == 'R7':
+#             sr7_count += 1 
+#         if pp[6] == 'R8':
+#             sr8_count += 1 
+#         if pp[6] == 'R9':
+#             sr9_count += 1 
+#         if pp[6] == 'R9B':
+#             sr9b_count += 1 
+#         if pp[6] == 'R10':
+#             sr10_count += 1 
+#         if pp[6] == 'R12':
+#             sr12_count += 1 
+#     shift = frappe.db.sql("""select name,upload from `tabShift Schedule` where from_date = '%s' and to_date = '%s' and workflow_state != "Rejected" """%(from_date,to_date),as_dict=True)
+#     r1_count = 0
+#     r2_count = 0
+#     r3_count = 0
+#     r4_count = 0
+#     r5_count = 0
+#     r6_count = 0
+#     r7_count = 0
+#     r8_count = 0
+#     r9_count = 0
+#     r9b_count = 0
+#     r10_count = 0
+#     r12_count = 0
+#     for sh in shift:
+#         _file = frappe.get_doc("File", {"file_url":sh.upload})
+#         filepath = get_file(sh.upload)
+#         pps = read_csv_content(filepath[1])
+#         for pp in pps:
+#             if pp[6] == 'R1':
+#                 r1_count += 1
+#             if pp[6] == 'R2':
+#                 r2_count += 1 
+#             if pp[6] == 'R3':
+#                 r3_count += 1 
+#             if pp[6] == 'R4':
+#                 r4_count += 1 
+#             if pp[6] == 'R5':
+#                 r5_count += 1 
+#             if pp[6] == 'R6':
+#                 r6_count += 1 
+#             if pp[6] == 'R7':
+#                 r7_count += 1 
+#             if pp[6] == 'R8':
+#                 r8_count += 1 
+#             if pp[6] == 'R9':
+#                 r9_count += 1 
+#             if pp[6] == 'R9B':
+#                 r9b_count += 1 
+#             if pp[6] == 'R10':
+#                 r10_count += 1 
+#             if pp[6] == 'R12':
+#                 r12_count += 1   
+#     count1 = r1_count + sr1_count 
+#     count2 = r2_count + sr2_count 
+#     count3 = r3_count + sr3_count 
+#     count4 = r4_count + sr4_count 
+#     count5 = r5_count + sr5_count 
+#     count6 = r6_count + sr6_count
+#     count7 = r7_count + sr7_count 
+#     count8 = r8_count + sr8_count 
+#     count9 = r9_count + sr9_count 
+#     count9b = r9b_count + sr9b_count 
+#     count10 = r10_count + sr10_count 
+#     count12 = r12_count + sr12_count 
+#     capacity1 = frappe.db.get_value('Route No',{'name':'R1'},['capacity'])
+#     capacity2 = frappe.db.get_value('Route No',{'name':'R2'},['capacity'])
+#     capacity3 = frappe.db.get_value('Route No',{'name':'R3'},['capacity'])
+#     capacity4 = frappe.db.get_value('Route No',{'name':'R4'},['capacity'])
+#     capacity5 = frappe.db.get_value('Route No',{'name':'R5'},['capacity'])
+#     capacity6 = frappe.db.get_value('Route No',{'name':'R6'},['capacity'])
+#     capacity7 = frappe.db.get_value('Route No',{'name':'R7'},['capacity'])
+#     capacity8 = frappe.db.get_value('Route No',{'name':'R8'},['capacity'])
+#     capacity9 = frappe.db.get_value('Route No',{'name':'R9'},['capacity'])
+#     capacity9b = frappe.db.get_value('Route No',{'name':'R9B'},['capacity'])
+#     capacity10 = frappe.db.get_value('Route No',{'name':'R10'},['capacity'])
+#     capacity12 = frappe.db.get_value('Route No',{'name':'R12'},['capacity'])
+#     if capacity1 < count1:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R1"))
+#     if capacity2 < count2:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R2"))
+#     if capacity3 < count3:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R3"))
+#     if capacity4 < count4:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R4"))
+#     if capacity5 < count5:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R5"))
+#     if capacity6 < count6:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R6"))
+#     if capacity7 < count7:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R7"))
+#     if capacity8 < count8:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R8"))
+#     if capacity9 < count9:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R9"))
+#     if capacity9b < count9b:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R9B"))
+#     if capacity10 < count10:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R10"))
+#     if capacity12 < count12:
+#         frappe.throw(_("Employee's Count is more than Fixed Employee's Count through R12"))
+
 
 # @frappe.whitelist()
 # def mail_alerts(workflow_state,department,name,from_date,to_date):

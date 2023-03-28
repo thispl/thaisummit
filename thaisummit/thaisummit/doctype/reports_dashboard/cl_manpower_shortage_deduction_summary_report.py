@@ -32,6 +32,7 @@ from six import BytesIO, string_types
 def download():
     filename = 'cl plan shortage'
     test = build_xlsx_response(filename)
+    # enqueue(build_xlsx_response, queue='default', timeout=6000, event='build_xlsx_response',filename=filename)
 
     
 # return xlsx file object

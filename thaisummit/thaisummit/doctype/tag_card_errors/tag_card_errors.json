@@ -1,0 +1,119 @@
+{
+ "actions": [],
+ "autoname": "TCE.#####",
+ "creation": "2023-03-10 13:36:34.658917",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "error_name",
+  "mat_numbers",
+  "child_mat_number",
+  "production_order_qty",
+  "warehouse_qty",
+  "column_break_6",
+  "tag_card_qty",
+  "shortage_qty",
+  "date",
+  "time",
+  "user_id",
+  "linked_document"
+ ],
+ "fields": [
+  {
+   "fieldname": "error_name",
+   "fieldtype": "Data",
+   "label": "Error Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mat_numbers",
+   "fieldtype": "Data",
+   "label": "Mat Numbers",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warehouse_qty",
+   "fieldtype": "Data",
+   "label": "Warehouse Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tag_card_qty",
+   "fieldtype": "Data",
+   "label": "Tag Card Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shortage_qty",
+   "fieldtype": "Data",
+   "label": "Shortage Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "child_mat_number",
+   "fieldtype": "Data",
+   "label": "Child Mat Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_order_qty",
+   "fieldtype": "Data",
+   "label": "Production Order Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "user_id",
+   "fieldtype": "Data",
+   "label": "User Id",
+   "read_only": 1
+  },
+  {
+   "fieldname": "linked_document",
+   "fieldtype": "Link",
+   "label": "Linked Document",
+   "options": "Generate Tag Card",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Data",
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Data",
+   "label": "Time",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-03-11 12:51:34.918543",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag Card Errors",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

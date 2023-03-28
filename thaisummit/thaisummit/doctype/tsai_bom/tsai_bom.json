@@ -62,6 +62,7 @@
   {
    "fieldname": "fm",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "FM"
   },
   {
@@ -82,13 +83,13 @@
   },
   {
    "fieldname": "item_quantity",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
    "label": "Item Quantity"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-03-31 07:02:13.659458",
+ "modified": "2022-10-29 12:18:13.571634",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI BOM",

@@ -7,18 +7,20 @@
  "field_order": [
   "reports",
   "download",
-  "attach",
+  "column_break_3",
   "from_date",
-  "to_date",
   "column_break_5",
-  "contractor"
+  "to_date",
+  "column_break_7",
+  "contractor",
+  "attach"
  ],
  "fields": [
   {
+   "default": "CL Wages Contractor Wise",
    "fieldname": "reports",
-   "fieldtype": "Select",
-   "label": "Reports",
-   "options": "\nCL Wages Contractor Wise\nCL Manpower Summary\nCL Monthly OT Register"
+   "fieldtype": "Data",
+   "label": "Reports"
   },
   {
    "fieldname": "download",
@@ -42,19 +44,28 @@
    "options": "Contractor"
   },
   {
+   "fieldname": "attach",
+   "fieldtype": "Attach",
+   "hidden": 1,
+   "label": "Attach"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "column_break_5",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "attach",
-   "fieldtype": "Attach",
-   "label": "Attach"
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-29 20:32:44.697779",
+ "modified": "2023-01-12 16:21:27.282155",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "CL Reports",

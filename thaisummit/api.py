@@ -2,6 +2,7 @@ import frappe
 import json
 from frappe.utils import add_days, today, nowdate
 import requests
+
 import pandas as pd
 from frappe.utils.background_jobs import enqueue
 from frappe.utils import cstr, add_days, date_diff, getdate, today
@@ -9,6 +10,34 @@ import datetime
 from datetime import datetime
 from frappe.desk.query_report import background_enqueue_run
 
+# APi call(http://182.156.241.11/api/method/thaisummit.api.get_invoice_data?name=name)
+@frappe.whitelist(allow_guest=True)
+def get_invoice_data(po_no):
+    invoice_pos = frappe.get_list("TSAI Invoice", filters={"po_no": po_no}, fields=["name"])
+
+    invoice_list = []
+    for po in invoice_pos:
+        invoice = frappe.get_doc("TSAI Invoice", po.name)
+
+        invoice_items = {
+            "po_no": float(invoice.po_no),
+            "name": invoice.name,
+            "invoice_data": []
+        }
+
+        for item in invoice.invoice_items:
+            invoice_items["invoice_data"].append({
+                "mat_no": str(item.mat_no),
+                "key_qty": float(item.key_qty)
+            })
+
+        invoice_list.append(invoice_items)
+
+    return invoice_list
+
+
+    
+    
 
 def fetch_ekanban_stock():
     frappe.db.sql("delete from `tabTSAI Stock`")
@@ -101,28 +130,29 @@ def enqueue_fetch_ekanban_bom():
 @frappe.whitelist()
 def fetch_ekanban_bom():
     frappe.db.sql("delete from `tabTSAI BOM`")
-    url = "http://172.16.1.18/StockDetail/Service1.svc/GetBOMDetails"
-    payload = json.dumps({
-        "ItemCode": "",
-    })
-    headers = {
-        'Content-Type': 'application/json'
-    }
-    response = requests.request("POST", url, headers=headers, data=payload)
-    bom_details = json.loads(response.text)
-    for bom in bom_details:
-        doc = frappe.new_doc("TSAI BOM")
-        doc.item = bom["Item"]
-        doc.item_description = bom["ItemDescription"]
-        doc.uom = bom["UOM"]
-        doc.item_quantity = bom["Quantity"]
-        doc.whse = bom["Whse"]
-        doc.price = bom["Price"]
-        doc.depth = bom["Depth"]
-        doc.bom_type = bom["BOMType"]
-        doc.fm = bom["FG"]
-        doc.save(ignore_permissions=True)
-        frappe.db.commit()
+    # url = "http://172.16.1.18/StockDetail/Service1.svc/GetBOMDetails"
+    # payload = json.dumps({
+    #     "ItemCode": "",
+    # })
+    # headers = {
+    #     'Content-Type': 'application/json'
+    # }
+    # response = requests.request("POST", url, headers=headers, data=payload)
+    # bom_details = json.loads(response.text)
+    # print(bom_details)
+    # for bom in bom_details:
+    #     doc = frappe.new_doc("TSAI BOM")
+    #     doc.item = bom["Item"]
+    #     doc.item_description = bom["ItemDescription"]
+    #     doc.uom = bom["UOM"]
+    #     doc.item_quantity = bom["Quantity"]
+    #     doc.whse = bom["Whse"]
+    #     doc.price = bom["Price"]
+    #     doc.depth = bom["Depth"]
+    #     doc.bom_type = bom["BOMType"]
+    #     doc.fm = bom["FG"]
+    #     doc.save(ignore_permissions=True)
+    #     frappe.db.commit()
 
 
 @frappe.whitelist(allow_guest=True)
@@ -161,10 +191,58 @@ def mark_checkin(**args):
         return "No Emp"
 
 
+def generate_daily_order_test():
+    report_name = "Supplier Daily Order Test"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+def generate_transfer_plan():
+    report_name = "RM-RE Transfer Plan"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+    report_name = "RM-IYM Transfer Plan"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+    report_name = "BOP-IYM TRANSFER PLAN"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+    report_name = "BOP-RE TRANSFER PLAN"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+    report_name = "IYM-FG LIVE STOCK"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+    report_name = "RE-FG LIVE STOCK"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+    report_name = "BOP-RE LIVE STOCK"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+    report_name = "BOP-IYM LIVE STOCK"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+    report_name = "Production Plan"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
 def generate_daily_order():
     report_name = "Supplier Daily Order"
     filters = "{}"
     background_enqueue_run(report_name, filters)
+
+def generate_production_daily_order_test():
+    report_name = "Production Daily Order Test"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
 
 def generate_production_daily_order():
     report_name = "Production Daily Order"
@@ -199,7 +277,6 @@ def fetch_grn_details_8am():
     invs = frappe.db.sql("""select `tabInvoice Items`.mat_no as mat_no, `tabTSAI Invoice`.name as name, `tabTSAI Invoice`.po_no from `tabTSAI Invoice`
     left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent where `tabInvoice Items`.grn = 0 """, as_dict=True)
     for inv in invs:
-        print(inv)
         url = "http://172.16.1.18/StockDetail/Service1.svc/GetPODetails"
         payload = json.dumps({
             "Fromdate": "", "Todate": "", "MatNo": inv.mat_no, "PONO": inv.po_no
@@ -306,3 +383,24 @@ def fetch_grn_details_1am():
 #                 d.grn_no = grn[3]
 #         doc.save(ignore_permissions=True)
 #         frappe.db.commit()
+
+
+import requests
+import json
+
+def create_prod_plan():
+    url = "http://172.16.1.18/StockDetail/Service1.svc/CreateProductionPlan"
+
+    payload = json.dumps({
+    "orderdate": "2022-02-21",
+    "qty": "",
+    "itemno": "10000089"
+    })
+    headers = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer /1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    print(response)

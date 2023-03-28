@@ -122,7 +122,7 @@ def get_data(args):
 
     earning_comp = ["Basic","House Rent Allowance","Welding Allowance","Attendance Bonus","Additional Allowance","Shift Allowance","Arrear","PP Allowance","Transport Allowance","Others",]
 
-    dedcution_comp = ["Provident Fund","Employee State Insurance","Canteen Charges","Professional Tax","LWF","Tel EXP","Personal Protective Equipment","Advance" ]
+    dedcution_comp = ["Provident Fund","Employee State Insurance","Canteen Charges","Professional Tax","Labor Welfare Fund","Tel EXP","Personal Protective Equipment","Advance" ]
 
     # if args.department:
     #     salary_slips = frappe.get_all("Salary Slip",{'employee_type':'BC''start_date':args.from_date,'end_date':args.to_date},['*'])	

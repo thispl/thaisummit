@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "autoname": "OPQ.#####",
+ "creation": "2022-11-15 16:51:02.059145",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "daily_order_date",
+  "mat_no",
+  "open_qty",
+  "completed_qty",
+  "planned_qty"
+ ],
+ "fields": [
+  {
+   "fieldname": "daily_order_date",
+   "fieldtype": "Date",
+   "label": "Daily Order Date"
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Mat No",
+   "options": "TSAI Part Master"
+  },
+  {
+   "default": "0",
+   "fieldname": "open_qty",
+   "fieldtype": "Float",
+   "label": "Open Qty"
+  },
+  {
+   "default": "0",
+   "fieldname": "completed_qty",
+   "fieldtype": "Float",
+   "label": "Completed Qty"
+  },
+  {
+   "default": "0",
+   "fieldname": "planned_qty",
+   "fieldtype": "Float",
+   "label": "Planned Qty"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2022-11-15 22:22:39.772403",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Open Production Quantity",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

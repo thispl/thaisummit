@@ -1,0 +1,31 @@
+{
+ "actions": [],
+ "creation": "2022-12-21 20:15:43.271082",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "slip"
+ ],
+ "fields": [
+  {
+   "fieldname": "slip",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Slip",
+   "options": "Salary Slip"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-12-21 20:16:20.808162",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Salary Slip Child",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

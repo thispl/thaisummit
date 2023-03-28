@@ -14,7 +14,9 @@
   "section_break_6",
   "od_approval",
   "section_break_8",
-  "mp_approval"
+  "mp_approval",
+  "section_break_10",
+  "guest_entry_approval"
  ],
  "fields": [
   {
@@ -62,13 +64,23 @@
    "fieldtype": "Table",
    "label": "Manual Attendance Correction Approval",
    "options": "MP Child Approval"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "guest_entry_approval",
+   "fieldtype": "Table",
+   "label": "Guest Entry Approval",
+   "options": "GE Child Approval"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2021-07-08 13:22:52.231236",
+ "modified": "2022-07-30 17:50:02.826969",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Approval",

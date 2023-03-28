@@ -5,21 +5,107 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "canteen_timings"
+  "canteen_timings_section",
+  "break_fast",
+  "lunch",
+  "dinner",
+  "supper",
+  "column_break_3",
+  "bf_min_time",
+  "lu_min_time",
+  "dn_min_time",
+  "su_min_time",
+  "column_break_5",
+  "bf_max_time",
+  "lu_max_time",
+  "dn_max_time",
+  "su_max_time"
  ],
  "fields": [
   {
-   "fieldname": "canteen_timings",
-   "fieldtype": "Table",
-   "label": "Canteen Timings",
-   "options": "Canteen Timings"
+   "fieldname": "canteen_timings_section",
+   "fieldtype": "Section Break",
+   "label": "Canteen Timings"
+  },
+  {
+   "default": "Break Fast",
+   "fieldname": "break_fast",
+   "fieldtype": "Data",
+   "label": "Break Fast",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lunch",
+   "fieldtype": "Data",
+   "label": "Lunch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dinner",
+   "fieldtype": "Data",
+   "label": "Dinner",
+   "read_only": 1
+  },
+  {
+   "fieldname": "supper",
+   "fieldtype": "Data",
+   "label": "Supper",
+   "read_only": 1
+  },
+  {
+   "fieldname": "su_min_time",
+   "fieldtype": "Time",
+   "label": "Min Time"
+  },
+  {
+   "fieldname": "dn_max_time",
+   "fieldtype": "Time",
+   "label": "Max Time"
+  },
+  {
+   "fieldname": "su_max_time",
+   "fieldtype": "Time",
+   "label": "Max Time"
+  },
+  {
+   "fieldname": "dn_min_time",
+   "fieldtype": "Time",
+   "label": "Min Time"
+  },
+  {
+   "fieldname": "bf_min_time",
+   "fieldtype": "Time",
+   "label": "Min TIme"
+  },
+  {
+   "fieldname": "bf_max_time",
+   "fieldtype": "Time",
+   "label": "Max TIime"
+  },
+  {
+   "fieldname": "lu_min_time",
+   "fieldtype": "Time",
+   "label": "Min Time"
+  },
+  {
+   "fieldname": "lu_max_time",
+   "fieldtype": "Time",
+   "label": "Max Time"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-06-27 08:11:44.950177",
+ "modified": "2022-11-14 17:39:17.894572",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Canteen Settings",

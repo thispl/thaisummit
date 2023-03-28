@@ -1,0 +1,23 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2022-09-22 10:14:59.103783",
+ "disable_prepared_report": 0,
+ "disabled": 1,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "TS_logo",
+ "modified": "2022-09-22 13:33:42.936678",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "BOB-IYM LIVE STOCK",
+ "owner": "Administrator",
+ "prepared_report": 1,
+ "ref_doctype": "TSAI Part Master",
+ "report_name": "BOB-IYM LIVE STOCK",
+ "report_type": "Script Report",
+ "roles": []
+}

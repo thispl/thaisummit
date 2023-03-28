@@ -16,6 +16,12 @@
   "shift_date",
   "ot",
   "overtime_request",
+  "salary_details_section",
+  "basic",
+  "ctc",
+  "column_break_13",
+  "per_day_basic",
+  "per_day_ctc",
   "section_break_9",
   "qr_scan_time",
   "column_break_11",
@@ -113,11 +119,40 @@
    "fieldtype": "Data",
    "label": "QR Scanned By",
    "read_only": 1
+  },
+  {
+   "fieldname": "salary_details_section",
+   "fieldtype": "Section Break",
+   "label": "Salary Details"
+  },
+  {
+   "fieldname": "basic",
+   "fieldtype": "Currency",
+   "label": "Basic"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "per_day_basic",
+   "fieldtype": "Currency",
+   "label": "Per Day Basic"
+  },
+  {
+   "fieldname": "ctc",
+   "fieldtype": "Currency",
+   "label": "CTC"
+  },
+  {
+   "fieldname": "per_day_ctc",
+   "fieldtype": "Currency",
+   "label": "Per Day CTC"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-11-24 16:48:45.054021",
+ "modified": "2023-02-15 20:11:09.934258",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "QR Checkin",

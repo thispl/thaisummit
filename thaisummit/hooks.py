@@ -16,7 +16,12 @@ app_license = "MIT"
 
 # Scheduled Tasks
 # ---------------
-
+# doc_events = {
+# 	"Leave Allocation":{
+# 		"after_submit":"thaisummit.utils.create_leave",
+		
+# 	}
+# }
 scheduler_events = {
 # 	"all": [
 # 		"thaisummit.tasks.all"
@@ -138,7 +143,10 @@ override_doctype_class = {
 	"Payroll Entry": "thaisummit.overrides.CustomPayrollEntry",
 	"Shift Assignment": "thaisummit.overrides.CustomShiftAssignment",
 	"Leave Application": "thaisummit.overrides.CustomLeaveApplication",
-	"Compensatory Leave Request": "thaisummit.overrides.CustomCompensatoryLeaveRequest"
+	"Compensatory Leave Request": "thaisummit.overrides.CustomCompensatoryLeaveRequest",
+	"Employee":"thaisummit.overrides.CustomEmployee",
+	"Additional Salary":"thaisummit.overrides.CustomAdditionalSalary",
+	# "Overtime Request":"thaisummit.overrides.CustomOvertimeRequest",
 }
 
 jenv = {
@@ -166,13 +174,19 @@ jenv = {
 
 doc_events = {
 	"Employee": {
-		"on_update": "thaisummit.custom.delete_left_att",
+		"on_update":[ 
+			"thaisummit.custom.delete_left_att",
+			"thaisummit.custom.mark_biometric_pin"
+
+		]
+
 		# "on_cancel": "method",
 		# "on_trash": "method"
 	},
 	"IYM Sequence Plan Upload":{
 		'on_submit': "thaisummit.thaisummit.doctype.tsa_master.tsa_master.enqueue_master_creation"
 	},
+	
 }
 
 # Testing

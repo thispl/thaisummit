@@ -31,7 +31,28 @@
   "max_day",
   "parts_weight",
   "scrap_weight",
-  "transfer_rate"
+  "transfer_rate",
+  "section_break_25",
+  "rack_no",
+  "column_break_27",
+  "rack_resposible_person",
+  "section_break_29",
+  "after_spot_nut",
+  "fg_mat",
+  "column_break_31",
+  "machine",
+  "fg_name",
+  "section_break_35",
+  "operator",
+  "manual_welder",
+  "spater_cleaner",
+  "inspector",
+  "column_break_40",
+  "final_inspector",
+  "buffing_and_rework",
+  "retap",
+  "boring",
+  "tag_card_flow_master"
  ],
  "fields": [
   {
@@ -49,6 +70,7 @@
   {
    "fieldname": "mat_no",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "Mat No",
    "unique": 1
   },
@@ -161,11 +183,111 @@
    "fieldname": "transfer_rate",
    "fieldtype": "Currency",
    "label": "Transfer Rate"
+  },
+  {
+   "fieldname": "section_break_25",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "rack_no",
+   "fieldtype": "Data",
+   "label": "Rack No"
+  },
+  {
+   "fieldname": "column_break_27",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rack_resposible_person",
+   "fieldtype": "Data",
+   "label": "Rack Responsible Person"
+  },
+  {
+   "fieldname": "section_break_29",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "after_spot_nut",
+   "fieldtype": "Data",
+   "label": "After Spot Nut"
+  },
+  {
+   "fieldname": "column_break_31",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "machine",
+   "fieldtype": "Data",
+   "label": "Machine"
+  },
+  {
+   "fieldname": "fg_name",
+   "fieldtype": "Data",
+   "label": "FG NAME"
+  },
+  {
+   "fieldname": "fg_mat",
+   "fieldtype": "Data",
+   "label": "FG MAT"
+  },
+  {
+   "fieldname": "section_break_35",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "operator",
+   "fieldtype": "Float",
+   "label": "Operator"
+  },
+  {
+   "fieldname": "manual_welder",
+   "fieldtype": "Float",
+   "label": "Manual Welder"
+  },
+  {
+   "fieldname": "spater_cleaner",
+   "fieldtype": "Float",
+   "label": "Spater Cleaner"
+  },
+  {
+   "fieldname": "inspector",
+   "fieldtype": "Float",
+   "label": "Inspector"
+  },
+  {
+   "fieldname": "column_break_40",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "final_inspector",
+   "fieldtype": "Float",
+   "label": "Final Inspector"
+  },
+  {
+   "fieldname": "buffing_and_rework",
+   "fieldtype": "Float",
+   "label": "Buffing and Rework"
+  },
+  {
+   "fieldname": "retap",
+   "fieldtype": "Float",
+   "label": "Retap"
+  },
+  {
+   "fieldname": "boring",
+   "fieldtype": "Float",
+   "label": "Boring"
+  },
+  {
+   "fieldname": "tag_card_flow_master",
+   "fieldtype": "Link",
+   "label": "Tag Card Flow Master",
+   "options": "Tag Card Flow Master"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-04-17 19:30:54.739574",
+ "modified": "2023-03-13 18:43:36.128165",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI Part Master",

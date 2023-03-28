@@ -41,6 +41,5 @@ def get_data(filters):
 				first.emergency_contact_person,first.relationship,first.emergency_phone,first.blood_group,first.symptoms,first.prescription,]
 			med_list = [med[0],med[1],med[2]]
 				
-		
 		# data.append(first_aid_med)
 	return data	

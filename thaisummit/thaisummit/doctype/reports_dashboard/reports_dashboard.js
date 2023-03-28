@@ -2,9 +2,6 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Reports Dashboard', {
-	// refresh: function(frm) {
-	// 	frm.disable_save()
-	// },
 	download: function (frm) {
 		if (frm.doc.report == 'Shift Schedule Summary Report') {
 			var path = "thaisummit.thaisummit.doctype.reports_dashboard.shift_schedule_summary_report.download"

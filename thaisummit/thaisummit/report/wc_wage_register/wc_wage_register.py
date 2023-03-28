@@ -22,7 +22,7 @@ def get_columns(filters):
     columns = [_("Emp No") + ":Data/:100",_("Cost Centre No") + ":Data/:150",_("Cost Centre Name") + ":Data/:150",_("DOJ") + ":Date/:100",_("Employee_Name") + ":Data/:150",_("Designation") + ":Data/:150",
     _("Payable") + ":Data/:100",_("CTC 100%") + ":Data/:100",_("Basic Salary") + ":Currency/:100",_("HRA") + ":Currency/:100",_("Conveyance") + ":Currency/:100",_("Special Allowance") + ":Currency/:150",_("Medical Allowance") + ":Currency/:150",
     _("LTA") + ":Currency/:100",_("Children Allowance") + ":Currency/:150",_("Chidren Hostel") + ":Currency/:100",_("Washing") + ":Currency/:100",_("Gross Salary") + ":Currency/:100",_("BAS") + ":Currency/:100",_("HRA") + ":Currency/:100",_("CON") + ":Currency/:100",_("SPA") + ":Currency/:100",_("MED") + ":Currency/:100",
-    _("LTA") + ":Currency/:100",_("Children Allowance") + ":Currency/:150",_("Chidren Hostel") + ":Currency/:100",_("Washing") + ":Currency/:100",("Position Allowance") + ":Currency/:150",_("ARR") + ":Currency/:100",_(" Other ARR") + ":Currency/:100",_("ATA") + ":Currency/:100",_("SHT") + ":Currency/:100",_("Transport Allowance") + ":Currency/:100",_("Other(Extra hrs)") + ":Currency/:100",_("GROSS") + ":Currency/:100",_("PF") + ":Currency/:100",_("ESI") + ":Currency/:100",
+_("LTA") + ":Currency/:100",_("Children Allowance") + ":Currency/:150",_("Chidren Hostel") + ":Currency/:100",_("Washing") + ":Currency/:100",("Position Allowance") + ":Currency/:150",_("ARR") + ":Currency/:100",_(" Other ARR") + ":Currency/:100",_("ATA") + ":Currency/:100",_("SHT") + ":Currency/:100",_("Transport Allowance") + ":Currency/:100",_("Other(Extra hrs)") + ":Currency/:100",_('Leave Encashment') + ":Currency/:100",_("GROSS") + ":Currency/:100",_("PF") + ":Currency/:100",_("ESI") + ":Currency/:100",
     _("CAN") + ":Currency/:100",_("PTAX") + ":Currency/:100",_("LWF") + ":Currency/:100",_("TDS") + ":Currency/:100",_("Arrears TDS") + ":Currency/:150",_("TEL EXP") + ":Currency/:100",_("Other Dedu") + ":Currency/:100",_("TOTAL") + ":Currency/:100",_("Earned & Net Salary") + ":Currency/:150",_("Bonus") + ":Currency/:100",_("Other(Extra hrs)") + ":Currency/:150",_("For P Tax Earnings") + ":Currency/:200"]
     return columns
 
@@ -33,9 +33,9 @@ def get_data(filters):
 
     salary_comp = ['Basic','House Rent Allowance','Conveyance Allowance','Special Allowance','Medical Allowance','Leave Travel Allowance','Children Education','Children Hostel','Washing Allowance']
 
-    earning_comp = ['Basic','House Rent Allowance','Conveyance Allowance','Special Allowance','Medical Allowance','Leave Travel Allowance','Children Education','Children Hostel','Washing Allowance','Position Allowance','Arrear','Other Arrear','Attendance Bonus','Shift Allowance','Transport Allowance','Others']
+    earning_comp = ['Basic','House Rent Allowance','Conveyance Allowance','Special Allowance','Medical Allowance','Leave Travel Allowance','Children Education','Children Hostel','Washing Allowance','Position Allowance','Arrear','Other Arrear','Attendance Bonus','Shift Allowance','Transport Allowance','Others','Leave Encashment']
 
-    dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','LWF','Tax Deducted at Source','Arrear TDS','TEL EXP','Other Deduction']
+    dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','Labor Welfare Fund','Tax Deducted at Source','Arrear TDS','TEL EXP','Other Deduction']
 
     if filters.department:
         salary_slips = frappe.get_all("Salary Slip",{'employee_type':'WC','department':filters.department,'start_date':filters.from_date,'end_date':filters.to_date},['*'])	

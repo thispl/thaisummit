@@ -85,9 +85,9 @@
   {
    "fieldname": "payroll_date",
    "fieldtype": "Date",
+   "ignore_user_permissions": 1,
    "in_standard_filter": 1,
-   "label": "Payroll Date",
-   "read_only": 1
+   "label": "Payroll Date"
   },
   {
    "fetch_from": "employee.employee_type",
@@ -107,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2021-09-30 11:15:17.436618",
+ "modified": "2023-03-01 16:04:57.937602",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Other Deduction",

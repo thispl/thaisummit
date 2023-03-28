@@ -6,18 +6,20 @@ import frappe
 from frappe import msgprint, _
 from warnings import  filters
 from frappe.utils import cstr, cint, getdate
-from frappe.utils import cstr, add_days, date_diff, getdate,today
+from frappe.utils import cstr, add_days, date_diff, getdate,today,gzip_decompress
 from datetime import date, timedelta, datetime
 import pandas as pd
-
+import json
 
 def execute(filters=None):
     # from_date = '2021-11-01'
+    # from_date = today()
+    # to_date = today()
     from_date = today()
-    to_date = add_days(from_date,6)
+    to_date = add_days(from_date,7)
     dates = get_dates(from_date,to_date)
     holiday = check_holiday(from_date,to_date)
-    to_date = add_days(from_date,6 + len(holiday))
+    # to_date = add_days(from_date,6 + len(holiday))
     dates = get_dates(from_date,to_date)
     columns = get_columns(dates)
     data = get_data(dates)
@@ -53,86 +55,78 @@ def get_columns(dates):
 
 def get_data(dates):
     data = []
-    bom_mats = frappe.get_all('TSAI BOM',{'depth':1},'item',order_by='item')
-    for item in bom_mats:
-        boms = frappe.get_all('TSAI BOM',{'fm':item.item,'item':('not in',('DL','OHS','DL-HPS','DL-RE','DL-TSSI','OHs-HPS','OHs-RE','OHs-TSSI'))},['item','item_quantity'],order_by='item')
-        for bom in boms:
-            if frappe.db.exists('TSAI Part Master',bom.item):
-                master = frappe.get_doc('TSAI Part Master',bom.item)
-                row = [master.mat_no,master.parts_no,master.parts_name,master.customer,master.model,master.production_line,master.packing_std]
-                total_qty = 0
-                day = 0
-                for date in dates:
-                    forecast_qty = frappe.db.get_value('Forecast Data',{'mat_no':item.item,'date':date},'qty') or 0
-                    total_qty += forecast_qty * bom.item_quantity
-                    if forecast_qty > 0:
-                        day += 1
-                    row.append(forecast_qty*bom.item_quantity)
-                if day > 0:
-                    daily_order = round(total_qty / day)
-                else:
-                    daily_order = 0
-                min_qty = round(daily_order * round(master.min_day,1))
-                max_qty = round(daily_order * round(master.max_day,1))
-                row.extend([total_qty,day,daily_order,round(master.min_day,1),min_qty,round(master.max_day,1),max_qty])
-                data.append(row)
 
-    forecast_items = frappe.db.sql("select distinct `tabForecast Data`.mat_no as item from `tabForecast Data` where not exists(select `tabTSAI BOM`.item from `tabTSAI BOM` where `tabForecast Data`.mat_no = `tabTSAI BOM`.item) ",as_dict=True)
-    for forecast in forecast_items:
-        if frappe.db.exists('TSAI Part Master',forecast.item):
-            master = frappe.get_doc('TSAI Part Master',forecast.item)
-            row = [master.mat_no,master.parts_no,master.parts_name,master.customer,master.model,master.production_line,master.packing_std]
-            total_qty = 0
-            day = 0
-            for date in dates:
-                forecast_qty = frappe.db.get_value('Forecast Data',{'mat_no':forecast.item,'date':date},'qty') or 0
-                total_qty += forecast_qty
-                if forecast_qty > 0:
-                    day += 1
-                row.append(forecast_qty)
-            if day > 0:
-                daily_order = round(total_qty / day)
-            else:
-                daily_order = 0
-            min_qty = round(daily_order * round(master.min_day,1))
-            max_qty = round(daily_order * round(master.max_day,1))
-            row.extend([total_qty,day,daily_order,round(master.min_day,1),min_qty,round(master.max_day,1),max_qty])
-            data.append(row)
-        
-    parts = frappe.get_all('TSAI Part Master',{'direct_part':1},['*'])
-    for part in parts:
-        row = [part.mat_no,part.parts_no,part.parts_name,part.customer,part.model,part.production_line,part.packing_std]
-        total_qty = 0
+    pr_name = frappe.db.get_value(
+                    'Prepared Report', {'report_name': 'Supplier Daily Order Test','status':'Completed'}, 'name')
+    attached_file_name = frappe.db.get_value(
+        "File",
+        {"attached_to_doctype": 'Prepared Report',
+            "attached_to_name": pr_name},
+        "name",
+    )
+    attached_file = frappe.get_doc("File", attached_file_name)
+    compressed_content = attached_file.get_content()
+    uncompressed_content = gzip_decompress(compressed_content)
+    dos = json.loads(uncompressed_content.decode("utf-8"))
+    
+    for do in dos:
+        row = [do['item'],do['part_no'],do['part_name'],do['cus'],do['model'],do['prod_line'],do['packing']]
         day = 0
         for date in dates:
-            forecast_qty = frappe.db.get_value('Forecast Data',{'mat_no':part.name,'date':date},'qty') or 0
-            total_qty += forecast_qty
+            date = datetime.strptime(str(date),'%Y-%m-%d')
+            d = date.strftime('%d')
+            m = date.strftime('%b')
+            date_formatted = d + '_' + m.lower()
+            forecast_qty = do[date_formatted]
+            row.append(do[date_formatted])
             if forecast_qty > 0:
                 day += 1
-            row.append(forecast_qty)
+        total_qty = do['total']
         if day > 0:
             daily_order = round(total_qty / day)
         else:
             daily_order = 0
-        min_qty = round(daily_order * round(part.min_day,1))
-        max_qty = round(daily_order * round(part.max_day,1))
-        row.extend([total_qty,day,daily_order,round(part.min_day,1),min_qty,round(part.max_day,1),max_qty])
+        master = frappe.get_doc('TSAI Part Master',do['item'])
+        min_qty = round(daily_order * round(master.min_day,1))
+        max_qty = round(daily_order * round(master.max_day,1))
+        row.extend([total_qty,day,daily_order,round(master.min_day,1),min_qty,round(master.max_day,1),max_qty])
         data.append(row)
+    return data
 
-    cols = ['Item', 'Part No', 'Part Name', 'Cus', 'Model', 'PROD Line', 'Packing',]
+    # cols = ['Item', 'Part No', 'Part Name', 'Cus', 'Model', 'PROD Line', 'Packing',]
+    # for date in dates:
+    #     date = datetime.strptime(str(date),'%Y-%m-%d')
+    #     d = date.strftime('%d')
+    #     m = date.strftime('%b')
+    #     cols.append(d + '-' + m)
 
-    for date in dates:
-        date = datetime.strptime(str(date),'%Y-%m-%d')
-        d = date.strftime('%d')
-        m = date.strftime('%b')
-        cols.append(d + '-' + m)
+    # cols += ['Total','Day','Daily Order','Min Day','Min Qty','Max Day','Max Qty']
 
-    cols += ['Total','Day','Daily Order','Min Day','Min Qty','Max Day','Max Qty']
+    
+    
+    # df = pd.DataFrame(data, columns = cols)
+    # df2 = df.groupby(['Item','Part No', 'Part Name', 'Cus', 'Model', 'PROD Line', 'Packing']).sum().reset_index()
+    # data_list = df2.values.tolist()
+    
+    # return data_list
 
-    df = pd.DataFrame(data, columns = cols)
-    df2 = df.groupby(['Item','Part No', 'Part Name', 'Cus', 'Model', 'PROD Line', 'Packing']).sum().reset_index()
-    data_list = df2.values.tolist()
-    return data_list
+def get_reqd_qty_dates(mat_no):
+    day_count = 0
+    from_date = add_days(today(),1)
+    to_date = add_days(today(),1)
+    # from_date = today()
+    # to_date = add_days(from_date,6)
+    # dates = get_dates(from_date,to_date)
+    # holiday = check_holiday(from_date,to_date)
+    # to_date = add_days(from_date,6 + len(holiday))
+    dates = get_dates(from_date,to_date)
+
+    for day in dates:
+        qty1 = frappe.db.sql("""select qty from `tabForecast Data` where mat_no='%s' and date='%s'""" % (mat_no,day),as_dict=True)
+        qty = frappe.get_value('Forecast Data',{'mat_no':mat_no,'date':day},'qty') or 0
+        if qty > 0:
+            day_count += 1
+    return day_count
 
 def get_dates(from_date,to_date):
     no_of_days = date_diff(add_days(to_date, 1), from_date)

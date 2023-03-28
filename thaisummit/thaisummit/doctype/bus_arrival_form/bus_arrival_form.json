@@ -25,7 +25,6 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -61,8 +60,9 @@
   },
   {
    "fieldname": "shift",
-   "fieldtype": "Data",
-   "label": "Shift"
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
   },
   {
    "fieldname": "column_break_2",
@@ -74,9 +74,8 @@
   },
   {
    "fieldname": "status",
-   "fieldtype": "Select",
+   "fieldtype": "Data",
    "label": "Status",
-   "options": "\nLate\nOn Time",
    "read_only": 1
   },
   {
@@ -89,7 +88,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-07-11 19:06:16.634533",
+ "modified": "2022-07-21 11:00:32.685485",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Bus Arrival Form",

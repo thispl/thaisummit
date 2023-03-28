@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "creation": "2022-12-17 10:07:32.426408",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_type",
+  "salary_slip",
+  "column_break_2",
+  "start_date",
+  "column_break_4",
+  "download_slip"
+ ],
+ "fields": [
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_type",
+   "fieldtype": "Select",
+   "label": "Employee Type",
+   "options": "\nWC\nBC\nFT\nNT\nTH\nCL"
+  },
+  {
+   "fieldname": "download_slip",
+   "fieldtype": "Button",
+   "label": "Download Slip"
+  },
+  {
+   "fieldname": "salary_slip",
+   "fieldtype": "Table",
+   "hidden": 1,
+   "label": "Salary Slip",
+   "options": "Salary Slip Child"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-12-27 17:14:09.451666",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Bulk Salary Slip Download",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

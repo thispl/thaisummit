@@ -64,7 +64,6 @@ frappe.ui.form.on('Shift Schedule', {
 			}
 			// frm.set_value("to_date",frappe.datetime.add_days(frm.doc.from_date, 5))
 		}
-
 	},
 	to_date(frm) {
 		if (frm.doc.to_date) {
@@ -99,7 +98,14 @@ frappe.ui.form.on('Shift Schedule', {
 
 				}
 			})
-
+			// frappe.call({
+			// 	"method": "thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.get_count",
+			// 	"args":{
+			// 		"filename" : frm.doc.upload,
+			// 		"from_date" : frm.doc.from_date,
+			// 		"to_date" : frm.doc.to_date,
+			// 	},
+			// })
 		}
 	},
 	validate(frm) {

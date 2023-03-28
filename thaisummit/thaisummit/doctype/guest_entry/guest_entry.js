@@ -4,9 +4,11 @@
 frappe.ui.form.on('Guest Entry', {
 	//this is the type field by clicking to change the type_id of four naming_series
 	onload(frm) {
+		if(frm.doc.docstatus != 1){
         var time = new Date().toLocaleTimeString();
         var time_format = moment(time, "h:mm:ss A").format("HH:mm");
         frm.set_value('time', time_format)
+		}
 	},
 	type(frm){
 		if(frm.doc.type == 'Customer'){

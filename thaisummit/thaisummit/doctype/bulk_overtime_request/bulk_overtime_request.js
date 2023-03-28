@@ -176,7 +176,7 @@ frappe.ui.form.on('Bulk OT', {
 	},
 	ot_date(frm, cdt, cdn) {
 		var child = locals[cdt][cdn]
-		if (!frappe.user.has_role('System Manager')) {
+		if (!frappe.user.has_role('HR GM')) {
 		if (child.ot_date){
 			var date = frappe.datetime.add_days(child.ot_date,3 )
 			frappe.call({

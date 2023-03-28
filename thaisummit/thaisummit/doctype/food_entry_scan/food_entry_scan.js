@@ -5,17 +5,19 @@ frappe.ui.form.on('Food Entry Scan', {
 	
 	
 	employee_guest(frm){
+		var emp = frm.doc.employee_guest
 		if(frm.doc.employee_guest){
 			frappe.call({
 				method:'thaisummit.thaisummit.doctype.food_entry_scan.food_entry_scan.get_canteen_user_id',
 				args:{
 					user:frm.doc.employee_guest,
-					cur_date:frm.doc.date
 				},
+				freeze:true,
+				freeze_message:('food Scan'),
 				callback(r){
-					console.log(r.message)
-					if(r.message == 'Completed'){
+					if(r.message == 'Completed'){	
 						frm.set_value('employee_guest','')
+						$("input[data-fieldname='employee_guest']").focus()
 						frm.trigger('get_live_screen')
 					}
 					// else{
@@ -28,10 +30,11 @@ frappe.ui.form.on('Food Entry Scan', {
 					// 	frm.get_field("output").$wrapper.html('');
 					//  }, 5000);
 				}
-			})
+			})	
 		}
 		
 	},
+	
 	get_live_screen(frm){
 		frappe.call({
 			method:'thaisummit.www.canteen_live_screen.get_live_screen_data',
@@ -39,24 +42,42 @@ frappe.ui.form.on('Food Entry Scan', {
 			},
 			callback(r){
 				var data = r.message;
-			var html = `<table border="1px solid" width="100%">
-				<tr>\
-					<td colspan="7"  style="background-color:#90ee90">
-						<center>\
-							<h3 style="color:#000000"><b>${data["current_datetime"]}</b></h3>\
-						</center>\
-					</td>\
-				</tr>\
-			</table> `
-				frm.fields_dict.output.$wrapper.empty().append(frappe.render_template('canteen_live_screen_data',r.message))
-				// frm.fields_dict.output.$wrapper.empty().append(html)
-			
+				if(r.message.food_type == 'Break Fast'){
+					frm.fields_dict.output.$wrapper.empty().append(frappe.render_template('canteen_live_screen_bf_data',r.message))
+					frm.fields_dict.employee_list.$wrapper.empty().append(frappe.render_template('employee_display_bf',r.message))	
+				}
+				else if(r.message.food_type == 'Lunch' ){
+					frm.fields_dict.output.$wrapper.empty().append(frappe.render_template('canteen_live_screen_lu_data',r.message))
+					frm.fields_dict.employee_list.$wrapper.empty().append(frappe.render_template('employee_display_lu',r.message))
+				}
+				else if (r.message.food_type == 'Dinner'){
+					frm.fields_dict.output.$wrapper.empty().append(frappe.render_template('canteen_live_screen_dn_data',r.message))
+					frm.fields_dict.employee_list.$wrapper.empty().append(frappe.render_template('employee_display_dn',r.message))
+				}
+				else if (r.message.food_type == 'NA'){
+					frm.fields_dict.output.$wrapper.empty().append(frappe.render_template('canteen_live_screen_dn_data',r.message))
+					frm.fields_dict.employee_list.$wrapper.empty().append(frappe.render_template('employee_display_dn',''))
+				}
+				else{
+					// frm.fields_dict.output.$wrapper.empty().append(frappe.render_template('canteen_live_screen_su_data',r.message))
+					frm.fields_dict.output.$wrapper.empty().append(frappe.render_template('canteen_live_screen_sp_data',r.message))
+					// frm.fields_dict.output.$wrapper.empty().append(frappe.render_template('canteen_live_screen_sd_data',r.message))
+					frm.fields_dict.employee_list.$wrapper.empty().append(frappe.render_template('employee_display_sp',r.message))
+				} 
+				
 			}
 			
 		})
 	},
 	refresh(frm){
+		$("input[data-fieldname='employee_guest']").focus()
 		frm.disable_save()
-		frm.trigger("get_live_screen")
+		if (frm.trigger("get_live_screen")){
+		// 	frm.trigger("get_live_screen")
+		}
+		// else{
+		// 	frappe.throw(__('Today Food Plan was not Entry'))
+		// }
+		
 	}
 });

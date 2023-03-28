@@ -6,7 +6,5 @@ frappe.query_reports["Production Daily Order"] = {
 	// "filters": [
 
 	// ]
-	refresh(frm){
-        frappe.breadcrumbs.add("Home","E-KANBAN");
-	}
+	
 };

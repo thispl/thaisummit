@@ -6,16 +6,18 @@ frappe.ui.form.on('Food Plan Entry', {
 		frm.fields_dict['food_plan_child'].grid.wrapper.find('.grid-add-row').remove();
 		frm.fields_dict['food_plan_child'].grid.wrapper.find('.grid-remove-rows').remove();
 		frm.fields_dict['food_plan_child'].grid.wrapper.find('.edit-grid-row').hide();
+		$('*[data-fieldname="food_plan_child"]').find('.grid-remove-all-rows').hide();
+
 	},
 	setup(frm){
 		frm.get_docfield('food_plan_child').allow_bulk_edit = 1
 	},
 	onload(frm) {
 		frm.set_value('date',frappe.datetime.nowdate())
-		frm.trigger("get_food_plan")
 		frm.trigger("validate_dates")
+		frm.trigger("get_food_plan")
 		frm.disable_save()
-		$('.edit-grid-row').hide()
+		// $('.edit-grid-row').hide()
 	},
 	validate_dates(frm){
 		var current_date = frappe.datetime.nowdate()
@@ -28,6 +30,7 @@ frappe.ui.form.on('Food Plan Entry', {
 		frm.trigger("validate_dates")
 	},
 	get_food_plan(frm) {
+		frm.set_value("food_plan_child", [])
 		frappe.call({
 			method: "thaisummit.thaisummit.doctype.food_plan_entry.food_plan_entry.get_food_plan",
 			args: {
@@ -35,13 +38,16 @@ frappe.ui.form.on('Food Plan Entry', {
 			},
 			callback(r) {
 				frm.set_value("food_plan_child", [])
+				
 				if (r.message && r.message.length == 0) {
 					frappe.call({
 						method: "frappe.client.get_list",
 						args: {
 							"doctype": "Food Menu",
 							'fields': ["name",'price'],
+							"order_by": "priority",
 						},
+						
 						callback(r) {
 							if (r.message) {
 								$.each(r.message, function (i, v) {

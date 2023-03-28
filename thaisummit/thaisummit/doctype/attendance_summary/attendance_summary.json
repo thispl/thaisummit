@@ -8,6 +8,7 @@
  "field_order": [
   "employee",
   "employee_name",
+  "user",
   "column_break_3",
   "from_date",
   "to_date",
@@ -26,8 +27,7 @@
    "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
-   "label": "Employee Name",
-   "read_only": 1
+   "label": "Employee Name"
   },
   {
    "fieldname": "column_break_3",
@@ -51,13 +51,19 @@
    "fieldname": "html",
    "fieldtype": "HTML",
    "label": "html"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "User"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-12 12:44:59.922068",
+ "modified": "2022-07-19 10:18:08.825892",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Attendance Summary",

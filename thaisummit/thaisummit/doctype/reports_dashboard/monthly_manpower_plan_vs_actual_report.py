@@ -6,12 +6,9 @@ from frappe.utils.data import format_date
 from frappe.utils.file_manager import get_file
 from frappe.model.document import Document
 from frappe.utils.background_jobs import enqueue
-
 from datetime import date, timedelta, datetime
 import openpyxl
 from openpyxl import Workbook
-
-
 import openpyxl
 import xlrd
 import re

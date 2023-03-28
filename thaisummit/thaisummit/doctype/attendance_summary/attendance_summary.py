@@ -126,9 +126,11 @@ def get_status(emp,date):
             if shift_status[2]:
                 shift = shift_status[2] + holiday
             else:
-                shift = shift_status[0] + holiday
+                # shift = shift_status[0] + holiday
+                shift = holiday
         else:
             shift = shift_status[0]
+        # frappe.errprint([date,shift])
         if shift_status[1] == "WC":
             status = wc_status_map.get(shift, "")
         else:
@@ -335,3 +337,10 @@ wc_status_map = {
     "PP2HH": "PP2H",
     "ODWW": "ODW"
     }
+
+@frappe.whitelist()
+def get_employee():
+    emp_details = frappe.db.get_value('Employee',{'user_id':frappe.session.user},['employee','employee_name',])
+    # employee = frappe.db.sql(""" select employee,employee_name from `tabEmployee` where user_id = '%s' """%(frappe.session.user),as_dict=True)
+    # frappe.errprint(employee)
+    return emp_details

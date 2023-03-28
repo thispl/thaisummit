@@ -1,0 +1,131 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "autoname": "TCG.#####",
+ "creation": "2023-03-08 11:06:55.782736",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "mat_number",
+  "mat_name",
+  "part_number",
+  "column_break_3",
+  "packing_std",
+  "production_order_qty",
+  "quantity",
+  "section_break_8",
+  "html",
+  "section_break_10",
+  "table_9",
+  "qr_code",
+  "user_name",
+  "date",
+  "time",
+  "shift"
+ ],
+ "fields": [
+  {
+   "fieldname": "mat_number",
+   "fieldtype": "Link",
+   "label": "Mat Number",
+   "options": "TSAI Part Master"
+  },
+  {
+   "fieldname": "mat_name",
+   "fieldtype": "Data",
+   "label": "Mat Name"
+  },
+  {
+   "fieldname": "part_number",
+   "fieldtype": "Data",
+   "label": "Part Number"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "packing_std",
+   "fieldtype": "Data",
+   "label": "Packing Std"
+  },
+  {
+   "fieldname": "production_order_qty",
+   "fieldtype": "Int",
+   "label": "Production Order Qty"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "HTML"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_9",
+   "fieldtype": "Table",
+   "options": "Tag Card Items"
+  },
+  {
+   "fieldname": "qr_code",
+   "fieldtype": "Data",
+   "label": "QR Code"
+  },
+  {
+   "fieldname": "user_name",
+   "fieldtype": "Read Only",
+   "label": "User Name"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time"
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Data",
+   "label": "Shift"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-03-08 11:08:28.722912",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag Card Generation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

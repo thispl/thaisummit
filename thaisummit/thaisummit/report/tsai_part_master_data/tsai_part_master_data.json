@@ -1,0 +1,37 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2022-12-13 20:08:51.753440",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "json": "{\"filters\":[],\"fields\":[[\"name\",\"TSAI Part Master\"],[\"parts_name\",\"TSAI Part Master\"],[\"parts_no\",\"TSAI Part Master\"],[\"mat_type\",\"TSAI Part Master\"],[\"mat_no\",\"TSAI Part Master\"],[\"customer\",\"TSAI Part Master\"],[\"min_day\",\"TSAI Part Master\"],[\"max_day\",\"TSAI Part Master\"],[\"packing_std\",\"TSAI Part Master\"],[\"production_line\",\"TSAI Part Master\"],[\"model\",\"TSAI Part Master\"],[\"mrp_daily_order\",\"TSAI Part Master\"],[\"mrp_purchase_price\",\"TSAI Part Master\"],[\"cycle_time\",\"TSAI Part Master\"],[\"manpower_std\",\"TSAI Part Master\"],[\"mrp_sales_price\",\"TSAI Part Master\"],[\"kanban_group\",\"TSAI Part Master\"],[\"direct_part\",\"TSAI Part Master\"],[\"uph\",\"TSAI Part Master\"],[\"scrap_weight\",\"TSAI Part Master\"],[\"rack_no\",\"TSAI Part Master\"],[\"parts_weight\",\"TSAI Part Master\"],[\"transfer_rate\",\"TSAI Part Master\"],[\"rack_resposible_person\",\"TSAI Part Master\"],[\"fg_mat\",\"TSAI Part Master\"],[\"fg_name\",\"TSAI Part Master\"],[\"manual_welder\",\"TSAI Part Master\"],[\"inspector\",\"TSAI Part Master\"],[\"final_inspector\",\"TSAI Part Master\"],[\"operator\",\"TSAI Part Master\"],[\"spater_cleaner\",\"TSAI Part Master\"],[\"after_spot_nut\",\"TSAI Part Master\"],[\"machine\",\"TSAI Part Master\"],[\"buffing_and_rework\",\"TSAI Part Master\"],[\"retap\",\"TSAI Part Master\"],[\"boring\",\"TSAI Part Master\"]],\"order_by\":\"`tabTSAI Part Master`.`modified` desc\",\"add_totals_row\":0,\"page_length\":20,\"column_widths\":{\"name\":120,\"parts_name\":120,\"parts_no\":120,\"mat_type\":120,\"mat_no\":120,\"customer\":120,\"min_day\":120,\"max_day\":120,\"packing_std\":120,\"production_line\":120,\"model\":120,\"mrp_daily_order\":120,\"mrp_purchase_price\":120,\"cycle_time\":120,\"manpower_std\":120,\"mrp_sales_price\":120,\"kanban_group\":120,\"direct_part\":120,\"uph\":120,\"scrap_weight\":120,\"rack_no\":120,\"parts_weight\":120,\"transfer_rate\":120,\"rack_resposible_person\":120,\"fg_mat\":120,\"fg_name\":120,\"manual_welder\":120,\"inspector\":120,\"final_inspector\":120,\"operator\":120,\"spater_cleaner\":120,\"after_spot_nut\":120,\"machine\":120,\"buffing_and_rework\":120,\"retap\":120,\"boring\":120},\"group_by\":null}",
+ "letter_head": "TS_logo",
+ "modified": "2022-12-13 20:14:26.252032",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "TSAI Part Master Data",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "TSAI Part Master",
+ "report_name": "TSAI Part Master Data",
+ "report_type": "Report Builder",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "E-Kanban User"
+  },
+  {
+   "role": "Supplier"
+  },
+  {
+   "role": "HOD"
+  }
+ ]
+}

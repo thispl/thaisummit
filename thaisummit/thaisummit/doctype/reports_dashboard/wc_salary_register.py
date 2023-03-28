@@ -151,7 +151,7 @@ def get_data(args):
 
     earning_comp = ['Basic','House Rent Allowance','Conveyance Allowance','Special Allowance','Medical Allowance','Leave Travel Allowance','Children Education','Children Hostel','Washing Allowance','Position Allowance','Arrear','Other Arrear','Attendance Bonus','Shift Allowance','Transport Allowance','Additional Allowance','Other Allowance','Others']
 
-    dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','LWF','Tax Deducted at Source','Arrear TDS','TEL EXP','Other Deduction']
+    dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','Labor Welfare Fund','Tax Deducted at Source','Arrear TDS','TEL EXP','Other Deduction']
 
     if args.department:
         salary_slips = frappe.get_all("Salary Slip",{'employee_type':'WC','department':args.department,'start_date':args.from_date,'end_date':args.to_date},['*'])	

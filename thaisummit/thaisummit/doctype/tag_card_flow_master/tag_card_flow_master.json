@@ -1,0 +1,50 @@
+{
+ "actions": [],
+ "autoname": "field:title",
+ "creation": "2023-03-13 11:08:53.926530",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "tag_card_workflow_table"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "unique": 1
+  },
+  {
+   "fieldname": "tag_card_workflow_table",
+   "fieldtype": "Table",
+   "label": "Tag Card Workflow Table",
+   "options": "Tag Card Workflow Table"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-03-13 11:44:27.540263",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag Card Flow Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

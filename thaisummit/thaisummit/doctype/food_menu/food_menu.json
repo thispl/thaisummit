@@ -7,7 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "menu",
-  "price"
+  "price",
+  "order",
+  "priority"
  ],
  "fields": [
   {
@@ -20,11 +22,21 @@
    "fieldname": "price",
    "fieldtype": "Currency",
    "label": "Price"
+  },
+  {
+   "fieldname": "order",
+   "fieldtype": "Int",
+   "label": "Order"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Int",
+   "label": "Priority"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-16 19:29:44.624809",
+ "modified": "2022-08-12 11:50:43.404627",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Food Menu",

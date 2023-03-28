@@ -80,7 +80,8 @@
   "column_break_62",
   "total_amount",
   "section_break_64",
-  "allowed_items"
+  "allowed_items",
+  "amended_from"
  ],
  "fields": [
   {
@@ -463,8 +464,9 @@
   {
    "fetch_from": "requester_id.department",
    "fieldname": "department",
-   "fieldtype": "Data",
-   "label": "Department"
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
   },
   {
    "fieldname": "naming_series",
@@ -478,6 +480,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "allowed_items",
    "fieldtype": "Small Text",
    "label": "Allowed Items"
@@ -545,11 +548,21 @@
    "fieldname": "dn_amount",
    "fieldtype": "Currency",
    "label": "Amount"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Guest Entry",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2022-07-06 16:20:24.734315",
+ "modified": "2022-08-20 12:13:23.332153",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Guest Entry",
@@ -565,6 +578,19 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Canteen Master Manager",
+   "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

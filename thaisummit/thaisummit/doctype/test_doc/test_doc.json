@@ -1,0 +1,173 @@
+{
+ "actions": [],
+ "autoname": "Te.#####",
+ "creation": "2023-03-09 16:12:32.277214",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "supcode",
+  "user_code",
+  "generate_tag_card_section",
+  "mat_number",
+  "mat_name",
+  "part_number",
+  "column_break_3",
+  "packing_std",
+  "production_order_qty",
+  "quantity",
+  "section_break_8",
+  "html",
+  "section_break_10",
+  "table_9",
+  "section_break_15",
+  "qr_code",
+  "user_name",
+  "date",
+  "column_break_18",
+  "time",
+  "shift",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "supcode",
+   "fieldtype": "Data",
+   "label": "Sup.Code"
+  },
+  {
+   "fieldname": "user_code",
+   "fieldtype": "Data",
+   "label": "User Code"
+  },
+  {
+   "depends_on": "eval:doc.user_code && doc.supcode",
+   "fieldname": "generate_tag_card_section",
+   "fieldtype": "Section Break",
+   "label": "Generate Tag Card"
+  },
+  {
+   "fieldname": "mat_number",
+   "fieldtype": "Link",
+   "label": "Mat Number",
+   "options": "TSAI Part Master"
+  },
+  {
+   "fieldname": "mat_name",
+   "fieldtype": "Data",
+   "label": "Mat Name"
+  },
+  {
+   "fieldname": "part_number",
+   "fieldtype": "Data",
+   "label": "Part Number"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "packing_std",
+   "fieldtype": "Data",
+   "label": "Packing Std"
+  },
+  {
+   "fieldname": "production_order_qty",
+   "fieldtype": "Int",
+   "label": "Production Order Qty"
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  },
+  {
+   "depends_on": "eval:doc.user_code && doc.supcode",
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "HTML"
+  },
+  {
+   "depends_on": "eval:doc.user_code && doc.supcode",
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_9",
+   "fieldtype": "Table",
+   "options": "Tag Card Items"
+  },
+  {
+   "depends_on": "eval:doc.user_code && doc.supcode",
+   "fieldname": "section_break_15",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "qr_code",
+   "fieldtype": "Data",
+   "label": "QR Code"
+  },
+  {
+   "fieldname": "user_name",
+   "fieldtype": "Read Only",
+   "label": "User Name"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "column_break_18",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time"
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Data",
+   "label": "Shift"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Test doc",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-03-09 16:12:32.277214",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Test doc",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,89 @@
+{
+ "add_total_row": 1,
+ "columns": [
+  {
+   "fieldname": "Date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "width": 125
+  },
+  {
+   "fieldname": "Time",
+   "fieldtype": "Data",
+   "label": "Time",
+   "width": 125
+  },
+  {
+   "fieldname": "Mat Number",
+   "fieldtype": "Data",
+   "label": "Mat Number",
+   "width": 125
+  },
+  {
+   "fieldname": "Error",
+   "fieldtype": "Data",
+   "label": "Error",
+   "width": 400
+  },
+  {
+   "fieldname": "Child Part",
+   "fieldtype": "Data",
+   "label": "Child Part",
+   "width": 125
+  },
+  {
+   "fieldname": "Planned Qty",
+   "fieldtype": "Data",
+   "label": "Planned Qty",
+   "width": 125
+  },
+  {
+   "fieldname": "Warehouse Qty",
+   "fieldtype": "Data",
+   "label": "Warehouse Qty",
+   "width": 125
+  },
+  {
+   "fieldname": "Tag Card Qty",
+   "fieldtype": "Data",
+   "label": "Tag Card Qty",
+   "width": 125
+  },
+  {
+   "fieldname": "Shortage Qty",
+   "fieldtype": "Data",
+   "label": "Shortage Qty",
+   "width": 125
+  },
+  {
+   "fieldname": "Staff ID",
+   "fieldtype": "Data",
+   "label": "Staff ID",
+   "width": 125
+  }
+ ],
+ "creation": "2023-03-11 12:25:36.313556",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "TS_logo",
+ "modified": "2023-03-11 15:23:09.913411",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag Card Failed Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select\ndate,time,mat_numbers,error_name,child_mat_number,production_order_qty,warehouse_qty,tag_card_qty,shortage_qty,user_id\nfrom\n`tabTag Card Errors`",
+ "ref_doctype": "Tag Card Errors",
+ "report_name": "Tag Card Failed Report",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

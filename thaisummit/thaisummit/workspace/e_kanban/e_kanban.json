@@ -25,7 +25,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-06-16 10:47:56.549629",
+ "modified": "2023-02-09 17:48:02.453190",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "E-KANBAN",
@@ -56,6 +56,78 @@
    "label": "Ekanban Settings",
    "link_to": "Ekanban Settings",
    "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "FG-RE LIVE STOCK",
+   "link_to": "RE-FG LIVE STOCK",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "FG-IYM LIVE STOCK",
+   "link_to": "IYM-FG LIVE STOCK",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "BOP-RE LIVE STOCK",
+   "link_to": "BOP-RE LIVE STOCK",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "BOP-IYM LIVE STOCK",
+   "link_to": "BOP-IYM LIVE STOCK",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "BOP-IYM TRANSFER PLAN",
+   "link_to": "BOP-IYM TRANSFER PLAN",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "BOP-RE TRANSFER PLAN",
+   "link_to": "BOP-RE TRANSFER PLAN",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Production Plan IYM",
+   "link_to": "Production Plan",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "RM-IYM Transfer Plan",
+   "link_to": "RM-IYM Transfer Plan",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "RM-RE Transfer Plan",
+   "link_to": "RM-RE Transfer Plan",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Production Plan Test",
+   "link_to": "Production Plan Test",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "RE Production Plan",
+   "link_to": "RE Production Plan",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "RE Production Plan Test",
+   "link_to": "RE Production Plan Test",
+   "type": "Report"
   }
  ]
 }

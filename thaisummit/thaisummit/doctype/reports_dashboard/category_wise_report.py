@@ -34,8 +34,8 @@ from six import BytesIO, string_types
 def download(f_date,t_date,emp_type):
     args = {'from_date':f_date,'to_date':t_date,'employee_type':emp_type}
     filename = 'Payroll Cross Check Report'
-    build_xlsx_response(filename,args)
-    # enqueue(build_xlsx_response, queue='default', timeout=6000, event='build_xlsx_response',filename=filename,args=args)
+    # build_xlsx_response(filename,args)
+    enqueue(build_xlsx_response, queue='default', timeout=6000, event='build_xlsx_response',filename=filename,args=args)
 
 
 # return xlsx file object
@@ -195,12 +195,18 @@ def get_data(args):
                     else:
                         sts = hh+hh
                 
+                # if status[1] in ('2','PP2'):
+                #     if status[0] not in ('2M','M2'):
+                #         shift_2 += 1
+                # elif status[1] == '3':
+                #     if status[0] not in ('3M','M3'):
+                #         shift_3 += 1
                 if status[1] in ('2','PP2'):
-                    if status[0] not in ('2M','M2'):
+                    if status[0]  in ('22', '2L2', '2W', '2LW'):
                         shift_2 += 1
                 elif status[1] == '3':
-                    if status[0] not in ('3M','M3'):
-                        shift_3 += 1
+                    if status[0]  in ('33', '3L3', '3W', '3LW'):
+                        shift_3 += 1        
                 
                 # elif status[2] == 'Half Day':
                 #     if status[1] == '1':

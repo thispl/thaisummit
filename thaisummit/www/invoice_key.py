@@ -51,6 +51,7 @@ def get_data():
         except :
             frappe.msgprint("Unable to display Invoice Key due to API Issue")
         data = []
+
         for po in pos:
             if frappe.db.exists('TSAI Part Master', po['Mat_No']):
                 pr_name = frappe.db.get_value(
@@ -59,22 +60,23 @@ def get_data():
                     "File",
                     {"attached_to_doctype": 'Prepared Report',
                         "attached_to_name": pr_name},
+                    # {"attached_to_doctype": 'Prepared Report',
+                    #     "attached_to_name": pr_name},
                     "name",
                 )
                 attached_file = frappe.get_doc("File", attached_file_name)
                 compressed_content = attached_file.get_content()
                 uncompressed_content = gzip_decompress(compressed_content)
                 dos = json.loads(uncompressed_content.decode("utf-8"))
-
+                
                 daily_order = 0
                 min_qty = 0
                 max_qty = 0
                 for do in dos:
-                    if do['item'] == po['Mat_No']:
-                        daily_order = do['daily_order']
-                        min_qty = do['min_qty']
-                        max_qty = do['max_qty']
-
+                    if str(do['item']) == po['Mat_No']:
+                        daily_order = cint(do['daily_order'])
+                        min_qty = cint(do['min_qty'])
+                        max_qty = cint(do['max_qty'])
                 url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
                 payload = json.dumps({
                     "ItemCode": po['Mat_No']
@@ -116,6 +118,7 @@ def get_data():
                 delivery_date = pd.to_datetime(po['Delivery_Date']).date()
                 share = frappe.db.get_value('Shares of Business Entry',{'supplier_code':supplier_code,'mat_no':po['Mat_No']},'share_of_business') or '-'
                 # if open_qty > 0:
+                
                 if t_qty < min_qty:
                     try:
                         req_qty = math.ceil((max_qty - t_qty)/packing_std)*packing_std
@@ -274,12 +277,10 @@ def download_excel():
                 min_qty = 0
                 max_qty = 0
                 for do in dos:
-                    if do['item'] == po['Mat_No']:
-                        daily_order = do['daily_order']
+                    if cstr(do['item']) == po['Mat_No']:
+                        daily_order = cint(do['daily_order'])
                         min_qty = do['min_qty']
-                        max_qty = do['max_qty']
-
-
+                        max_qty = do['max_qty']                
                 url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
                 payload = json.dumps({
                     "ItemCode": po['Mat_No']
@@ -405,21 +406,21 @@ def get_transit_qty(po_no,mat_no):
     return transit_qty
 
 
-def test_do():
-    pr_name = frappe.db.get_value(
-        'Prepared Report', {'report_name': 'Supplier Daily Order','status':'Completed'}, 'name')
-    attached_file_name = frappe.db.get_value(
-        "File",
-        {"attached_to_doctype": 'Prepared Report', "attached_to_name": pr_name},
-        "name",
-    )
-    attached_file = frappe.get_doc("File", attached_file_name)
-    compressed_content = attached_file.get_content()
-    uncompressed_content = gzip_decompress(compressed_content)
-    dos = json.loads(uncompressed_content.decode("utf-8"))
-    for do in dos:
-        if do['item'] == '91100080':
-            print(do)
+# def test_do():
+#     pr_name = frappe.db.get_value(
+#         'Prepared Report', {'report_name': 'Supplier Daily Order','status':'Completed'}, 'name')
+#     attached_file_name = frappe.db.get_value(
+#         "File",
+#         {"attached_to_doctype": 'Prepared Report', "attached_to_name": pr_name},
+#         "name",
+#     )
+#     attached_file = frappe.get_doc("File", attached_file_name)
+#     compressed_content = attached_file.get_content()
+#     uncompressed_content = gzip_decompress(compressed_content)
+#     dos = json.loads(uncompressed_content.decode("utf-8"))
+#     for do in dos:
+#         if do['item'] == '91100080':
+#             print(do)
 
 
 def test_po():

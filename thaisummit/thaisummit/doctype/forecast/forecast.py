@@ -171,6 +171,7 @@ def enqueue_upload(file,from_date,to_date):
 
 @frappe.whitelist()
 def upload(file,from_date,to_date):
+    frappe.db.sql("delete from `tabForecast Data`")
     file = get_file(file)
     pps = read_xlsx_file_from_attached_file(fcontent=file[1])
     for pp in pps:

@@ -14,17 +14,18 @@
   "name1",
   "cdepartment",
   "food",
+  "meal_type",
   "type",
   "column_break_7",
   "party_name",
   "tsa_id",
   "employee_name",
   "department",
-  "price"
+  "price",
+  "cost_centre"
  ],
  "fields": [
   {
-   "default": "Today",
    "fieldname": "date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -82,6 +83,7 @@
   {
    "fieldname": "id",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "ID"
   },
   {
@@ -106,11 +108,22 @@
    "fieldname": "cdepartment",
    "fieldtype": "Data",
    "label": "Department"
+  },
+  {
+   "fieldname": "meal_type",
+   "fieldtype": "Select",
+   "label": "Meal Type",
+   "options": "\nBreak Fast\nLunch\nDinner\nSupper"
+  },
+  {
+   "fieldname": "cost_centre",
+   "fieldtype": "Currency",
+   "label": "Cost Centre"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-26 19:25:11.807881",
+ "modified": "2023-01-11 10:45:47.977595",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Food Scan",

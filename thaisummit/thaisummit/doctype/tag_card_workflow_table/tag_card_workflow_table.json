@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "creation": "2023-03-13 11:06:32.601392",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "workflow",
+  "role_name"
+ ],
+ "fields": [
+  {
+   "allow_on_submit": 1,
+   "fieldname": "workflow",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Workflow"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "role_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Role Name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-03-27 11:38:08.977219",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag Card Workflow Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

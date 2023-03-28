@@ -17,13 +17,13 @@ class GuestEntry(Document):
 		if self.break_fast:
 			allowed_items.append('Break Fast')
 
-		if self.lunch_briyani_veg or self.lunch_briyani_non_veg or self.lunch_special_veg or self.lunch_special_non_veg:
+		if self.lunch or self.lunch_briyani_veg or self.lunch_briyani_non_veg or self.lunch_special_veg or self.lunch_special_non_veg:
 			allowed_items.append('Lunch')
 
-		if self.dinner_briyani_veg or self.dinner_briyani_non_veg or self.dinner_special_veg or self.dinner_special_non_veg:
+		if self.dinner or self.dinner_briyani_veg or self.dinner_briyani_non_veg or self.dinner_special_veg or self.dinner_special_non_veg:
 			allowed_items.append('Dinner')
 
 		if self.supper_dates or self.supper_special_food:
 			allowed_items.append('Supper')
 
-		self.allowed_items = cstr(allowed_items)
+		self.allowed_items = ','.join(allowed_items)

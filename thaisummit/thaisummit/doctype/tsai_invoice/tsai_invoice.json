@@ -45,7 +45,8 @@
   "planned_out_time",
   "actual_out_time",
   "outdelay",
-  "out_bin"
+  "out_bin",
+  "invoice_data"
  ],
  "fields": [
   {
@@ -256,11 +257,16 @@
    "fieldtype": "Time",
    "label": "Invoice Time",
    "read_only": 1
+  },
+  {
+   "fieldname": "invoice_data",
+   "fieldtype": "Read Only",
+   "label": "Invoice Data"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-28 15:50:55.518178",
+ "modified": "2023-03-20 18:53:59.357363",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI Invoice",

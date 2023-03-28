@@ -17,11 +17,19 @@
   "download_invoice_key",
   "invoice_key_date_wise",
   "date_wise_last_download_on",
-  "enqueued_methods"
+  "enqueued_methods",
+  "column_break_13",
+  "delete_bom",
+  "iym_manpower_limit",
+  "re_manpower_limit",
+  "adjustable_percent",
+  "section_break_18",
+  "bob_file",
+  "upolad"
  ],
  "fields": [
   {
-   "depends_on": "eval:frappe.user.has_role(\"E-Kanban Manager\")",
+   "depends_on": "eval:frappe.user.has_role(\"E-Kanban Master Manager\")\n\n",
    "fieldname": "sync_grn",
    "fieldtype": "Button",
    "label": "Sync GRN",
@@ -89,13 +97,53 @@
    "fieldtype": "HTML",
    "label": "Enqueued Methods",
    "options": "<a src=\"172.16.1.1/app/enqueue-methods\">EQ</a>"
+  },
+  {
+   "depends_on": "eval:frappe.user.has_role(\"E-Kanban Master Manager\")\n",
+   "fieldname": "delete_bom",
+   "fieldtype": "Button",
+   "label": "Delete BOM"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "iym_manpower_limit",
+   "fieldtype": "Float",
+   "label": "IYM Manpower Limit"
+  },
+  {
+   "fieldname": "re_manpower_limit",
+   "fieldtype": "Float",
+   "label": "RE Manpower Limit"
+  },
+  {
+   "fieldname": "adjustable_percent",
+   "fieldtype": "Percent",
+   "label": "Adjustable Percent"
+  },
+  {
+   "fieldname": "section_break_18",
+   "fieldtype": "Section Break",
+   "label": "BOM File"
+  },
+  {
+   "fieldname": "bob_file",
+   "fieldtype": "Attach",
+   "label": "Attach BOM File"
+  },
+  {
+   "fieldname": "upolad",
+   "fieldtype": "Button",
+   "label": "Delete and Upload BOM"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-06-06 12:21:17.680799",
+ "modified": "2023-02-13 10:30:01.771400",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Ekanban Settings",

@@ -51,6 +51,5 @@ frappe.ui.form.on('Delete Shift Schedule', {
 				frm.set_value('from_date', '')
 			}
 		}
-
 	}
 });

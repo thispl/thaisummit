@@ -26,7 +26,7 @@ frappe.query_reports["Monthly Attendance Register"] = {
 		// 	"default": frappe.datetime.str_to_obj(frappe.datetime.get_today()).getMonth() + 1,
 		// 	// on_change: function() {
 		// 	// 		frappe.query_report.set_filter_value('to_date', );
-		// 	// }
+		 	//  }
 		// },
 		{
 			"fieldname": "from_date",

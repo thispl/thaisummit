@@ -56,6 +56,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "employee.department",
    "fieldname": "department",
    "fieldtype": "Link",
    "label": "Department",
@@ -228,7 +229,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2022-03-08 20:49:51.524866",
+ "modified": "2023-03-24 12:45:40.073180",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Overtime Request",

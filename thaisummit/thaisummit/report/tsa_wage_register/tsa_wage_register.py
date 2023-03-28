@@ -33,7 +33,7 @@ def get_data(filters):
     salary_comp = ['Basic','House Rent Allowance','Other Allowance','Position Allowance']
 
     earning_comp = ['Basic','House Rent Allowance','Other Allowance','Position Allowance','Attendance Bonus','Shift Allowance','Arrear','Additional Allowance','Welding Allowance','PPE Allowance','Transport Allowance','Other Allowance',]
-    dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','LWF','TELEXP','PPE','ADV']
+    dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','Labor Welfare Fund','TELEXP','PPE','ADV']
 
     if filters.department:
         salary_slips = frappe.get_all("Salary Slip",{'employee_type':filters.employee_type,'department':filters.department,'start_date':filters.from_date,'end_date':filters.to_date},['*'])	

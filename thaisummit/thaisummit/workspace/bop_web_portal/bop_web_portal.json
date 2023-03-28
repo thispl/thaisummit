@@ -25,7 +25,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-07-07 11:13:28.725407",
+ "modified": "2022-12-13 20:11:59.039758",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "BOP Web Portal",
@@ -38,6 +38,12 @@
    "label": "Part Master",
    "link_to": "Part Master Data",
    "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Part Master Report",
+   "link_to": "TSAI Part Master Data",
+   "type": "Report"
   },
   {
    "doc_view": "",

@@ -1,0 +1,222 @@
+{
+ "actions": [],
+ "autoname": "GTC.#####",
+ "creation": "2023-03-06 19:16:46.776620",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "supcode",
+  "column_break_2",
+  "user_code",
+  "generate_tag_card_section",
+  "mat_number",
+  "mat_name",
+  "part_number",
+  "column_break_3",
+  "packing_std",
+  "production_order_qty",
+  "quantity",
+  "section_break_8",
+  "html",
+  "section_break_10",
+  "table_9",
+  "section_break_15",
+  "qr_code",
+  "user_name",
+  "date",
+  "column_break_18",
+  "time",
+  "shift",
+  "section_break_23",
+  "child_parts",
+  "section_break_25",
+  "workflow_table",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "mat_number",
+   "fieldtype": "Link",
+   "label": "Mat Number",
+   "options": "TSAI Part Master"
+  },
+  {
+   "fieldname": "mat_name",
+   "fieldtype": "Data",
+   "label": "Mat Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "part_number",
+   "fieldtype": "Data",
+   "label": "Part Number",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "packing_std",
+   "fieldtype": "Data",
+   "label": "Packing Std",
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_order_qty",
+   "fieldtype": "Int",
+   "label": "Production Order Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quantity",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  },
+  {
+   "depends_on": "eval:doc.user_code && doc.supcode",
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "html",
+   "fieldtype": "HTML",
+   "label": "HTML"
+  },
+  {
+   "depends_on": "eval:doc.user_code && doc.supcode",
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "table_9",
+   "fieldtype": "Table",
+   "options": "Tag Card Items"
+  },
+  {
+   "fieldname": "qr_code",
+   "fieldtype": "Data",
+   "label": "QR Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "user_name",
+   "fieldtype": "Read Only",
+   "label": "User Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Data",
+   "label": "Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shift",
+   "fieldtype": "Data",
+   "label": "Shift",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Generate Tag Card",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Generate Tag Card",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "supcode",
+   "fieldtype": "Data",
+   "label": "Sup.Code"
+  },
+  {
+   "fieldname": "user_code",
+   "fieldtype": "Data",
+   "label": "User Code"
+  },
+  {
+   "depends_on": "eval:doc.user_code && doc.supcode",
+   "fieldname": "generate_tag_card_section",
+   "fieldtype": "Section Break",
+   "label": "Generate Tag Card"
+  },
+  {
+   "fieldname": "column_break_18",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.user_code && doc.supcode",
+   "fieldname": "section_break_15",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "child_parts",
+   "fieldtype": "Table",
+   "label": "Child Parts",
+   "options": "Child Parts"
+  },
+  {
+   "depends_on": "eval:doc.user_code && doc.supcode",
+   "fieldname": "section_break_23",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_25",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "workflow_table",
+   "fieldtype": "Table",
+   "hidden": 1,
+   "label": "Workflow Table",
+   "options": "Tag Card Workflow Table"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2023-03-15 14:24:15.083355",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Generate Tag Card",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

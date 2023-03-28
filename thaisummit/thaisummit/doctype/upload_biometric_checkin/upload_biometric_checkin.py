@@ -20,10 +20,10 @@ class UploadBiometricCheckin(Document):
 		rows = 1
 		err_rows = 1
 		for pp in pps:
-			if pp[5] != 'Employee Name':
-				if pp[5]:
-					if not frappe.db.exists("Employee",pp[5]):
-						errs += '<tr><td style="border: 1px solid black">%s</td><td style="border: 1px solid black">%s</td><td style="border: 1px solid black">Employee not found</td></tr>'%(i,pp[5])
+			if pp[0] != 'Employee Name':
+				if pp[0]:
+					if not frappe.db.exists("Employee",pp[0]):
+						errs += '<tr><td style="border: 1px solid black">%s</td><td style="border: 1px solid black">%s</td><td style="border: 1px solid black">Employee not found</td></tr>'%(i,pp[0])
 						err_rows += 1
 					rows += 1
 			i += 1
@@ -41,14 +41,16 @@ def enqueue_create_checkins(file,name):
 	filepath = get_file(file)
 	pps = read_csv_content(filepath[1])
 	for pp in pps:
-		if frappe.db.exists("Employee",pp[5]):
-			t = datetime.strptime(pp[1], '%d-%b-%Y %H:%M:%S')
+		if frappe.db.exists("Employee",pp[0]):
+			t = datetime.strptime(pp[2], '%d-%b-%Y %H:%M:%S')
 			t = t.replace(second=0)
-			if not frappe.db.exists("Employee Checkin",{'employee':pp[5],'time':t}):
+			if not frappe.db.exists("Employee Checkin",{'employee':pp[0],'time':t}):
 				doc = frappe.new_doc("Employee Checkin")
-				doc.employee = pp[5]
+				doc.employee = pp[0]
 				doc.time = t
-				doc.log_type = pp[2].upper()
+				doc.log_type = pp[4].upper()
+				doc.biometric_pin = pp[1]
+				doc.device_id = pp[3]
 				doc.save(ignore_permissions=True)
 				frappe.db.commit()
 	ubc = frappe.get_doc("Upload Biometric Checkin",name)

@@ -19,7 +19,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Canteen",
-   "link_type": "DocType",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Card Break"
   },
@@ -42,7 +42,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-07-09 21:55:06.136669",
+ "modified": "2022-07-20 11:56:59.445806",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Canteen",
@@ -78,6 +78,24 @@
    "doc_view": "",
    "label": "Food Scan Report",
    "link_to": "Food Scan Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Food Plan Report",
+   "link_to": "Food Plan Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Food Payment Report",
+   "link_to": "Food Payment Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Guest Entry Report",
+   "link_to": "Guest Entry Report",
    "type": "Report"
   }
  ],

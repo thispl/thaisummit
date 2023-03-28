@@ -1,4 +1,5 @@
 {
+ "cards_label": "Reports",
  "category": "Modules",
  "charts": [],
  "creation": "2022-06-16 10:18:57.558568",
@@ -17,8 +18,8 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Food Reports",
-   "link_type": "Page",
+   "label": "Canteen",
+   "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
   },
@@ -41,7 +42,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-06-16 10:48:04.648829",
+ "modified": "2022-07-14 20:45:21.571686",
  "modified_by": "Administrator",
  "module": "Canteen",
  "name": "Canteen",
@@ -51,9 +52,52 @@
  "shortcuts": [
   {
    "doc_view": "",
+   "label": "Food Scan",
+   "link_to": "Food Entry Scan",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
    "label": "Food Plan Entry",
    "link_to": "Food Plan Entry",
    "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Food Menu",
+   "link_to": "Food Menu",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Guest Entry",
+   "link_to": "Guest Entry",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Food Scan Report",
+   "link_to": "Food Scan Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Food Plan Report",
+   "link_to": "Food Plan Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Food Payment Report",
+   "link_to": "Food Payment Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Guest Entry Report",
+   "link_to": "Guest Entry Report",
+   "type": "Report"
   }
- ]
+ ],
+ "shortcuts_label": "Canteen"
 }

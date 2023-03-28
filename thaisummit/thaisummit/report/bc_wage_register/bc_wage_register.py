@@ -22,7 +22,7 @@ def get_columns(filters):
     columns = [_("Cost Centre") + ":Data/:100",_("Emp No") + ":Data/:100",_("Name") + ":Data/:150",_("DOJ") + ":Date/:100",_("Department") + ":Data/:150",_("Section") + ":Data/:100",_("Designation") + ":Data/:150",
     _("Category") + ":Data/:100",_("Paid days 100%") + ":Data/:100",_("Basic & DA") + ":Currency/:100",_("House Rent Allowance") + ":Currency/:100",_("Other Allowance") + ":Currency/:100",
     _("Position All") + ":Currency/:100",_("Gross Wage") + ":Currency/:100",_("Basic") + ":Currency/:100",_("HRA") + ":Currency/:100",_("Other Allowance") + ":Currency/:100",_("Position All") + ":Currency/:100",_("ATA") + ":Currency/:100",
-    _("SHT") + ":Currency/:100",_("ARR") + ":Currency/:100",_("Additional Allowance") + ":Currency/:150",_("PP Allowance") + ":Currency/:100",_("Transport Allowance") + ":Currency/:100",_("Others") + ":Currency/:100",_("Gross") + ":Currency/:100",_("PF") + ":Currency/:100",_("ESI") + ":Currency/:100",
+    _("SHT") + ":Currency/:100",_("ARR") + ":Currency/:100",_("Additional Allowance") + ":Currency/:150",_("PP Allowance") + ":Currency/:100",_("Transport Allowance") + ":Currency/:100",_("Others") + ":Currency/:100",_('Leave Encashment') + ":Currency/:100",_("Gross") + ":Currency/:100",_("PF") + ":Currency/:100",_("ESI") + ":Currency/:100",
     _("Can") + ":Currency/:100",_("P Tax") + ":Currency/:100",_("LWF") + ":Currency/:100",_("TEL EXP") + ":Currency/:100",_("PPE") + ":Currency/:100",_("Advance") + ":Currency/:100",_("Total Deduction") + ":Currency/:100",_("Net Wage") + ":Currency/:100"]
     return columns
 
@@ -32,8 +32,8 @@ def get_data(filters):
     basic_component_amount = earning_component_amount = deduction_component_amount = gross_wage = total_deduction = 0
     salary_comp = ['Basic','House Rent Allowance','Other Allowance','Position Allowance']
 
-    earning_comp = ['Basic','House Rent Allowance','Other Allowance','Position Allowance','Attendance Bonus','Shift Allowance','Arrear','Additional Allowance','PPE Allowance','Transport Allowance']
-    dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','LWF','TELEXP','PPE','ADV']
+    earning_comp = ['Basic','House Rent Allowance','Other Allowance','Position Allowance','Attendance Bonus','Shift Allowance','Arrear','Additional Allowance','PPE Allowance','Transport Allowance','Others','Leave Encashment']
+    dedcution_comp = ['Provident Fund','Employee State Insurance','Canteen Charges','Professional Tax','Labor Welfare Fund','TELEXP','PPE','ADV']
 
     if filters.department:
         salary_slips = frappe.get_all("Salary Slip",{'employee_type':'BC','department':filters.department,'start_date':filters.from_date,'end_date':filters.to_date},['*'])	

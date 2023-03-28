@@ -5,28 +5,19 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "employee_guest",
-  "column_break_2",
-  "date",
+  "output",
   "section_break_4",
-  "output"
+  "employee_guest",
+  "column_break_4",
+  "employee_list"
  ],
  "fields": [
   {
+   "columns": 1,
    "fieldname": "employee_guest",
    "fieldtype": "Data",
-   "label": "Employee /Guest"
-  },
-  {
-   "default": "Today",
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
+   "label": "Employee /Guest",
+   "width": "0"
   },
   {
    "fieldname": "section_break_4",
@@ -35,13 +26,21 @@
   {
    "fieldname": "output",
    "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "employee_list",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-06-27 14:06:27.640418",
+ "modified": "2022-07-14 11:01:07.886758",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Food Entry Scan",

@@ -39,16 +39,18 @@ frappe.ui.form.on('Overtime Request', {
 		frm.call('send_for_approval')
 	},
 	validate(frm) {
-		if (!frappe.user.has_role('System Manager')) {
-			var date = frappe.datetime.add_days(frm.doc.ot_date, 3)
-			frappe.call({
-				"method": "thaisummit.utils.get_server_date",
-				callback(r) {
-					if (r.message > date) {
-						frappe.msgprint("OT should be applied within 3 days")
-						frappe.validated = false;
+		if (!frappe.user.has_role('HR GM')) {
+			frappe.db.get_single_value('HR Time Settings', 'overtime_validation_dates').then(value=>{
+				var date = frappe.datetime.add_days(frm.doc.ot_date, value)
+				frappe.call({
+					"method": "thaisummit.utils.get_server_date",
+					callback(r) {
+						if (r.message > date) {
+							frappe.msgprint("OT should be applied within 3 days")
+							frappe.validated = false;
+						}
 					}
-				}
+				})
 			})
 		}
 		if (!frm.doc.employee) {
@@ -155,9 +157,9 @@ frappe.ui.form.on('Overtime Request', {
 				}
 				else if (frm.doc.shift == 'PP2') {
 					frm.set_value('from_time', '04:30:00')
-					// frm.set_value('to_time', '')
-					frm.set_value('ot_hours', '')
-					frm.set_value('total_hours', '')
+					frm.set_value('to_time', '08:00:00')
+					// frm.set_value('ot_hours', '03:30:00')
+					// frm.set_value('total_hours','03:30:00')
 				}
 				else {
 					frappe.db.get_value('Shift Type', frm.doc.shift, 'start_time', (r) => {
@@ -233,18 +235,21 @@ frappe.ui.form.on('Overtime Request', {
 		}
 	},
 	ot_date(frm) {
-		var date = frappe.datetime.add_days(frm.doc.ot_date, 3)
-		if (!frappe.user.has_role('System Manager')) {
-			frappe.call({
-				"method": "thaisummit.utils.get_server_date",
-				callback(r) {
-					if (r.message > date) {
-						frappe.msgprint("OT should be applied within 3 days")
-						frappe.validated = false;
+		frappe.db.get_single_value('HR Time Settings', 'overtime_validation_dates').then(value=>{
+			var date = frappe.datetime.add_days(frm.doc.ot_date,value)
+			if (!frappe.user.has_role('HR GM')) {
+				frappe.call({
+					"method": "thaisummit.utils.get_server_date",
+					callback(r) {
+						if (r.message > date) {
+							frappe.msgprint("OT should be applied within 3 days")
+							frappe.validated = false;
+						}
 					}
-				}
-			})
-		}
+				})
+			}
+		})
+		
 		if (frm.doc.shift) {
 			frm.trigger('shift')
 		}

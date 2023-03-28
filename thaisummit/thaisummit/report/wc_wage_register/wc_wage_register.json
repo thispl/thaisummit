@@ -1,5 +1,5 @@
 {
- "add_total_row": 0,
+ "add_total_row": 1,
  "columns": [],
  "creation": "2021-08-30 08:55:36.736957",
  "disable_prepared_report": 0,
@@ -10,7 +10,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "TS_logo",
- "modified": "2021-08-30 09:05:00.762614",
+ "modified": "2023-01-03 16:50:30.748561",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "WC Wage Register",

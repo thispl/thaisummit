@@ -82,8 +82,8 @@ def get_data(filters):
 
                     max_qty = 0
                     for do in dos:
-                        if do['item'] == po['Mat_No']:
-                            max_qty = do['max_qty']
+                        if str(do['item']) == po['Mat_No']:
+                            max_qty = cint(do['max_qty'])
 
                     open_qty = float(po['Open_Qty'])
                     in_transit_qty = 0
@@ -128,13 +128,13 @@ def get_data(filters):
                     row = [po['Mat_No'],po['Part_No'],po['Part_Name'],model,packing_std,req_qty]
                     x += 1
                     for do in dos:
-                        if do['item'] == po['Mat_No']:
+                        if str(do['item']) == po['Mat_No']:
                             tomorrow = add_days(today(),1)
                             for i in range(7):
                                 dt = datetime.strptime(add_days(tomorrow,i),'%Y-%m-%d')
                                 day = datetime.strftime(dt,'%d')
                                 month = datetime.strftime(dt,'%b')
-                                qty = do[day+'_'+month.lower()]
+                                qty = cint(do[day+'_'+month.lower()])
                                 if qty == 0:
                                     qty = '-'
                                 row.append(qty)

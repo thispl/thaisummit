@@ -1,0 +1,36 @@
+{
+ "add_total_row": 1,
+ "columns": [],
+ "creation": "2022-11-30 11:30:26.620295",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "TS_logo",
+ "modified": "2022-11-30 11:30:26.620295",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "RM-IYM Transfer Plan",
+ "owner": "Administrator",
+ "prepared_report": 1,
+ "ref_doctype": "TSAI Part Master",
+ "report_name": "RM-IYM Transfer Plan",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "E-Kanban User"
+  },
+  {
+   "role": "Supplier"
+  },
+  {
+   "role": "HOD"
+  }
+ ]
+}

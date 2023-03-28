@@ -7,6 +7,8 @@ from frappe.utils import cstr, cint, getdate, get_last_day, get_first_day, add_d
 from frappe import msgprint, _
 from calendar import monthrange
 from datetime import date, timedelta, datetime
+from frappe.utils import today, add_days, add_months, getdate, format_date
+
 
 bc_status_map = {
 	"Absent": "AA",
@@ -92,6 +94,8 @@ bc_status_map = {
 	"Sick Leave": "SL",
 	"Special Leave": "SPL",
 	"OD": "OD",
+	"ODW":"ODW",
+	"ODH":"ODH",
 	"Compensatory Off": "CO",
 	"Leave Without Pay": "LL",
 	"0.5Earned Leave": "0.5EL",
@@ -129,6 +133,8 @@ wc_status_map = {
 	# "Present": "11",
 	"Work From Home": "WFH",
 	"OD": "OD",
+	"ODW":"ODW",
+	"ODH":"ODH",
 	"Earned Leave": "EL",
 	"Casual Leave": "CL",
 	"Sick Leave": "SL",
@@ -254,7 +260,7 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 		row = []
 		if filters.group_by:
 			row += [" "]
-		row += [emp, emp_det.employee_name]
+		row += [emp, emp_det.employee_name,format_date(emp_det.date_of_joining),emp_det.department]
 
 		total_p = total_a = total_l = total_h = total_um= 0.0
 		emp_status_map = []
@@ -274,7 +280,7 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 					for idx, ele in enumerate(sorted(holiday_map[emp_holiday_list])):
 						if filtered_date == holiday_map[emp_holiday_list][idx][0]:
 							if frappe.db.exists('Attendance',{'attendance_date':filterdate,'employee':emp,'status':('!=','Absent')}):
-								shift = frappe.get_value('Attendance',{'attendance_date':filterdate,'employee':emp },['employee_type','shift','qr_shift','late_entry']) or ''
+								shift = frappe.get_value('Attendance',{'attendance_date':filterdate,'employee':emp },['employee_type','shift','qr_shift','late_entry','shift_status']) or ''
 								late = ''
 								# if shift[3] == 1:
 								# 	late = 'L'
@@ -282,8 +288,16 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 									if shift[0] == 'WC':
 										if shift[1]:
 											status = shift[1] + late + "W"
+										elif shift[4]:
+											status = 'ODW'	
+										elif shift[4]:
+											status = 'ODH'	
 										else:
 											status = "WW"
+									# elif shift[4] == "ODW":
+									# 	status = "ODW"
+									# elif shift[4] == "ODH":
+									# 	status ="ODH"				
 									else:
 										if shift[2]:
 											status = shift[2] + late + "W"
@@ -362,8 +376,8 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 		total_worked_days = total_weekoffs = total_holidays = total_cl = total_el = total_sl = total_co = total_spl = total_la = total_lop = total_wrong_shifts = total_payable_days = 0
 		
 		actual_shifts = ['11','22','33','P2P2','P1P1','12','13','23','21','32','OD','1L1','1L2','1L3','2L1','2L2','2L3','3L1','3L2','3L3']
-		holidays = ['HH','1H','2H','3H','1LH','2LH','3LH',]
-		weekoffs = ['WW','1W','2W','3W','1LW','2LW','3LW']
+		holidays = ['HH','1H','2H','3H','1LH','2LH','3LH','ODH']
+		weekoffs = ['WW','1W','2W','3W','1LW','2LW','3LW''ODW']
 		lops = ['AA','1M','MM','M1','','LL']
 		wrong_shifts = ['12','13','21','23','31','32','2P2','1L2','1L3','2L1','2L3','3L1','3L2']
 		half_days = ["0.5EL","0.5CL","0.5SL","0.5CO","0.5SPL","0.5LL","LEL/2","LCL/2","LSL/2","LCO/2","LLL/2","LA/2","0.5LLL"]
@@ -449,7 +463,7 @@ def get_columns(filters):
 		columns = [_(filters.group_by)+ ":Link/Branch:120"]
 
 	columns += [
-		_("Employee ID") + ":Employee:150", _("Employee Name") + ":Data/:200"
+		_("Employee ID") + ":Employee:150", _("Employee Name") + ":Data/:200",_("Date of Joining") +":Data/:200",_("Department") +":Data/:200",
 	]
 	days = []
 
@@ -489,6 +503,9 @@ def get_attendance_list(conditions, filters):
 	for d in attendance_list:
 		att_map.setdefault(d.employee, frappe._dict()).setdefault(d.day_of_month, "")
 		att_map[d.employee][d.day_of_month] = d.shift_status
+		frappe.errprint(d.shift_status)
+		# if d.shift_status == 'OD':
+		# 	frappe.errprint(d.shift_status)
 		# late = ''
 		# if d.late_entry:
 		# 	late = 'L'

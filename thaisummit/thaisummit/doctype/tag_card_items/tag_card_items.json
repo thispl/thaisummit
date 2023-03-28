@@ -1,0 +1,58 @@
+{
+ "actions": [],
+ "creation": "2023-02-28 10:20:32.711660",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_card_no",
+  "mat_no",
+  "packing_standard",
+  "production_order",
+  "qty"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_card_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Card No"
+  },
+  {
+   "fieldname": "mat_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mat No"
+  },
+  {
+   "fieldname": "packing_standard",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Packing Standard"
+  },
+  {
+   "fieldname": "production_order",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Production order"
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Qty"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-02-28 10:21:20.437169",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag Card Items",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

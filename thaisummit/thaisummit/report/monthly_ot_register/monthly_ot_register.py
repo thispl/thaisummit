@@ -93,7 +93,6 @@ def get_data(filters):
                 row.append(emp.basic)
                 row.append(floor(ot_amount))
                 data.append(row)
-
     return data
 
 def get_dates(from_date,to_date):
