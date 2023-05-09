@@ -145,7 +145,7 @@ override_doctype_class = {
 	"Leave Application": "thaisummit.overrides.CustomLeaveApplication",
 	"Compensatory Leave Request": "thaisummit.overrides.CustomCompensatoryLeaveRequest",
 	"Employee":"thaisummit.overrides.CustomEmployee",
-	"Additional Salary":"thaisummit.overrides.CustomAdditionalSalary",
+	"Additional Salary":"thaisummit.overrides.CustomAdditionalSalary"
 	# "Overtime Request":"thaisummit.overrides.CustomOvertimeRequest",
 }
 
@@ -186,6 +186,18 @@ doc_events = {
 	"IYM Sequence Plan Upload":{
 		'on_submit': "thaisummit.thaisummit.doctype.tsa_master.tsa_master.enqueue_master_creation"
 	},
+	"TSAI Invoice":{
+		'after_insert':[
+			"thaisummit.api.push_invoice",
+
+		],
+		'on_update': "thaisummit.custom.get_gst_percent"
+
+
+	},
+	# 'Tag Card':{
+	# 	'after_insert': "thaisummit.thaisummit.doctype.generate_tag_card.generate_tag_card.link_document_name"
+	# },
 	
 }
 

@@ -176,7 +176,7 @@ def get_live_stock(mat_no):
     return qty
     
 # def get_live_stock(mat_no):
-#     url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+#     url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
 #     payload = json.dumps({
 #         "ItemCode": mat_no
 #     })

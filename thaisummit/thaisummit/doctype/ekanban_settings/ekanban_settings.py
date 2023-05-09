@@ -79,17 +79,19 @@ class EkanbanSettings(Document):
 	pass
 
 	
+@frappe.whitelist()
+def enqueue_update_bom(file):
+	enqueue(update_bom, queue='default', timeout=6000, event='update_bom',file=file)
+	return 'Succuss'
 
 @frappe.whitelist()
 def update_bom(file):
-	frappe.db.sql("delete from `tabTest BOM`")
+	frappe.db.sql("""delete from `tabTSAI BOM`""")
 	frappe.log_error(title="BOM Delete",message="BOM Deleted By %s" % frappe.session.user)
 	filepath = get_file(file)
 	pps = read_csv_content(filepath[1])
-	# pps = read_csv_content(filepath[1])
-	# frappe.errprint("hi")
 	for p in pps[1:]:
-		bom = frappe.new_doc("Test BOM")
+		bom = frappe.new_doc("TSAI BOM")
 		bom.item = p[0]
 		bom.item_descripition = p[1]
 		bom.uom = p[2]
@@ -101,41 +103,54 @@ def update_bom(file):
 		bom.fm = p[8]
 		bom.save(ignore_permissions=True)
 		bom.submit()
-		enqueue(update_bom, queue='default', timeout=6000, event='build_xlsx_response',enqueue_id='Tsai Bom Upload' )
+		frappe.db.commit()
 
 @frappe.whitelist()
-def fetch_grn_details(date):
-	# date = str(date).replace('-','')
-	invs = frappe.db.sql("""select `tabInvoice Items`.mat_no as mat_no, `tabTSAI Invoice`.name as name, `tabTSAI Invoice`.po_no from `tabTSAI Invoice`
-	left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent where `tabInvoice Items`.grn = 0 """,as_dict=True)
+def enqueue_grn_details():
+	enqueue(fetch_grn_details, queue='default', timeout=60000, event='fetch_grn_details')
+	return 'Succuss'
+
+@frappe.whitelist()
+def fetch_grn_details():
+	invs = frappe.db.sql("""select name from `tabTSAI Invoice` where sync_grn = 0 """,as_dict=True)
 	for inv in invs:
-		# frappe.errprint(inv.po_no)
-		# frappe.errprint(inv.mat_no)
-		url = "http://172.16.1.18/StockDetail/Service1.svc/GetPODetails"
+		url = "http://apioso.thaisummit.co.th:10401/api/GRNData"
 		payload = json.dumps({
-			"Fromdate":"","Todate":"","MatNo":inv.mat_no,"PONO":inv.po_no
+			"InvNo": inv.name
 		})
 		headers = {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
 		}
 		response = requests.request(
 			"POST", url, headers=headers, data=payload)
-		frappe.log_error(response.text)  
 		if response.text:  
 			grns = json.loads(response.text)
 			for grn in grns:
-				if grn['NumAtCard'] == inv.name:
+				if grn['InvNo'] == inv.name:
 					doc = frappe.get_doc('TSAI Invoice',inv.name)
 					for d in doc.invoice_items:
-						if d.mat_no == inv.mat_no:
+						if grn['MatNo'] == str(d.mat_no):
 							d.grn = 1
-							d.grn_qty = grn["GrnQty"]
-							d.grn_date = pd.to_datetime(grn["GrnDate"]).date()
-							d.grn_no = grn["GrnNo"]
+							d.grn_qty = str(grn["GRNQty"])
+							d.grn_date = pd.to_datetime(grn["GRNDate"]).date()
+							d.grn_no = grn["GRNNo"]
 					doc.save(ignore_permissions=True)
 					frappe.db.commit()
-	return 'ok'
+		inv_grn = frappe.get_doc('TSAI Invoice',inv.name)
+		sum_key = 0  
+		sum_grn_qty = 0 
+		for i in inv_grn.invoice_items:
+			sum_key += i.key_qty
+			sum_grn_qty += i.grn_qty
+		if sum_key == sum_grn_qty:
+			inv_grn.sync_grn = 1
+		else:
+			inv_grn.sync_grn = 0
+		inv_grn.save(ignore_permissions=True)
+		frappe.db.commit()
 
+	return 'ok'
 
 @frappe.whitelist()
 def enqueue_invoice_key_date_wise(invoice_key_date):
@@ -181,12 +196,13 @@ def download_invoice_key_date_wise(invoice_key_date,enqueue_id):
 					max_qty = cint(do['max_qty'])
 
 
-			url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+			url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
 			payload = json.dumps({
 				"ItemCode": po.mat_no
 			})
 			headers = {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
 			}
 			response = requests.request(
 				"POST", url, headers=headers, data=payload)
@@ -330,7 +346,7 @@ def enqueue_overall_invoice_key_cron():
 
 @frappe.whitelist()
 def download_invoice_key(enqueue_id):
-	url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
+	url = "http://apioso.thaisummit.co.th:10401/api/POLineDetails"
 	date = datetime.strptime(today(), '%Y-%m-%d')
 	date = datetime.strftime(date, "%Y%m%d")
 	payload = json.dumps({
@@ -340,7 +356,8 @@ def download_invoice_key(enqueue_id):
 		"DeliveryDate": date
 	})
 	headers = {
-		'Content-Type': 'application/json'
+		'Content-Type': 'application/json',
+		'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
 	}
 	response = requests.request("POST", url, headers=headers, data=payload)
 	# pos = json.loads(response.text)
@@ -374,12 +391,13 @@ def download_invoice_key(enqueue_id):
 					max_qty = cint(do['max_qty'])
 
 
-			url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+			url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
 			payload = json.dumps({
 				"ItemCode": po['Mat_No']
 			})
 			headers = {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
 			}
 			response = requests.request(
 				"POST", url, headers=headers, data=payload)

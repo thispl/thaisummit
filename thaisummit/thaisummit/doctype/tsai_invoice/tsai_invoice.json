@@ -18,6 +18,8 @@
   "invoice_date",
   "supplier_code",
   "supplier_name",
+  "sap_status",
+  "sync_grn",
   "section_break_7",
   "invoice_items",
   "section_break_11",
@@ -262,11 +264,22 @@
    "fieldname": "invoice_data",
    "fieldtype": "Read Only",
    "label": "Invoice Data"
+  },
+  {
+   "fieldname": "sap_status",
+   "fieldtype": "Data",
+   "label": "SAP Status"
+  },
+  {
+   "default": "0",
+   "fieldname": "sync_grn",
+   "fieldtype": "Check",
+   "label": "SYNC GRN"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-20 18:53:59.357363",
+ "modified": "2023-04-17 14:00:01.694253",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI Invoice",

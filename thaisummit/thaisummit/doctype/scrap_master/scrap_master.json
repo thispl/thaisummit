@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "SCM.####",
+ "creation": "2023-04-11 11:45:15.469363",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vendor_code",
+  "vendor_name",
+  "column_break_3",
+  "iym",
+  "re"
+ ],
+ "fields": [
+  {
+   "fieldname": "vendor_code",
+   "fieldtype": "Data",
+   "label": "Vendor Code"
+  },
+  {
+   "fieldname": "vendor_name",
+   "fieldtype": "Data",
+   "label": "Vendor Name"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "iym",
+   "fieldtype": "Data",
+   "label": " IYM"
+  },
+  {
+   "fieldname": "re",
+   "fieldtype": "Data",
+   "label": " RE "
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-04-11 12:43:39.532636",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Scrap Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

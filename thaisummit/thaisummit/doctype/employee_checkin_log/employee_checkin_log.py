@@ -19,7 +19,7 @@ class EmployeeCheckinLog(Document):
 		log_file = frappe.get_doc("File", log_file_name)
 		log_file_content = log_file.get_content()
 		checkin_logs = json.loads(log_file_content)
-		enqueue(mark_checkin, queue='default', timeout=6000, event='mark_checkin',checkin_logs=checkin_logs)
+		enqueue(mark_checkin, queue='default', timeout=9000, event='mark_checkin',checkin_logs=checkin_logs)
 
 @frappe.whitelist()
 def mark_checkin(checkin_logs):

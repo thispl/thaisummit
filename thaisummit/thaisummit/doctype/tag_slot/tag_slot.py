@@ -63,20 +63,19 @@ class TAGSlot(Document):
 def get_sap_qty(parts_no):
     avl_qty = 0
     mat_no = frappe.get_value('Part Master', parts_no,"mat_no")
-    # url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
-    url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+    url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
     payload = json.dumps({
     "ItemCode": mat_no
     })
     headers = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
     }
     response = requests.request("POST", url, headers=headers, data=payload)
     wh_data = json.loads(response.text)
-    frappe.errprint(wh_data)
     if wh_data:
         for whd in wh_data:
-            if whd['Warehouse'] == 'FG':
+            if whd['Warehouse'] == 'W101':
                 avl_qty = whd['Qty']
     return avl_qty
 

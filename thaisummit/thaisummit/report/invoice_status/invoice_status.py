@@ -21,12 +21,12 @@ def get_columns():
         _("Status")+":Data:100",
         _("Invoice Amount")+":Data:120",
         _("Invoice Date")+":Date:120",
-        _("GATE in Date")+":Data:120",
-        _("GATE in Time")+":Data:120",
+        # _("GATE in Date")+":Data:120",
+        # _("GATE in Time")+":Data:120",
         _("GRN Date")+":Date:100",
         _("GRN No")+":Data:100",
-        _("GRN QTY")+":Data:100",
-        _("GRN Amount")+":Data:120",
+        # _("GRN QTY")+":Data:100",
+        # _("GRN Amount")+":Data:120",
     ]
     return columns
 
@@ -50,8 +50,10 @@ def get_data(filters):
         else:
             status = inv.status
 
+        # row = [inv.supplier_name, inv.name, status, inv.total_invoice_amount,
+        #             inv.invoice_date, "-", "-",  grn_details.grn_date, grn_details.grn_no, grn_details.grn_qty, "-"]
         row = [inv.supplier_name, inv.name, status, inv.total_invoice_amount,
-                    inv.invoice_date, "-", "-",  grn_details.grn_date, grn_details.grn_no, grn_details.grn_qty, "-"]
+                    inv.invoice_date,  grn_details.grn_date, grn_details.grn_no]
         data.append(row)
     return data
 

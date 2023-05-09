@@ -32,7 +32,7 @@ def get_data():
     supplier_code = frappe.db.get_value(
         'TSAI Supplier', {'email': frappe.session.user}, 'name')
     if supplier_code:
-        url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
+        url = "http://apioso.thaisummit.co.th:10401/api/POLineDetails"
         date = datetime.strptime(today(), '%Y-%m-%d')
         date = datetime.strftime(date, "%Y%m%d")
         payload = json.dumps({
@@ -43,7 +43,8 @@ def get_data():
             # "DeliveryDate": '20220228'
         })
         headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
         try:
@@ -77,12 +78,13 @@ def get_data():
                         daily_order = cint(do['daily_order'])
                         min_qty = cint(do['min_qty'])
                         max_qty = cint(do['max_qty'])
-                url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+                url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
                 payload = json.dumps({
                     "ItemCode": po['Mat_No']
                 })
                 headers = {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
                 }
                 response = requests.request(
                     "POST", url, headers=headers, data=payload)
@@ -243,7 +245,7 @@ def download_excel():
     supplier_code = frappe.db.get_value(
         'TSAI Supplier', {'email': frappe.session.user}, 'name')
     if supplier_code:
-        url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
+        url = "http://apioso.thaisummit.co.th:10401/api/POLineDetails"
         date = datetime.strptime(today(), '%Y-%m-%d')
         date = datetime.strftime(date, "%Y%m%d")
         payload = json.dumps({
@@ -253,7 +255,8 @@ def download_excel():
             "DeliveryDate": date
         })
         headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
         }
         response = requests.request("POST", url, headers=headers, data=payload)
         pos = json.loads(response.text)
@@ -281,12 +284,13 @@ def download_excel():
                         daily_order = cint(do['daily_order'])
                         min_qty = do['min_qty']
                         max_qty = do['max_qty']                
-                url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+                url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
                 payload = json.dumps({
                     "ItemCode": po['Mat_No']
                 })
                 headers = {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
                 }
                 response = requests.request(
                     "POST", url, headers=headers, data=payload)
@@ -310,7 +314,7 @@ def download_excel():
                 in_transit_qty = frappe.db.sql("""select sum(`tabInvoice Items`.key_qty) as key_qty from `tabTSAI Invoice`
                         left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent
                         where `tabTSAI Invoice`.status = 'OPEN' and `tabInvoice Items`.mat_no = '%s' and `tabTSAI Invoice`.supplier_code = '%s' and `tabInvoice Items`.grn = 0 """ % (po['Mat_No'],supplier_code), as_dict=True)[0].key_qty or 0
-
+                frappe.errprint(stock)
                 t_qty = stock + in_transit_qty
                 req_qty = 0
                 open_qty = float(po['Open_Qty'])
@@ -377,12 +381,13 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
 
 
 def get_stock(mat_no):
-    url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+    url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
     payload = json.dumps({
         "ItemCode": mat_no
     })
     headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
     }
     response = requests.request("POST", url, headers=headers, data=payload)
     stocks = json.loads(response.text)
@@ -424,7 +429,7 @@ def get_transit_qty(po_no,mat_no):
 
 
 def test_po():
-    url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
+    url = "http://apioso.thaisummit.co.th:10401/api/POLineDetails"
     date = str(today()).replace('-', '')
     payload = json.dumps({
         "Fromdate": "",
@@ -433,7 +438,8 @@ def test_po():
         "DeliveryDate": date
     })
     headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
     }
     response = requests.request("POST", url, headers=headers, data=payload)
     pos = json.loads(response.text)

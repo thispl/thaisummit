@@ -1,8 +1,8 @@
 import frappe
 import json
-from frappe.utils import add_days, today, nowdate
+from frappe.utils import add_days, today, nowdate,flt
 import requests
-
+from frappe import _
 import pandas as pd
 from frappe.utils.background_jobs import enqueue
 from frappe.utils import cstr, add_days, date_diff, getdate, today
@@ -10,43 +10,86 @@ import datetime
 from datetime import datetime
 from frappe.desk.query_report import background_enqueue_run
 
-# APi call(http://182.156.241.11/api/method/thaisummit.api.get_invoice_data?name=name)
+@frappe.whitelist()
+def push_invoice(doc,method):
+    url = "http://apioso.thaisummit.co.th:10401/api/GRPOHeader"
+    invoice_data = []
+    for item in doc.invoice_items:
+        invoice_data.append({
+            "mat_no": item.mat_no,
+            "key_qty": item.key_qty
+        })
+
+    payload = json.dumps({
+        "po_no": doc.po_no,
+        "name": doc.name,
+        "invoice_date": doc.invoice_date,
+        "invoice_data": invoice_data
+    })
+    headers = {
+    'Content-Type': 'application/json',
+    'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    res = json.loads(response.text)
+    frappe.errprint(res['Status'])
+    frappe.errprint(doc.name)
+    frappe.db.set_value("TSAI Invoice", doc.name, "sap_status", str(res['Status']))
+
+
+
+# APi call(http://182.156.241.11/api/method/thaisummit.api.get_invoice_data?po_no=name)
 @frappe.whitelist(allow_guest=True)
-def get_invoice_data(po_no):
-    invoice_pos = frappe.get_list("TSAI Invoice", filters={"po_no": po_no}, fields=["name"])
-
-    invoice_list = []
-    for po in invoice_pos:
-        invoice = frappe.get_doc("TSAI Invoice", po.name)
-
-        invoice_items = {
-            "po_no": float(invoice.po_no),
-            "name": invoice.name,
-            "invoice_data": []
+def sync_grn_data(**args):
+    frappe.log_error(title='grn_data',message=args['invoice_name'])
+    if args['invoice_name'] and frappe.db.exists('TSAI Invoice',args['invoice_name']):
+        inv_name = args['invoice_name']
+        url = "http://apioso.thaisummit.co.th:10401/api/GRNData"
+        payload = json.dumps({
+            "InvNo": args['invoice_name']
+        })
+        headers = {
+            'Content-Type': 'application/json',
+            'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
         }
-
-        for item in invoice.invoice_items:
-            invoice_items["invoice_data"].append({
-                "mat_no": str(item.mat_no),
-                "key_qty": float(item.key_qty)
-            })
-
-        invoice_list.append(invoice_items)
-
-    return invoice_list
-
-
-    
-    
+        response = requests.request(
+            "POST", url, headers=headers, data=payload)
+        if response.text:
+            grns = json.loads(response.text)
+            doc = frappe.get_doc('TSAI Invoice',inv_name)
+            for grn in grns:
+                frappe.log_error(title='grn_data',message=grn['MatNo'])
+                for d in doc.invoice_items:
+                    if grn['MatNo'] == str(d.mat_no):
+                        d.grn = 1
+                        d.grn_qty = str(grn["GRNQty"])
+                        d.grn_date = pd.to_datetime(grn["GRNDate"]).date()
+                        d.grn_no = grn["GRNNo"]
+            sum_key = 0  
+            sum_grn_qty = 0 
+            for i in doc.invoice_items:
+                sum_key += float(i.key_qty)
+                sum_grn_qty += float(i.grn_qty)
+            if sum_key == sum_grn_qty:
+                doc.sync_grn = 1
+            else:
+                doc.sync_grn = 0
+            doc.save(ignore_permissions=True)
+            frappe.db.commit()
+            return {"status": "success"}
+    else:
+        return {"status": "failed"}
 
 def fetch_ekanban_stock():
     frappe.db.sql("delete from `tabTSAI Stock`")
-    url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+    url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
     payload = json.dumps({
         "ItemCode": ""
     })
     headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
     }
     response = requests.request("POST", url, headers=headers, data=payload)
     stocks = json.loads(response.text)
@@ -66,7 +109,7 @@ def fetch_ekanban_stock():
 
 
 def fetch_ekanban_po():
-    url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
+    url = "http://apioso.thaisummit.co.th:10401/api/POLineDetails"
     # from_date = str(add_days(today(),-1)).replace('-','')
     today = str(nowdate()).replace('-', '')
     print(today)
@@ -79,7 +122,8 @@ def fetch_ekanban_po():
         "SupplierCode": ""
     })
     headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
     }
     response = requests.request("POST", url, headers=headers, data=payload)
     pos = json.loads(response.text)
@@ -196,6 +240,33 @@ def generate_daily_order_test():
     filters = "{}"
     background_enqueue_run(report_name, filters)
 
+def generate_daily_order():
+    report_name = "Supplier Daily Order"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+def generate_iym_production_plan_test():
+    report_name = "Production Plan Test"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+def generate_iym_production_plan():
+    report_name = "Production Plan"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+def generate_re_production_plan_test():
+    report_name = "RE Production Plan Test"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+def generate_re_production_plan():
+    report_name = "RE Production Plan"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+
+
+
 def generate_transfer_plan():
     report_name = "RM-RE Transfer Plan"
     filters = "{}"
@@ -233,10 +304,7 @@ def generate_transfer_plan():
     filters = "{}"
     background_enqueue_run(report_name, filters)
 
-def generate_daily_order():
-    report_name = "Supplier Daily Order"
-    filters = "{}"
-    background_enqueue_run(report_name, filters)
+
 
 def generate_production_daily_order_test():
     report_name = "Production Daily Order Test"
@@ -277,12 +345,14 @@ def fetch_grn_details_8am():
     invs = frappe.db.sql("""select `tabInvoice Items`.mat_no as mat_no, `tabTSAI Invoice`.name as name, `tabTSAI Invoice`.po_no from `tabTSAI Invoice`
     left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent where `tabInvoice Items`.grn = 0 """, as_dict=True)
     for inv in invs:
-        url = "http://172.16.1.18/StockDetail/Service1.svc/GetPODetails"
+        url = "http://apioso.thaisummit.co.th:10401/api/PODetails"
         payload = json.dumps({
             "Fromdate": "", "Todate": "", "MatNo": inv.mat_no, "PONO": inv.po_no
         })
         headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
+
         }
         response = requests.request(
             "POST", url, headers=headers, data=payload)
@@ -305,13 +375,13 @@ def fetch_grn_details_1am():
     invs = frappe.db.sql("""select `tabInvoice Items`.mat_no as mat_no, `tabTSAI Invoice`.name as name, `tabTSAI Invoice`.po_no from `tabTSAI Invoice`
     left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent where `tabInvoice Items`.grn = 0 """, as_dict=True)
     for inv in invs:
-        print(inv)
-        url = "http://172.16.1.18/StockDetail/Service1.svc/GetPODetails"
+        url = "http://apioso.thaisummit.co.th:10401/api/PODetails"
         payload = json.dumps({
             "Fromdate": "", "Todate": "", "MatNo": inv.mat_no, "PONO": inv.po_no
         })
         headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
         }
         response = requests.request(
             "POST", url, headers=headers, data=payload)
@@ -385,22 +455,39 @@ def fetch_grn_details_1am():
 #         frappe.db.commit()
 
 
-import requests
-import json
 
-def create_prod_plan():
-    url = "http://172.16.1.18/StockDetail/Service1.svc/CreateProductionPlan"
+# for grn in json_string:
+        # if grn['InvNo'] == inv.name:
+        #     doc = frappe.get_doc('TSAI Invoice',inv.name)
+        #     for d in doc.invoice_items:
+        #         frappe.errprint(grn)
+        #         d.grn = 1
+        #         d.grn_qty = grn["GRNQty"]
+        #         d.grn_date = pd.to_datetime(grn["GRNDate"]).date()
+        #         d.grn_no = grn["GRNNo"]
+        #     doc.sync_grn = 1
+        #     doc.save(ignore_permissions=True)
+        #     frappe.db.commit()
 
-    payload = json.dumps({
-    "orderdate": "2022-02-21",
-    "qty": "",
-    "itemno": "10000089"
-    })
-    headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer /1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
-    }
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    # invoice_pos = frappe.get_list("TSAI Invoice", filters={"po_no": po_no}, fields=["name"])
 
-    print(response)
+    # invoice_list = []
+    # for po in invoice_pos:
+    #     invoice = frappe.get_doc("TSAI Invoice", po.name)
+
+    #     invoice_items = {
+    #         "po_no": float(invoice.po_no),
+    #         "name": invoice.name,
+    #         "invoice_data": []
+    #     }
+
+    #     for item in invoice.invoice_items:
+    #         invoice_items["invoice_data"].append({
+    #             "mat_no": str(item.mat_no),
+    #             "key_qty": float(item.key_qty)
+    #         })
+
+    #     invoice_list.append(invoice_items)
+
+    # return invoice_list

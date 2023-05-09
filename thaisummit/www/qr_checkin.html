@@ -104,36 +104,7 @@
         clearTimeout(label.highlightTimeout);
         label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 100);
         
-        let opts = {
-                    method: "thaisummit.www.qr_checkin.mark_checkin",
-                    args: {
-                        employee: result
-                    }
-                }
-                frappe.call(opts).then(r => {
-                    frappe.msgprint(__(r.message));
-                    if (r.message == 'Checkin Marked Successfully') {
-                        setTimeout(function () {
-                            window.location.href = '/app/scan-qr';
-                        }, 1000);
-                    }
-                    return;
-                })
-
         // let opts = {
-        //     method: "thaisummit.qr_utils.validation_scan_qr",
-        //     args: {
-        //         user: frappe.session.user
-        //     }
-        // }
-        // frappe.call(opts).then(r => {
-        //     if (r.message == 'Plan Exceeded') {
-        //         frappe.msgprint(__(r.message));
-        //         document.getElementById('rescan').style.visibility = 'hidden';
-        //         document.getElementById('back').style.visibility = 'hidden';
-        //     }
-        //     else {
-        //         let opts = {
         //             method: "thaisummit.www.qr_checkin.mark_checkin",
         //             args: {
         //                 employee: result
@@ -148,8 +119,42 @@
         //             }
         //             return;
         //         })
-        //     }
-        // }) 
+
+        let opts = {
+            method: "thaisummit.qr_utils.validation_scan_qr",
+            args: {
+                user: frappe.session.user
+            }
+        }
+        frappe.call(opts).then(r => {
+            if (r.message == 'Plan Already Exceeded_NT/FT/CL') {
+                frappe.msgprint(__(r.message));
+                document.getElementById('rescan').style.visibility = 'hidden';
+                document.getElementById('back').style.visibility = 'hidden';
+            }
+            else if (r.message == 'Plan Already Exceeded_BC') {
+                frappe.msgprint(__(r.message));
+                document.getElementById('rescan').style.visibility = 'hidden';
+                document.getElementById('back').style.visibility = 'hidden';
+            }
+            else {
+                let opts = {
+                    method: "thaisummit.www.qr_checkin.mark_checkin",
+                    args: {
+                        employee: result
+                    }
+                }
+                frappe.call(opts).then(r => {
+                    frappe.msgprint(__(r.message));
+                    if (r.message == 'Checkin Marked Successfully') {
+                        setTimeout(function () {
+                            window.location.href = '/app/scan-qr';
+                        }, 1000);
+                    }
+                    return;
+                })
+            }
+        }) 
     }
 
     // ####### Web Cam Scanning #######

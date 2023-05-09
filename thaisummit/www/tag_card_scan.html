@@ -67,7 +67,7 @@
             const opt = {
                 method: "thaisummit.www.qr_checkin.set_tag_card_work_flow_for_approve",
                 args: {
-                    tag_card_no : result
+                    tag_card_no : result,
                 }
             };
             frappe.call(opt).then(r => {

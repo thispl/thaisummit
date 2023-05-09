@@ -1,0 +1,54 @@
+{
+ "actions": [],
+ "creation": "2023-05-04 12:38:20.949705",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rm_input_table1",
+  "section_break_2",
+  "rm_input_table2"
+ ],
+ "fields": [
+  {
+   "fieldname": "rm_input_table1",
+   "fieldtype": "Table",
+   "label": "IYM Settings",
+   "options": "RM Input Table1"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "rm_input_table2",
+   "fieldtype": "Table",
+   "label": "RE Settings",
+   "options": "RM Input Table2"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-05-04 13:02:10.557287",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "RM Input",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

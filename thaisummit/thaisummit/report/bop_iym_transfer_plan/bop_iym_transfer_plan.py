@@ -227,12 +227,13 @@ def get_parent_open_qty(mat_no):
             
 def get_live_stock(mat_no):
     
-    url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+    url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
     payload = json.dumps({
         "ItemCode": mat_no,
     })
     headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
     }
     response = requests.request(
         "POST", url, headers=headers, data=payload)

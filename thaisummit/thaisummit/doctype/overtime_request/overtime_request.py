@@ -36,19 +36,19 @@ class OvertimeRequest(Document):
                 doc.submit()
                 frappe.db.commit()
                 
+                
     def validate(self):
         today = frappe.db.sql("select count(*) as count from `tabOvertime Request` where employee = '%s' and ot_date = '%s' and name != '%s' and workflow_state != 'Rejected' "%(self.employee,self.ot_date,self.name),as_dict=True)
         if today[0].count >= 1:
             frappe.throw("Only 1 Overtime Request is allowed for a day for Employee - '%s' "%(self.employee))
-        # self.get_shift()
     
     def on_update(self):
         data = []
         if self.workflow_state == 'Approved':
             payroll_start_date = frappe.db.get_value('Payroll Dates',{'name':'PAYROLL OT PERIOD DATE 0001'},['payroll_start_date'])
             payroll_end_date = frappe.db.get_value('Payroll Dates',{'name':'PAYROLL OT PERIOD DATE 0001'},['payroll_end_date'])
-            employee = frappe.db.get_value('Employee',{'name':self.employee},['department'])
-            get_ot_hour_dept = frappe.db.get_value('Department',{'name':employee},['overtime_hours_limit'])
+            # employee = frappe.db.get_value('Employee',{'name':self.employee},['department'])
+            get_ot_hour_dept = frappe.db.get_value('Department',{'name':self.department},['overtime_hours_limit'])
             ot_request = frappe.db.get_all('Overtime Request',{'department':self.department,'ot_date':('between',(payroll_start_date,payroll_end_date)),'workflow_state':'Approved'},['*'])
             for ot in ot_request:
                 ftr = [3600,60,1]
@@ -59,7 +59,10 @@ class OvertimeRequest(Document):
                 except:
                     ot_hr = 0
             total_ot_hour = sum(data) 
+            frappe.errprint(type(total_ot_hour))
+            frappe.errprint(type(get_ot_hour_dept))
             if total_ot_hour > get_ot_hour_dept:
+                
                 frappe.throw(_('%s department has reached the OT Hours limit'%(self.department))) 
                 frappe.log_error('%s department has reached the OT Hours limit'%(self.department))
             else:
@@ -81,10 +84,8 @@ class OvertimeRequest(Document):
                     basic = 0
                     designation = frappe.db.get_value('Employee',self.employee,'designation')
                     if designation == 'Skilled':
-                        # basic = 116
                         basic = frappe.db.get_single_value('HR Time Settings','skilled_amount_per_hour')
                     elif designation == 'Un Skilled':
-                        # basic = 112
                         basic = frappe.db.get_single_value('HR Time Settings','unskilled_amount_per_hour')
                     frappe.db.set_value('Overtime Request',self.name,'ot_basic',basic)
                     ftr = [3600,60,1]
@@ -111,10 +112,8 @@ class OvertimeRequest(Document):
             basic = 0
             designation = frappe.db.get_value('Employee',self.employee,'designation')
             if designation == 'Skilled':
-                # basic = 131
                 basic = frappe.db.get_single_value('HR Time Settings','skilled_amount_per_hour')
             elif designation == 'Un Skilled':
-                # basic = 127
                 basic = frappe.db.get_single_value('HR Time Settings','unskilled_amount_per_hour')
             ftr = [3600,60,1]
             hr = sum([a*b for a,b in zip(ftr, map(int,str(self.ot_hours).split(':')))])
@@ -129,8 +128,6 @@ class OvertimeRequest(Document):
         `tabMulti Employee`.employee = '%s' and '%s' between `tabOn Duty Application`.from_date and `tabOn Duty Application`.to_date and `tabOn Duty Application`.workflow_state = 'Approved' """%(self.employee,self.ot_date),as_dict=True)
         if od:
             self.on_duty = od[0].name
-            # frappe.db.set_value('Overtime Request',self.name,'workflow_state','Pending for HOD')
-            # frappe.db.set_value('Overtime Request',self.name,'on_duty',od[0].name)
         else:
             if frappe.db.exists("Attendance",{'attendance_date':self.ot_date,'employee':self.employee,'docstatus':('!=','2')}):
                 att = frappe.get_doc("Attendance",{'attendance_date':self.ot_date,'employee':self.employee,'docstatus':('!=','2')})
@@ -227,7 +224,6 @@ class OvertimeRequest(Document):
 
 @frappe.whitelist()
 def ot_hours(shift,from_time,to_time,ot_date):
-    # ot_date = '2023-02-11'
     ot_date = datetime.strptime(ot_date, "%Y-%m-%d").date()
     from_time = datetime.strptime(from_time, "%H:%M:%S").time()
     to_time = datetime.strptime(to_time, "%H:%M:%S").time()

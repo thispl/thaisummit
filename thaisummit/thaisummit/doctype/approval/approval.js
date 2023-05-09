@@ -209,15 +209,17 @@ frappe.ui.form.on('Approval', {
 					$.each(frm.doc.ot_approval, function (i, d) {
 						if (d.__checked == 1) {
 							if (d.workflow_state == 'Pending for HOD') {
+								if (d.ot_hours >= 0.0){
 								// frappe.db.set_value('Overtime Request', d.overtime_request, 'workflow_state', 'Approved')
-								frm.call('submit_doc', {
-									doctype: "Overtime Request",
-									name: d.overtime_request,
-									workflow_state: 'Approved'
-								}).then(r => {
-									frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
-								})
+									frm.call('submit_doc', {
+										doctype: "Overtime Request",
+										name: d.overtime_request,
+										workflow_state: 'Approved'
+									}).then(r => {
+										frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
+									})
 								// frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
+								}
 							}
 						}
 					})
@@ -515,26 +517,29 @@ frappe.ui.form.on('Approval', {
 								"name": d.name
 							},
 							callback(r) {
-								frm.add_child('ot_approval', {
-									'overtime_request': r.message.name,
-									'employee': r.message.employee,
-									'employee_name': r.message.employee_name,
-									'workflow_state': r.message.workflow_state,
-									'ot_date': r.message.ot_date,
-									'department': r.message.department,
-									'shift': r.message.shift,
-									'from_time': r.message.from_time,
-									'to_time': r.message.to_time,
-									'total_hours': r.message.total_hours,
-									'ot_hours': r.message.ot_hours,
-									'bio_in': r.message.bio_in,
-									'bio_out': r.message.bio_out,
-									'total_wh': r.message.total_wh,
-									'approver': r.message.approver,
-									'approver_id': r.message.approver_id,
-									'approver_name': r.message.approver_name
-								})
-								frm.refresh_field('ot_approval')
+								if (r.message.ot_hours != '0:00:00' ){
+									console.log(r.message.ot_hours)
+									frm.add_child('ot_approval', {
+										'overtime_request': r.message.name,
+										'employee': r.message.employee,
+										'employee_name': r.message.employee_name,
+										'workflow_state': r.message.workflow_state,
+										'ot_date': r.message.ot_date,
+										'department': r.message.department,
+										'shift': r.message.shift,
+										'from_time': r.message.from_time,
+										'to_time': r.message.to_time,
+										'total_hours': r.message.total_hours,
+										'ot_hours': r.message.ot_hours,
+										'bio_in': r.message.bio_in,
+										'bio_out': r.message.bio_out,
+										'total_wh': r.message.total_wh,
+										'approver': r.message.approver,
+										'approver_id': r.message.approver_id,
+										'approver_name': r.message.approver_name
+									})
+									frm.refresh_field('ot_approval')
+								}
 							}
 						})
 

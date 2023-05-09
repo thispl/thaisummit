@@ -132,12 +132,13 @@ class TagCardGeneration(Document):
 @frappe.whitelist()
 def get_live_stock(mat_no):
 
-	url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+	url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
 	payload = json.dumps({
 		"ItemCode": mat_no,
 	})
 	headers = {
-		'Content-Type': 'application/json'
+		'Content-Type': 'application/json',
+		'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
 	}
 	response = requests.request(
 		"POST", url, headers=headers, data=payload)
@@ -159,15 +160,26 @@ def get_live_stock(mat_no):
 def get_shift_type():
 	nowtime = datetime.now()
 	shift_date = date.today()
-	shift = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
-	shift1_time = [time(hour=shift[0].seconds//3600,minute=((shift[0].seconds//60)%60),second=0),time(hour=shift[1].seconds//3600,minute=((shift[1].seconds//60)%60),second=0)]
-	frappe.errprint(shift1_time)
-	# shift1_time = [time(hour=7, minute=0, second=0),time(hour=13, minute=30, second=0)]
-	shift2_time = [time(hour=15, minute=30, second=0),time(hour=23, minute=30, second=0)]
-	shift3_time = [time(hour=00, minute=0, second=1),time(hour=4, minute=0, second=0)]
-	shiftpp2_time = [time(hour=23, minute=32, second=0),time(hour=23, minute=59, second=0)]
-	# shiftpp1_time = [time(hour=7, minute=0, second=0),time(hour=10, minute=0, second=0)]
-	# shift2_cont_time = [time(hour=22, minute=1, second=0),time(hour=22, minute=59, second=0)]
+	shift1 = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
+    shift1_time = [time(hour=shift1[0].seconds//3600,minute=((shift1[0].seconds//60)%60),second=0),time(hour=shift1[1].seconds//3600,minute=((shift1[1].seconds//60)%60),second=0)]
+    shift2 = frappe.db.get_value('Shift Type',{'name':'2'},['qr_start_time','qr_end_time'])
+    shift2_time = [time(hour=shift2[0].seconds//3600,minute=((shift2[0].seconds//60)%60),second=0),time(hour=shift2[1].seconds//3600,minute=((shift2[1].seconds//60)%60),second=0)]
+    shift3 = frappe.db.get_value('Shift Type',{'name':'3'},['qr_start_time','qr_end_time'])
+    shift3_time = [time(hour=shift3[0].seconds//3600,minute=((shift3[0].seconds//60)%60),second=0),time(hour=shift3[1].seconds//3600,minute=((shift3[1].seconds//60)%60),second=0)]
+    shift_pp1 = frappe.db.get_value('Shift Type',{'name':'PP1'},['qr_start_time','qr_end_time'])
+    shiftpp1_time = [time(hour=shift_pp1[0].seconds//3600,minute=((shift_pp1[0].seconds//60)%60),second=0),time(hour=shift_pp1[1].seconds//3600,minute=((shift_pp1[1].seconds//60)%60),second=0)]
+    shift_pp2 = frappe.db.get_value('Shift Type',{'name':'PP2'},['qr_start_time','qr_end_time'])
+    shiftpp2_time = [time(hour=shift_pp2[0].seconds//3600,minute=((shift_pp2[0].seconds//60)%60),second=0),time(hour=shift_pp2[1].seconds//3600,minute=((shift_pp2[1].seconds//60)%60),second=0)]
+    
+	# shift = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
+	# shift1_time = [time(hour=shift[0].seconds//3600,minute=((shift[0].seconds//60)%60),second=0),time(hour=shift[1].seconds//3600,minute=((shift[1].seconds//60)%60),second=0)]
+	# frappe.errprint(shift1_time)
+	# # shift1_time = [time(hour=7, minute=0, second=0),time(hour=13, minute=30, second=0)]
+	# shift2_time = [time(hour=15, minute=30, second=0),time(hour=23, minute=30, second=0)]
+	# shift3_time = [time(hour=00, minute=0, second=1),time(hour=4, minute=0, second=0)]
+	# shiftpp2_time = [time(hour=23, minute=32, second=0),time(hour=23, minute=59, second=0)]
+	# # shiftpp1_time = [time(hour=7, minute=0, second=0),time(hour=10, minute=0, second=0)]
+	# # shift2_cont_time = [time(hour=22, minute=1, second=0),time(hour=22, minute=59, second=0)]
 	curtime = time(hour=nowtime.hour, minute=nowtime.minute, second=nowtime.second)
 	shift_type = '1'
 	if is_between(curtime,shift1_time):

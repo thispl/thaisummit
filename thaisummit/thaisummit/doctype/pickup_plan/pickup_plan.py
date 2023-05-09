@@ -57,7 +57,7 @@ class PickupPlan(Document):
         supplier_code = frappe.db.get_value(
         'TSAI Supplier', {'email': frappe.session.user}, 'name')
         if supplier_code:
-            url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
+            url = "http://apioso.thaisummit.co.th:10401/api/POLineDetails"
             date = datetime.strptime(today(), '%Y-%m-%d')
             date = datetime.strftime(date, "%Y%m%d")
             payload = json.dumps({
@@ -67,7 +67,8 @@ class PickupPlan(Document):
                 "DeliveryDate": date,
             })
             headers = {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
             }
             response = requests.request("POST", url, headers=headers, data=payload)
             try:
@@ -99,12 +100,13 @@ class PickupPlan(Document):
                         open_qty = float(po['Open_Qty'])
                         in_transit_qty = 0
 
-                        url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+                        url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
                         payload = json.dumps({
                         "ItemCode": po['Mat_No']
                         })
                         headers = {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
                         }
                         response = requests.request("POST", url, headers=headers, data=payload)
                         stock = 0
@@ -175,7 +177,7 @@ def download_excel():
     supplier_code = frappe.db.get_value(
         'TSAI Supplier', {'email': frappe.session.user}, 'name')
     if supplier_code:
-        url = "http://172.16.1.18/StockDetail/Service1.svc/GetPOLineDetails"
+        url = "http://apioso.thaisummit.co.th:10401/api/POLineDetails"
         date = datetime.strptime(today(), '%Y-%m-%d')
         date = datetime.strftime(date, "%Y%m%d")
         payload = json.dumps({
@@ -185,7 +187,8 @@ def download_excel():
             "DeliveryDate": date,
         })
         headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
         }
         response = requests.request("POST", url, headers=headers, data=payload)
         pos = json.loads(response.text)
@@ -220,12 +223,13 @@ def download_excel():
                 open_qty = float(po['Open_Qty'])
                 in_transit_qty = 0
 
-                url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+                url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
                 payload = json.dumps({
                 "ItemCode": po['Mat_No']
                 })
                 headers = {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
                 }
                 response = requests.request("POST", url, headers=headers, data=payload)
                 stock = 0

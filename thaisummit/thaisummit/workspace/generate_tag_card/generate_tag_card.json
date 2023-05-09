@@ -1,0 +1,80 @@
+{
+ "category": "Modules",
+ "charts": [],
+ "creation": "2023-03-29 15:28:51.383567",
+ "developer_mode_only": 0,
+ "disable_user_customization": 1,
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "extends_another_page": 0,
+ "hide_custom": 0,
+ "icon": "",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "label": "Generate Tag Card",
+ "links": [],
+ "modified": "2023-03-29 15:42:53.957830",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Generate Tag Card",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "doc_view": "",
+   "label": "Generate Tag Card",
+   "link_to": "Generate Tag Card",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Tag Card",
+   "link_to": "Tag Card",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Tag Card Flow Master",
+   "link_to": "Tag Card Flow Master",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Scan Tag Card",
+   "link_to": "tag-card-details",
+   "type": "Page"
+  },
+  {
+   "doc_view": "",
+   "label": "TSAI Part Master",
+   "link_to": "TSAI Part Master",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "TSAI BOM",
+   "link_to": "TSAI BOM",
+   "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "label": "Tag Card Failed Report",
+   "link_to": "Tag Card Failed Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Open Status",
+   "link_to": "Open Status",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Tag Card Report",
+   "link_to": "Tag Card Report",
+   "type": "Report"
+  }
+ ]
+}

@@ -13,10 +13,10 @@ class TDSDeduction(Document):
 	def get_payroll_date(self):
 		date = datetime.strptime(today(), '%Y-%m-%d').date()
 		if date.day < 31:
-			payroll_date = add_days(get_first_day(add_months(date,-1)),25)
+			payroll_date = add_days(get_first_day(add_months(date,-2)),25)
 			self.payroll_date = payroll_date
 		else:
-			payroll_date = add_days(get_first_day(date),25)
+			payroll_date = add_days(get_first_day(add_months(date,-1)),25)
 			self.payroll_date = payroll_date
 
 	def validate(self):

@@ -133,7 +133,6 @@ def get_tag_list():
 	sum = 0
 	for do in dos[:-1]:
 		sum += do['today_headcount_after_adj']
-	frappe.log_error(sum)
 	for do in dos[:-1]:
 		sum_today_qty = do['today_qty']
 	for do in dos[:-1]:
@@ -150,13 +149,12 @@ def get_tag_list():
 			# if man_power > sum:
 				# if sum_today_qty > sum_adj_today_qty_witout_percent:
 			adj_percent = (p / 100)
-			frappe.log_error(adj_percent)
 		tody_qty = round((today_qty * adj_percent) / packing_std)*packing_std
 		
 		mat_number = do['mat_no']
 		t_qty = tody_qty
 		date_today = date.today()
-		date_string = date_today.strftime("%Y-%m-%d")
+		date_string = date_today.strftime('%d-%m-%Y')
 		new_date_string = date_string.replace("-", "")
 
 		if do['unit_per_shift'] > 0 :
@@ -209,6 +207,22 @@ def get_tag_list():
 			updated_tbs_dict['mat_number'] = mat_number
 			updated_tbs_dict['qty_today'] = t_qty
 			updated_tbs_dict['doc_date'] = new_date_string
+			url = "http://apioso.thaisummit.co.th:10401/api/CreateProductionPlan"
+
+			payload = json.dumps({
+			"orderdate": str(date_string),
+			"qty": str(t_qty),
+			"itemno": str(mat_number)
+			})
+			headers = {
+			'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
+			'Content-Type': 'application/json'
+			}
+
+			response = requests.request("POST", url, headers=headers, data=payload)
+
+			frappe.log_error(response.text)
+
 		else:
 			updated_tbs_dict['mat_number'] = '-'
 			updated_tbs_dict['qty_today'] = '-'
@@ -228,9 +242,6 @@ def get_tag_list():
 	return updated_tbs_list
 
 
-@frappe.whitelist()
-def write_api_call():
-	print('hi')
 
 # head_count = do['today_headcount_after_adj']
 #         man_power = frappe.get_single('Ekanban Settings').iym_manpower_limit

@@ -17,14 +17,14 @@ def get_qr_details_tag_card(user):
     shift_date = date.today()
     scan_active = 1
     qr_details = {}
-    shift_type =get_shift_type()
+    # shift_type = get_tag_shift_type()
     
-    if shift_type == '3':
-        shift_date = shift_date + timedelta(days=-1)
+    # if shift_type == '3':
+    #     shift_date = shift_date + timedelta(days=-1)
     # shift_active_type = get_shift_active_type()
     
     count_open_qy = frappe.db.sql("""select count(name) as cd from `tabTag Card` where docstatus ='0' """,as_dict=1)[0]
-    qr_details['shift_type'] = shift_type
+    # qr_details['shift_type'] = shift_type
     qr_details['count_open_qy'] = count_open_qy['cd']
     frappe.errprint(count_open_qy['cd'])
 
@@ -142,40 +142,41 @@ def is_between(time, time_range):
 def get_shift_type():
     nowtime = datetime.now()
     shift_date = date.today()
-    shift = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
-    shift1_time = [time(hour=shift[0].seconds//3600,minute=((shift[0].seconds//60)%60),second=0),time(hour=shift[1].seconds//3600,minute=((shift[1].seconds//60)%60),second=0)]
-    # shift1_time = [time(hour=7, minute=0, second=0),time(hour=13, minute=30, second=0)]
-    shift2_time = [time(hour=15, minute=31, second=0),time(hour=19, minute=30, second=0)]
-    shift3_time = [time(hour=00, minute=0, second=1),time(hour=4, minute=0, second=0)]
-    shiftpp2_time = [time(hour=19, minute=31, second=0),time(hour=22, minute=30, second=0)]
-    # shiftpp1_time = [time(hour=7, minute=0, second=0),time(hour=10, minute=0, second=0)]
-    # shift2_cont_time = [time(hour=22, minute=1, second=0),time(hour=22, minute=59, second=0)]
+    shift1 = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
+    shift1_time = [time(hour=shift1[0].seconds//3600,minute=((shift1[0].seconds//60)%60),second=0),time(hour=shift1[1].seconds//3600,minute=((shift1[1].seconds//60)%60),second=0)]
+    shift2 = frappe.db.get_value('Shift Type',{'name':'2'},['qr_start_time','qr_end_time'])
+    shift2_time = [time(hour=shift2[0].seconds//3600,minute=((shift2[0].seconds//60)%60),second=0),time(hour=shift2[1].seconds//3600,minute=((shift2[1].seconds//60)%60),second=0)]
+    shift3 = frappe.db.get_value('Shift Type',{'name':'3'},['qr_start_time','qr_end_time'])
+    shift3_time = [time(hour=shift3[0].seconds//3600,minute=((shift3[0].seconds//60)%60),second=0),time(hour=shift3[1].seconds//3600,minute=((shift3[1].seconds//60)%60),second=0)]
+    # shift_pp1 = frappe.db.get_value('Shift Type',{'name':'PP1'},['qr_start_time','qr_end_time'])
+    # shiftpp1_time = [time(hour=shift_pp1[0].seconds//3600,minute=((shift_pp1[0].seconds//60)%60),second=0),time(hour=shift_pp1[1].seconds//3600,minute=((shift_pp1[1].seconds//60)%60),second=0)]
+    # shift_pp2 = frappe.db.get_value('Shift Type',{'name':'PP2'},['qr_start_time','qr_end_time'])
+    # shiftpp2_time = [time(hour=shift_pp2[0].seconds//3600,minute=((shift_pp2[0].seconds//60)%60),second=0),time(hour=shift_pp2[1].seconds//3600,minute=((shift_pp2[1].seconds//60)%60),second=0)]
     curtime = time(hour=nowtime.hour, minute=nowtime.minute, second=nowtime.second)
     shift_type = 'NA'
     if is_between(curtime,shift1_time):
         shift_type = '1'
     if is_between(curtime,shift2_time):
         shift_type = '2'
-    # if is_between(curtime,shift2_cont_time):
-    #     shift_type = '2'
     if is_between(curtime,shift3_time):
         shift_type = '3'
         shift_date = shift_date + timedelta(days=-1)
-    if is_between(curtime,shiftpp2_time):
-        shift_type = 'PP2'
-    
+    # if is_between(curtime,shiftpp2_time):
+    #     shift_type = 'PP2'
     return shift_type
 
 def  get_shift_active_type():
     nowtime = datetime.now()
-    shift = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
-    shift1_time = [time(hour=shift[0].seconds//3600,minute=((shift[0].seconds//60)%60),second=0),time(hour=shift[1].seconds//3600,minute=((shift[1].seconds//60)%60),second=0)]
-    # shift1_time = [time(hour=7, minute=0, second=0),time(hour=1, minute=00, second=0)]
-    shift2_time = [time(hour=15, minute=30, second=0),time(hour=21, minute=30, second=0)]
-    shift3_time = [time(hour=00, minute=0, second=1),time(hour=4, minute=0, second=0)]
-    shiftpp2_time = [time(hour=21, minute=32, second=0),time(hour=23, minute=0, second=0)]
-    # shiftpp1_time = [time(hour=7, minute=0, second=0),time(hour=10, minute=0, second=0)]
-    # shift2_cont_time = [time(hour=22, minute=1, second=0),time(hour=22, minute=59, second=0)]
+    shift1 = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
+    shift1_time = [time(hour=shift1[0].seconds//3600,minute=((shift1[0].seconds//60)%60),second=0),time(hour=shift1[1].seconds//3600,minute=((shift1[1].seconds//60)%60),second=0)]
+    shift2 = frappe.db.get_value('Shift Type',{'name':'2'},['qr_start_time','qr_end_time'])
+    shift2_time = [time(hour=shift2[0].seconds//3600,minute=((shift2[0].seconds//60)%60),second=0),time(hour=shift2[1].seconds//3600,minute=((shift2[1].seconds//60)%60),second=0)]
+    shift3 = frappe.db.get_value('Shift Type',{'name':'3'},['qr_start_time','qr_end_time'])
+    shift3_time = [time(hour=shift3[0].seconds//3600,minute=((shift3[0].seconds//60)%60),second=0),time(hour=shift3[1].seconds//3600,minute=((shift3[1].seconds//60)%60),second=0)]
+    # shift_pp1 = frappe.db.get_value('Shift Type',{'name':'PP1'},['qr_start_time','qr_end_time'])
+    # shiftpp1_time = [time(hour=shift_pp1[0].seconds//3600,minute=((shift_pp1[0].seconds//60)%60),second=0),time(hour=shift_pp1[1].seconds//3600,minute=((shift_pp1[1].seconds//60)%60),second=0)]
+    # shift_pp2 = frappe.db.get_value('Shift Type',{'name':'PP2'},['qr_start_time','qr_end_time'])
+    # shiftpp2_time = [time(hour=shift_pp2[0].seconds//3600,minute=((shift_pp2[0].seconds//60)%60),second=0),time(hour=shift_pp2[1].seconds//3600,minute=((shift_pp2[1].seconds//60)%60),second=0)]
     curtime = time(hour=nowtime.hour, minute=nowtime.minute, second=nowtime.second)
     shift_active_type = 'NA'
     if is_between(curtime,shift1_time):
@@ -185,8 +186,8 @@ def  get_shift_active_type():
     if is_between(curtime,shift3_time):
         shift_active_type = '3'
         shift_date = shift_date + timedelta(days=-1)
-    if is_between(curtime,shiftpp2_time):
-        shift_active_type = 'PP2'
+    # if is_between(curtime,shiftpp2_time):
+    #     shift_active_type = 'PP2'
     
     return shift_active_type
 
@@ -218,7 +219,6 @@ def get_ot_qr_list(employee=None):
     checkin_list = frappe.db.sql(query,as_dict=True )
     return checkin_list
 
-
 @frappe.whitelist()
 def update_deleted_qr(checkin):
     qr_deleted_by = frappe.get_value('Employee',{'user_id':frappe.session.user},'name') + ':'
@@ -232,6 +232,7 @@ def update_deleted_qr(checkin):
             "employee_name":qr_checkin.employee_name,
             "department":qr_checkin.department,
             "employee_type":qr_checkin.employee_type,
+            'contractor': frappe.get_value('Employee',{'employee':qr_checkin.employee},'contractor'),
             "qr_shift":qr_checkin.qr_shift,
             "created_date":qr_checkin.created_date,
             "shift_date":qr_checkin.shift_date,
@@ -308,6 +309,7 @@ def get_food_time():
 
 @frappe.whitelist()
 def validation_scan_qr(user):
+    # frappe.errprint("HI")
     data = []
     employee_name = ''
     department = ''
@@ -339,18 +341,40 @@ def validation_scan_qr(user):
     planned_nt_ft_count = planned_nt_count + planned_ft_count
     actual_nt_ft_count = actual_nt_count + actual_ft_count
     ot_nt_ft_count = ot_ft_count + ot_nt_count
+
+    planned_nt_ft_cl_count = planned_nt_count + planned_ft_count + planned_cl_count
+    actual_nt_ft_cl_count = actual_nt_count + actual_ft_count + actual_cl_count
+    ot_nt_ft_cl_count = ot_ft_count + ot_nt_count + ot_cl_count
+
+    frappe.errprint(planned_bc_count)
+    frappe.errprint(planned_nt_count)
+    frappe.errprint(planned_ft_count)
+    frappe.errprint(planned_cl_count)
+    frappe.errprint(actual_bc_count)
+    frappe.errprint(actual_nt_count)
+    frappe.errprint(actual_ft_count)
+    frappe.errprint(actual_cl_count)
+        
+    if planned_nt_ft_cl_count:
+        if actual_nt_ft_cl_count < planned_nt_ft_cl_count:
+            nt_ft_cl_shortage = planned_nt_ft_cl_count - actual_nt_ft_cl_count
+            data.append("Not Reach the Plan_NT/FT/CL")
+            
+        elif actual_nt_ft_cl_count >= planned_nt_ft_cl_count:
+            data.append('Plan Already Exceeded_NT/FT/CL')
+
+        frappe.errprint(data)
     
     if planned_bc_count:
         if actual_bc_count < planned_bc_count:
             bc_shortage = planned_bc_count - actual_bc_count
+            data.append("Not Reach the Plan_BC")
+
         elif actual_bc_count >= planned_bc_count:
-            data.append('Plan Already Exceeded')
+            data.append('Plan Already Exceeded_BC')
         
-    if planned_nt_ft_count:
-        if actual_nt_ft_count < planned_nt_ft_count:
-            nt_ft_shortage = planned_nt_ft_count - actual_nt_ft_count
-        elif actual_nt_ft_count >= planned_nt_ft_count:
-            data.append('Plan Already Exceeded')
+        frappe.errprint(data)
+            
     return data
 
   

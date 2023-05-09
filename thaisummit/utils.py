@@ -60,12 +60,13 @@ def get_live_stock():
     # to_date = add_days(today, -90)
     # today.strftime("%Y%m%d")
     for mat_no in mat_nos:
-        url = "http://172.16.1.18/StockDetail/Service1.svc/GetItemInventory"
+        url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
         payload = json.dumps({
             "ItemCode": mat_no['mat_no'],
         })
         headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
         }
         response = requests.request(
             "POST", url, headers=headers, data=payload)
@@ -139,7 +140,7 @@ def get_open_production_qty():
                 opo_id.save(ignore_permissions=True)
                 frappe.db.commit()
                 
-frappe.whitelist()
+@frappe.whitelist()
 def get_open_production_qty_fg():
     from datetime import date
     today = date.today()
@@ -322,14 +323,14 @@ def test_api():
     # print(fms)
     
 def create_hooks():
-    job = frappe.db.exists('Scheduled Job Type', 'enqueue_overall_invoice_key_cron_930pm')
+    job = frappe.db.exists('Scheduled Job Type', 'generate_re_production_plan')
     if not job:
         sjt = frappe.new_doc("Scheduled Job Type")  
         sjt.update({
-            "method" : 'thaisummit.thaisummit.doctype.ekanban_settings.ekanban_settings.enqueue_overall_invoice_key_cron_930pm',
+            "method" : 'thaisummit.api.generate_re_production_plan',
             # "frequency" : 'Daily'
             "frequency" : 'Cron',
-            "cron_format" : '30 21 * * *'
+            "cron_format" : '30 07 * * mon-sat'
         })
         sjt.save(ignore_permissions=True)
 
@@ -391,3 +392,7 @@ def ot_amount_update():
 #     ot_update = frappe.db.sql(""" update `tabOvertime Request` set total_hours = '03:30' where ot_date = '2023-03-18' and shift = 'PP2' and workflow_state != 'Draft' """)
 #     ot_update_hours = frappe.db.sql(""" update `tabOvertime Request` set ot_hours = '03:30' where ot_date = '2023-03-18' and shift = 'PP2' and workflow_state != 'Draft' """)
 #     print(ot_update)
+
+@frappe.whitelist(allow_guest=True)
+def sync_grn_data1(**args):
+    return args

@@ -4,6 +4,34 @@
 
 frappe.query_reports["Tag Card Report"] = {
 	"filters": [
+		{
+			"fieldname": "from_date",
+			"label": __("From Date"),
+			"fieldtype": "Date",
+			"reqd": 1
+		},
+		{
+			"fieldname": "to_date",
+			"label": __("To Date"),
+			"fieldtype": "Date",
+			"reqd": 1
+		},
+		{
+			"fieldname": "tag_card",
+			"label": __("Tag Card"),
+			"fieldtype": "Link",
+			"options": "Tag Card",
+			// "reqd": 1
+		},
 
-	]
+	],
+	onload: function (report) {
+		var to_date = frappe.query_report.get_filter('to_date');
+		to_date.refresh();
+		to_date.set_input(frappe.datetime.month_end())
+
+		var from_date = frappe.query_report.get_filter('from_date');
+		from_date.refresh();
+		from_date.set_input(frappe.datetime.month_start())
+	}
 };

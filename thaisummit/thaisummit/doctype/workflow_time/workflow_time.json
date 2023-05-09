@@ -1,0 +1,37 @@
+{
+ "actions": [],
+ "creation": "2023-03-29 17:56:17.254837",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "workflow",
+  "workflow_changing_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "workflow",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Workflow"
+  },
+  {
+   "fieldname": "workflow_changing_time",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Workflow Changing Time"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-03-29 17:56:17.254837",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Workflow Time",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

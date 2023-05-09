@@ -1,0 +1,157 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "field:part_no",
+ "creation": "2023-04-11 11:40:40.583679",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "part_no",
+  "parts_name",
+  "vendor_code",
+  "vendor_name",
+  "model",
+  "customer",
+  "grade",
+  "mat_type",
+  "size_type",
+  "column_break_11",
+  "rm_length",
+  "rm__width",
+  "rm_thick",
+  "strip_qty",
+  "gross_weight",
+  "net_weight",
+  "process_cost",
+  "admin_cost",
+  "transport_cost"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Data",
+   "label": "Item Code"
+  },
+  {
+   "fieldname": "part_no",
+   "fieldtype": "Data",
+   "label": "Part No",
+   "unique": 1
+  },
+  {
+   "fieldname": "parts_name",
+   "fieldtype": "Data",
+   "label": "Parts Name"
+  },
+  {
+   "fieldname": "vendor_code",
+   "fieldtype": "Data",
+   "label": "Vendor Code"
+  },
+  {
+   "fieldname": "vendor_name",
+   "fieldtype": "Data",
+   "label": "Vendor Name"
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Data",
+   "label": "Grade"
+  },
+  {
+   "fieldname": "mat_type",
+   "fieldtype": "Data",
+   "label": "MAT Type"
+  },
+  {
+   "fieldname": "size_type",
+   "fieldtype": "Data",
+   "label": "Size Type"
+  },
+  {
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rm_thick",
+   "fieldtype": "Data",
+   "label": "RM Thick"
+  },
+  {
+   "fieldname": "strip_qty",
+   "fieldtype": "Data",
+   "label": "Strip Qty"
+  },
+  {
+   "fieldname": "gross_weight",
+   "fieldtype": "Data",
+   "label": "Gross Weight"
+  },
+  {
+   "fieldname": "net_weight",
+   "fieldtype": "Data",
+   "label": "Net Weight"
+  },
+  {
+   "fieldname": "process_cost",
+   "fieldtype": "Data",
+   "label": "Process Cost"
+  },
+  {
+   "fieldname": "admin_cost",
+   "fieldtype": "Data",
+   "label": "Admin Cost"
+  },
+  {
+   "fieldname": "transport_cost",
+   "fieldtype": "Data",
+   "label": "Transport Cost"
+  },
+  {
+   "fieldname": "rm_length",
+   "fieldtype": "Data",
+   "label": "RM Length"
+  },
+  {
+   "fieldname": "rm__width",
+   "fieldtype": "Data",
+   "label": "RM  Width"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-04-11 12:43:16.013119",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "PCS Part Master",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

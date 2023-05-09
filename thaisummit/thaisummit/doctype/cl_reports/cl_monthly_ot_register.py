@@ -75,9 +75,9 @@ def make_xlsx(data,args ,sheet_name=None, wb=None, column_widths=None):
                 row.append(total_ot_hr)
                 ot_amount = frappe.db.sql("select sum(ot_amount) as total from `tabOvertime Request` where ot_date between '%s' and '%s' and workflow_state = 'Approved' and employee = '%s' "%(args['from_date'],args['to_date'],emp.name),as_dict=True)[0].total or 0
                 if emp.designation == 'Skilled':
-                    row.append('116')
+                    row.append(frappe.db.get_single_value('HR Time Settings','skilled_amount_per_hour'))
                 elif emp.designation == 'Un Skilled':
-                    row.append('112')
+                    row.append(frappe.db.get_single_value('HR Time Settings','unskilled_amount_per_hour'))
                 row.append(floor(ot_amount))
                 ws.append(row)
     

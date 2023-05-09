@@ -1,0 +1,105 @@
+{
+ "actions": [],
+ "creation": "2023-04-17 17:43:03.172603",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "pcs_part_master_section",
+  "download_templete_for_pcs_part_master",
+  "attach_pcs_part_master",
+  "upload_pcs_part_master",
+  "column_break_2",
+  "download_pcs_part_master",
+  "pcs_scrap_master_section",
+  "download_templete_for_pcs_scrap_master",
+  "attach_scrap_master",
+  "upload_scrap_master",
+  "column_break_7",
+  "download_scrap_master"
+ ],
+ "fields": [
+  {
+   "fieldname": "pcs_part_master_section",
+   "fieldtype": "Section Break",
+   "label": "PCS Part Master"
+  },
+  {
+   "fieldname": "attach_pcs_part_master",
+   "fieldtype": "Attach",
+   "label": "Attach Pcs Part Master"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "download_pcs_part_master",
+   "fieldtype": "Button",
+   "label": "Download Pcs Part Master"
+  },
+  {
+   "fieldname": "pcs_scrap_master_section",
+   "fieldtype": "Section Break",
+   "label": "PCS Scrap Master"
+  },
+  {
+   "fieldname": "attach_scrap_master",
+   "fieldtype": "Attach",
+   "label": "Attach Scrap Master"
+  },
+  {
+   "fieldname": "download_scrap_master",
+   "fieldtype": "Button",
+   "label": "Download Scrap Master"
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "download_templete_for_pcs_part_master",
+   "fieldtype": "Button",
+   "label": "Download Templete for Pcs Part Master"
+  },
+  {
+   "fieldname": "download_templete_for_pcs_scrap_master",
+   "fieldtype": "Button",
+   "label": "Download Templete for Pcs Scrap Master"
+  },
+  {
+   "fieldname": "upload_pcs_part_master",
+   "fieldtype": "Button",
+   "label": "Upload"
+  },
+  {
+   "fieldname": "upload_scrap_master",
+   "fieldtype": "Button",
+   "label": "Upload"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-05-04 18:16:23.426360",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Upload and Download Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

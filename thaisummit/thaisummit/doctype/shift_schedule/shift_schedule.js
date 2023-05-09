@@ -17,7 +17,6 @@ frappe.ui.form.on('Shift Schedule', {
 					&format=${encodeURIComponent('Shift Report')}`)
 			);
 		})
-			// frm.set_df_property('department', 'read_only', 0);
 			if (frappe.user.has_role('HR')) {
 				if (!frm.doc.__islocal){
 			frm.add_custom_button(__('Re-Check'), function (){
@@ -31,11 +30,6 @@ frappe.ui.form.on('Shift Schedule', {
 					},
 					freeze: true,
 					freeze_message: 'Submitting Shift Schedule....',
-					// callback(r){
-					// 	if(r.message == "ok"){
-					// 		// frappe.msgprint("Attendance Marked Successfully")
-					// 	}
-					// }
 				})
 				frm.call("on_submit")
 			})
@@ -62,7 +56,6 @@ frappe.ui.form.on('Shift Schedule', {
 				frappe.msgprint("From Date should be within 7 days from Today")
 				frm.set_value('from_date', '')
 			}
-			// frm.set_value("to_date",frappe.datetime.add_days(frm.doc.from_date, 5))
 		}
 	},
 	to_date(frm) {
@@ -82,6 +75,78 @@ frappe.ui.form.on('Shift Schedule', {
 		}
 	},
 	upload(frm) {
+		frappe.call({
+			"method": "thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.get_count",
+			"args":{
+				"filename" : frm.doc.upload,
+				"from_date" : frm.doc.from_date,
+				"to_date" : frm.doc.to_date,
+			},
+			callback(r){
+				console.log(r)
+				if(r.message == "a"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					console.log("HI")
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R1")
+				}
+				if(r.message == "b"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R2")
+				}
+				if(r.message == "c"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R3")
+				}
+				if(r.message == "d"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R4")
+				}
+				if(r.message == "e"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R5")
+				}
+				if(r.message == "f"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R6")
+				}
+				if(r.message == "g"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R7")
+				}
+				if(r.message == "h"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R8")
+				}
+				if(r.message == "i"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R9")
+				}
+				if(r.message == "j"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R9B")
+				}
+				if(r.message == "k"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R10")
+				}
+				if(r.message == "l"){
+					frm.disable_save()
+					// frm.set_value('upload','')
+					frappe.throw("Employee's Count is more than Fixed Employee's Count through R12")
+				}
+			}
+		})
 		frm.trigger('show_csv_data')
 		frm.trigger('show_summary')
 		if (frm.doc.upload) {
@@ -98,35 +163,12 @@ frappe.ui.form.on('Shift Schedule', {
 
 				}
 			})
-			// frappe.call({
-			// 	"method": "thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.get_count",
-			// 	"args":{
-			// 		"filename" : frm.doc.upload,
-			// 		"from_date" : frm.doc.from_date,
-			// 		"to_date" : frm.doc.to_date,
-			// 	},
-			// })
 		}
 	},
 	validate(frm) {
 		frm.trigger('show_csv_data')
 		frm.trigger('upload')
 		frm.trigger('show_summary')
-		// console.log(frm.doc.name)
-		// if(frm.doc.workflow_state){
-	    //     frappe.call({
-	    //         method :'thaisummit.thaisummit.doctype.shift_schedule.shift_schedule.mail_alerts',
-		// 		args:{
-		// 		    workflow_state : frm.doc.workflow_state,
-		// 			department : frm.doc.department,
-		// 			name : frm.doc.name,
-		// 			from_date : frm.doc.from_date,
-		// 			to_date : frm.doc.to_date
-		// 		},
-		// 		callback(r){			    
-		// 		}
-	    //     })
-	    // }
 	},
 	after_save(frm){
 		frappe.call({

@@ -10,6 +10,7 @@
   "employee_name",
   "department",
   "employee_type",
+  "contractor",
   "column_break_4",
   "qr_shift",
   "created_date",
@@ -148,11 +149,18 @@
    "fieldname": "per_day_ctc",
    "fieldtype": "Currency",
    "label": "Per Day CTC"
+  },
+  {
+   "fieldname": "contractor",
+   "fieldtype": "Link",
+   "label": "Contractor",
+   "options": "Contractor",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-15 20:11:09.934258",
+ "modified": "2023-04-22 00:39:11.071172",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "QR Checkin",

@@ -1,0 +1,100 @@
+{
+ "actions": [],
+ "creation": "2023-05-04 12:23:11.394995",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "grade",
+  "std_old",
+  "std_impact",
+  "std_new",
+  "old1",
+  "impact1",
+  "new1",
+  "old2",
+  "impact2",
+  "new2"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Grade"
+  },
+  {
+   "fieldname": "std_old",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "STD Old"
+  },
+  {
+   "fieldname": "std_impact",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "STD Impact"
+  },
+  {
+   "fieldname": "std_new",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "STD New"
+  },
+  {
+   "fieldname": "old1",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": ">100 Old"
+  },
+  {
+   "fieldname": "impact1",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": ">100 Impact"
+  },
+  {
+   "fieldname": "new1",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": ">100 New"
+  },
+  {
+   "fieldname": "old2",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "<100 Old"
+  },
+  {
+   "fieldname": "impact2",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "<100 Impact"
+  },
+  {
+   "fieldname": "new2",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "<100 New"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-05-04 14:02:32.465076",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "RM Input Table1",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

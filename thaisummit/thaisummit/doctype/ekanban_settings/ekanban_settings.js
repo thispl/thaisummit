@@ -24,7 +24,7 @@ frappe.ui.form.on('Ekanban Settings', {
 	sync_grn(frm) {
 		if (frm.doc.date) {
 			frappe.call({
-				method: "thaisummit.thaisummit.doctype.ekanban_settings.ekanban_settings.fetch_grn_details",
+				method: "thaisummit.thaisummit.doctype.ekanban_settings.ekanban_settings.enqueue_grn_details",
 				args: {
 					"date": frm.doc.date,
 				},
@@ -32,7 +32,7 @@ frappe.ui.form.on('Ekanban Settings', {
 				freeze_message: 'Updating....',
 				callback(r) {
 					if (r) {
-						frappe.msgprint('GRN details updated successfully')
+						frappe.msgprint('Kindly wait for few minutes GRN Details is Updaing in Background')
 					}
 				}
 			})
@@ -49,9 +49,8 @@ frappe.ui.form.on('Ekanban Settings', {
 	},
 	upolad(frm){
 		frappe.confirm(__("This action will delete all the TSAI BOMs. It cannot be undone. Are you certain ?"), function() {
-		console.log('hi');
 	    frappe.call({
-			method: "thaisummit.thaisummit.doctype.ekanban_settings.ekanban_settings.update_bom",
+			method: "thaisummit.thaisummit.doctype.ekanban_settings.ekanban_settings.enqueue_update_bom",
 			args:{
 				file : frm.doc.bob_file
 			},

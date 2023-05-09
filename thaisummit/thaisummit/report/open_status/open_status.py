@@ -105,7 +105,7 @@ def get_columns(filters):
 
 def get_data(filters):
 	data = []
-	tag_card = frappe.db.sql("""select * from `tabTag Card` where docstatus = 0 and previous_workflow != '' """,as_dict=1)
+	tag_card = frappe.db.sql("""select * from `tabTag Card` where date between '%s' and '%s' and docstatus = 0 and previous_workflow != '' """%(filters.from_date,filters.to_date),as_dict=1)
 	for t in tag_card:
 		part_master = frappe.db.sql("""select production_line,model from `tabTSAI Part Master` where mat_no ='%s' """%(t.mat_number),as_dict =1)
 		formatted_dt = t.creation.strftime("%Y-%m-%d %H:%M:%S")
@@ -117,8 +117,7 @@ def get_data(filters):
 		for p in part_master:
 			prod = p.production_line
 			mod = p.model
-		if t.previous_workflow != ('Completed'):
-			row = [t.name,t.date,t.time,t.mat_number,t.part_number,t.mat_name,prod,mod,t.quantity,open_days,t.previous_workflow or '-']
-		data.append(row)
+			row = [t.name,t.date,t.time,t.mat_number,t.part_number,t.mat_name,prod,mod,t.quantity,open_days,t.allowed_role or '-']
+			data.append(row)
 	return data
 

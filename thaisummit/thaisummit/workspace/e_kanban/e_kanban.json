@@ -25,7 +25,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-02-09 17:48:02.453190",
+ "modified": "2023-04-03 15:07:20.305091",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "E-KANBAN",
@@ -95,12 +95,6 @@
   },
   {
    "doc_view": "",
-   "label": "Production Plan IYM",
-   "link_to": "Production Plan",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
    "label": "RM-IYM Transfer Plan",
    "link_to": "RM-IYM Transfer Plan",
    "type": "Report"
@@ -113,19 +107,13 @@
   },
   {
    "doc_view": "",
-   "label": "Production Plan Test",
+   "label": "Production Plan",
    "link_to": "Production Plan Test",
    "type": "Report"
   },
   {
    "doc_view": "",
    "label": "RE Production Plan",
-   "link_to": "RE Production Plan",
-   "type": "Report"
-  },
-  {
-   "doc_view": "",
-   "label": "RE Production Plan Test",
    "link_to": "RE Production Plan Test",
    "type": "Report"
   }

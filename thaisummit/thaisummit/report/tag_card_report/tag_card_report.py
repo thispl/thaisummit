@@ -16,14 +16,14 @@ import pandas as pd
 import openpyxl
 from six import BytesIO
 from frappe.utils import (
-    flt,
-    cint,
-    cstr,
-    get_html_format,
-    get_url_to_form,
-    gzip_decompress,
-    format_duration,
-    today
+	flt,
+	cint,
+	cstr,
+	get_html_format,
+	get_url_to_form,
+	gzip_decompress,
+	format_duration,
+	today
 )
 from datetime import timedelta, datetime
 # from __future__ import unicode_literals
@@ -63,6 +63,8 @@ from frappe import _, msgprint
 from frappe.utils import flt
 from frappe.utils import cstr, cint, getdate
 import pandas as pd
+from datetime import datetime, timedelta
+
 # from __future__ import unicode_literals
 from functools import total_ordering
 from itertools import count
@@ -77,6 +79,7 @@ from datetime import date, timedelta, datetime,time
 from numpy import true_divide
 import pandas as pd
 import datetime as dt
+from datetime import datetime, timedelta
 
 
 def execute(filters=None):
@@ -86,39 +89,79 @@ def execute(filters=None):
 	return columns, data
 
 def get_columns(filters):
-	column = [
-		_('Tag Card Name') + ':Data:120',
-		_('Generated Date') + ':Date:150',
-		_('Generated Time') + ':Data:190',
-		_('Mat Number') + ':Data:120',
-        _('Part Number') + ':Data:120',
-		_('Part Name') + ':Data:220',
-		_('Production Line') + ':Data:220',
-		_('Model') + ':Data:100',
-		_('Standard Quantity') + ':Data:150',
-		_('Time Elapsed') + ':Data:150',
-		# _('Current Workflow State') + ':Data:200',
-		_('Status') + ':Data:150'
+	
+	columns = [
+	_('Tag Card Name') + ':Data:180',
+	_('Generated Date') + ':Date:150',
+	_('Generated Time') + ':Data:190',
+	_('Mat Number') + ':Data:180',
+	_('Part Number') + ':Data:180',
+	_('Part Name') + ':Data:180',
+	_('Production Line') + ':Data:180',
+	_('Open by production') + ':Data:220',
+	_('Confirmed By QA') + ':Data:220',
+	_('Confirmed By PDI') + ':Data:220',
+	_('Received By Sales') + ':Data:220',
+	_('Received by PPC before Job Work') + ':Data:220',
+	_('Received by PPC after Job Work') + ':Data:220',
+	_('Confirmed by IQA') + ':Data:220',
+	_('Time difference between Workflows') + ':Data:220',
+
 
 	]
-	return column
+
+	return columns
+
+
 
 def get_data(filters):
 	data = []
-	tag_card = frappe.db.sql("""select * from `tabTag Card` where docstatus = 0 and previous_workflow != '' """,as_dict=1)
+	unique_rows = set()
+	if filters.tag_card:
+		tag_card = frappe.db.sql("""select * from `tabTag Card` where date between '%s' and '%s' and name = '%s' """%(filters.from_date,filters.to_date,filters.tag_card),as_dict=1)
+	else:
+		tag_card = frappe.db.sql("""select * from `tabTag Card` where date between '%s' and '%s' """%(filters.from_date,filters.to_date),as_dict=1)
+
 	for t in tag_card:
-		part_master = frappe.db.sql("""select production_line,model from `tabTSAI Part Master` where mat_no ='%s' """%(t.mat_number),as_dict =1)
-		formatted_dt = t.creation.strftime("%Y-%m-%d %H:%M:%S")
-		current_datetime =  datetime.now()
-		formatted_datetime = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-		datetime_obj1 = datetime.strptime(formatted_dt, "%Y-%m-%d %H:%M:%S")
-		datetime_obj2 = datetime.strptime(formatted_datetime, "%Y-%m-%d %H:%M:%S")
-		open_days = datetime_obj2 - datetime_obj1
-		for p in part_master:
-			prod = p.production_line
-			mod = p.model
-		if t.previous_workflow != ('Completed'):
-			row = [t.name,t.date,t.time,t.mat_number,t.part_number,t.mat_name,prod,mod,t.quantity,open_days,t.previous_workflow or '-']
-		data.append(row)
+		tag_doc = frappe.get_doc("Tag Card", t.name)
+		flow_table = tag_doc.get('workflow_tracker_table')
+		prev_time = None
+		time = '-'
+		time_confirmed = '-' 
+		pdi_time = '-' 
+		sales_time = '-' 
+		before_j_w = '-'
+		after_j_w = '-'
+		iqa_time = '-'
+		time_ = '-'
+		for f in flow_table:
+			current_time = datetime.strptime(f.time, "%H:%M:%S")
+			time_diff = None
+			if prev_time:
+				time_diff = current_time - prev_time
+			if f.flow_name == 'Open By Production':
+				time = f.user_name + ' ' +f.date + ' ' +f.time
+			elif f.flow_name == 'Confirmed By QA':
+				time_confirmed = f.user_name + ' ' +f.date + ' ' +f.time
+			elif f.flow_name == 'Confirmed By PDI':
+				pdi_time = f.user_name + ' ' +f.date + ' ' +f.time
+			elif f.flow_name == 'Received By Sales':
+				sales_time = f.user_name + ' ' +f.date + ' ' +f.time
+			elif f.flow_name == 'Received by PPC before Job Work':
+				before_j_w = f.user_name + ' ' +f.date + ' ' +f.time
+			elif f.flow_name == 'Received by PPC after Job Work':
+				after_j_w = f.user_name + ' ' +f.date + ' ' +f.time
+			elif f.flow_name == 'Confirmed by IQA':
+				iqa_time = f.user_name + ' ' +f.date + ' ' +f.time
+
+			prev_time = current_time
+			if time_diff:
+				time_ += str(time_diff) + ',' + ' '
+
+		row = (t.name, t.date, t.time, t.mat_number, t.part_number, t.mat_name, t.quantity,time,time_confirmed,pdi_time,sales_time,before_j_w,after_j_w,iqa_time,time_)
+		if row not in unique_rows:
+			data.append(row)
+			unique_rows.add(row)
+
 	return data
 

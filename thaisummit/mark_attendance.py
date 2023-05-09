@@ -66,8 +66,6 @@ def enqueue_mark_att():
 
 @frappe.whitelist()
 def mark_att(from_date):
-# def mark_att():
-    # from_date = '2023-02-19'
     mark_on_duty(from_date)
     checkins = frappe.db.sql(
         """select * from `tabEmployee Checkin` where skip_auto_attendance = 0 and date(time) = '%s' order by time """%(from_date),as_dict=1)
@@ -313,6 +311,7 @@ def mark_qr_checkin(from_date):
                 att.save(ignore_permissions=True)
                 frappe.db.commit()
                 frappe.db.set_value("QR Checkin",qr.name, "attendance", att.name)
+                frappe.errprint("Created")
 
 def check_holiday(date):
     holiday = frappe.db.sql("""select `tabHoliday`.holiday_date,`tabHoliday`.weekly_off from `tabHoliday List` 
@@ -762,7 +761,7 @@ def mark_overtime(from_date):
                             from_datetime = datetime.combine(ot_date,from_time)
                             to_datetime = datetime.combine(ot_date,to_time)
                         if from_datetime > to_datetime:
-                            frappe.throw('From Time should be lesser that To Time')
+                            frappe.throw(_('From Time should be lesser that To Time in %s'%(ot.name))) 
                         else:
                             if shift == 'PP2':
                                 t_diff = datetime.strptime(str('03:30:00'), '%H:%M:%S').time()
@@ -821,10 +820,8 @@ def mark_overtime(from_date):
                             basic = 0
                             designation = frappe.db.get_value('Employee',ot.employee,'designation')
                             if designation == 'Skilled':
-                                # basic = 116
                                 basic = frappe.db.get_single_value('HR Time Settings','skilled_amount_per_hour')
                             elif designation == 'Un Skilled':
-                                # basic = 112
                                 basic = frappe.db.get_single_value('HR Time Settings','unskilled_amount_per_hour')
                             frappe.db.set_value('Overtime Request',ot.name,'ot_basic',basic)
                             ftr = [3600,60,1]
@@ -848,10 +845,8 @@ def mark_overtime(from_date):
             basic = 0
             designation = frappe.db.get_value('Employee',ot.employee,'designation')
             if designation == 'Skilled':
-                # basic = 116
                 basic = frappe.db.get_single_value('HR Time Settings','skilled_amount_per_hour')
             elif designation == 'Un Skilled':
-                # basic = 112
                 basic = frappe.db.get_single_value('HR Time Settings','unskilled_amount_per_hour')
             frappe.db.set_value('Overtime Request',ot.name,'ot_basic',basic)
             if ot.ot_hours:
@@ -888,10 +883,8 @@ def process_overtime(from_date):
                     basic = 0
                     designation = frappe.db.get_value('Employee',ot.employee,'designation')
                     if designation == 'Skilled':
-                        # basic = 116
                         basic = frappe.db.get_single_value('HR Time Settings','skilled_amount_per_hour')
                     elif designation == 'Un Skilled':
-                        # basic = 112
                         basic = frappe.db.get_single_value('HR Time Settings','unskilled_amount_per_hour')
                     frappe.db.set_value('Overtime Request',ot.name,'ot_basic',basic)
                     ftr = [3600,60,1]
@@ -950,7 +943,7 @@ def process_overtime(from_date):
                             from_datetime = datetime.combine(ot_date,from_time)
                             to_datetime = datetime.combine(ot_date,to_time)
                         if from_datetime > to_datetime:
-                            frappe.throw('From Time should be lesser that To Time')
+                            frappe.throw(_('From Time should be lesser that To Time in %s'%(ot.name))) 
                         else:
                             if shift == 'PP2':
                                 t_diff = datetime.strptime(str('03:30:00'), '%H:%M:%S').time()
@@ -1009,10 +1002,8 @@ def process_overtime(from_date):
                             basic = 0
                             designation = frappe.db.get_value('Employee',ot.employee,'designation')
                             if designation == 'Skilled':
-                                # basic = 116
                                 basic = frappe.db.get_single_value('HR Time Settings','skilled_amount_per_hour')
                             elif designation == 'Un Skilled':
-                                # basic = 112
                                 basic = frappe.db.get_single_value('HR Time Settings','unskilled_amount_per_hour')
                             frappe.db.set_value('Overtime Request',ot.name,'ot_basic',basic)
                             ftr = [3600,60,1]
@@ -1034,10 +1025,8 @@ def process_overtime(from_date):
             basic = 0
             designation = frappe.db.get_value('Employee',ot.employee,'designation')
             if designation == 'Skilled':
-                # basic = 116
                 basic = frappe.db.get_single_value('HR Time Settings','skilled_amount_per_hour')
             elif designation == 'Un Skilled':
-                # basic = 112
                 basic = frappe.db.get_single_value('HR Time Settings','unskilled_amount_per_hour')
             frappe.db.set_value('Overtime Request',ot.name,'ot_basic',basic)
             if ot.ot_hours:
@@ -1105,13 +1094,6 @@ def submit_att(employee_type,from_date):
 
 def method():
     import pandas as pd
-    # ots = frappe.get_all('Overtime Request',{'ot_date':('>=','2021-06-25')},['name','employee','ot_hours','employee_type'])
-    # for ot in ots:
-    #     if ot.ot_hours:
-    #         print(ot.ot_hours)
-    #         ot_hr = pd.to_datetime(str(ot.ot_hours)).time()
-    #         hr = ot_hr.strftime('%H:%M')
-    #         frappe.db.set_value('Overtime Request',ot.name,'ot_hours',hr)
     ots = frappe.get_all('Overtime Request',{'ot_date':('>=','2021-06-25')},['name','employee','ot_hours','employee_type'])
     for ot in ots:
         # print(ot)
@@ -1127,10 +1109,8 @@ def method():
             basic = 0
             designation = frappe.db.get_value('Employee',ot.employee,'designation')
             if designation == 'Skilled':
-                # basic = 116
                 basic = frappe.db.get_single_value('HR Time Settings','skilled_amount_per_hour')
             elif designation == 'Un Skilled':
-                # basic = 112
                 basic = frappe.db.get_single_value('HR Time Settings','unskilled_amount_per_hour')
             frappe.db.set_value('Overtime Request',ot.name,'ot_basic',basic)
             if ot.ot_hours:

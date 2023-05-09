@@ -29,6 +29,7 @@ class CLPlanvsActual(Document):
                     actual = actual[0].count
                 else:
                     actual = 0
+                frappe.errprint(actual)
                 short = plan - actual
                 actual_ot = frappe.db.sql("select count(*) as count from `tabQR Checkin` left join `tabEmployee` on `tabQR Checkin`.employee = `tabEmployee`.name where `tabEmployee`.contractor = '%s' and `tabQR Checkin`.qr_shift = '%s' and `tabQR Checkin`.shift_date = '%s' and `tabQR Checkin`.employee_type = 'CL' and `tabQR Checkin`.ot != 0 "%(contractor.name,self.shift,self.date),as_dict=True)
                 if actual_ot[0].count:
@@ -44,7 +45,7 @@ class CLPlanvsActual(Document):
                     short_percent = (short/plan) * 100
                 else:
                     short_percent = 0
-                data += '<tr style="font-size:5px;padding:0px"><td style="border: 1px solid black;padding:2px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b style="color:%s"><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td></tr>'%(contractor.name,plan,actual,diff_clr,diff,str(int(short_percent))+'%',actual_ot)
+                data += '<tr style="font-size:8px;padding:0px"><td style="border: 1px solid black;padding:2px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b style="color:%s"><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td></tr>'%(contractor.name,plan,actual,diff_clr,diff,str(int(short_percent))+'%',actual_ot)
             total_plan = frappe.db.sql("select sum(%s) as total from `tabCL Head Count Plan` where date = '%s' "%(shift_type,self.date),as_dict=True)
             if total_plan[0].total is not None:
                 total_plan = total_plan[0].total
@@ -114,7 +115,7 @@ class CLPlanvsActual(Document):
                     short_percent = (short/plan) * 100
                 else:
                     short_percent = 0
-                data += '<tr style="font-size:5px;padding:0px"><td style="border: 1px solid black;padding:2px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b style="color:%s"><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td></tr>'%(contractor.name,plan,actual,diff_clr,diff,str(int(short_percent))+'%',actual_ot)
+                data += '<tr style="font-size:8px;padding:0px"><td style="border: 1px solid black;padding:2px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b style="color:%s"><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td><td style="border: 1px solid black;padding:0px"><b><center>%s</center></b></td></tr>'%(contractor.name,plan,actual,diff_clr,diff,str(int(short_percent))+'%',actual_ot)
             total_plan_doc = frappe.db.sql("select sum(shift_1) as shift_1,sum(shift_2) as shift_2,sum(shift_3) as shift_3,sum(shift_pp1) as shift_pp1,sum(shift_pp2) as shift_pp2 from `tabCL Head Count Plan` where date = '%s' "%(self.date),as_dict=True)
             if total_plan_doc:
                 shift_1 = 0

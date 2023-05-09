@@ -13,7 +13,12 @@
   "overtime_amount_section",
   "unskilled_amount_per_hour",
   "column_break_11",
-  "skilled_amount_per_hour"
+  "skilled_amount_per_hour",
+  "shift_wages_amount_section",
+  "shift_2_amount",
+  "shift_pp2_amount",
+  "column_break_12",
+  "shift_3_amount"
  ],
  "fields": [
   {
@@ -53,13 +58,38 @@
    "fieldname": "skilled_amount_per_hour",
    "fieldtype": "Currency",
    "label": "Skilled Amount per Hour"
+  },
+  {
+   "fieldname": "shift_wages_amount_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Shift Wages Amount"
+  },
+  {
+   "fieldname": "shift_2_amount",
+   "fieldtype": "Currency",
+   "label": "Shift 2 Amount"
+  },
+  {
+   "fieldname": "shift_pp2_amount",
+   "fieldtype": "Currency",
+   "label": "Shift PP2 Amount"
+  },
+  {
+   "fieldname": "column_break_12",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "shift_3_amount",
+   "fieldtype": "Currency",
+   "label": "Shift 3 Amount"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-02-13 15:34:51.703484",
+ "modified": "2023-04-18 00:13:52.443558",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "HR Time Settings",
