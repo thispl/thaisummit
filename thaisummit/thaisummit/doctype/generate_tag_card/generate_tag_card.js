@@ -3,6 +3,9 @@
 
 frappe.ui.form.on('Generate Tag Card', {
 	refresh(frm) {
+		if(!frm.doc.__islocal ){
+			frm.disable_save()
+		}
 		if (frm.doc.production_line){
 			frappe.call({
 				method: "thaisummit.custom.update_list",
@@ -73,6 +76,7 @@ frappe.ui.form.on('Generate Tag Card', {
 		
 	},
 	onload: function (frm) {
+		if(frm.doc.quantity){
 		frm.fields_dict.html.$wrapper.empty().append('')
 		if (frm.doc.docstatus == 0) {
 			frm.call('get_data').then(r => {
@@ -82,6 +86,7 @@ frappe.ui.form.on('Generate Tag Card', {
 			})
 
 		}
+	}
 
 	},
 

@@ -86,7 +86,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "TS_logo",
- "modified": "2023-04-07 16:11:42.095013",
+ "modified": "2023-06-22 14:25:09.483669",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Tag Card Failed Report",
@@ -99,6 +99,9 @@
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Tag Card Manager"
   }
  ]
 }

@@ -5,9 +5,18 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "new_rm_input_data_section",
   "rm_input_table1",
+  "save_iym_old_data",
+  "iym_tube",
+  "rm_input_table2",
+  "save_re_old_data",
+  "re_tube",
   "section_break_2",
-  "rm_input_table2"
+  "old_iym_settings",
+  "download",
+  "old_re_settings",
+  "download1"
  ],
  "fields": [
   {
@@ -18,20 +27,72 @@
   },
   {
    "fieldname": "section_break_2",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Old RM Input Data"
   },
   {
    "fieldname": "rm_input_table2",
    "fieldtype": "Table",
    "label": "RE Settings",
    "options": "RM Input Table2"
+  },
+  {
+   "fieldname": "new_rm_input_data_section",
+   "fieldtype": "Section Break",
+   "label": "New RM Input Data"
+  },
+  {
+   "fieldname": "save_iym_old_data",
+   "fieldtype": "Button",
+   "label": "Save IYM Old Data"
+  },
+  {
+   "fieldname": "save_re_old_data",
+   "fieldtype": "Button",
+   "label": "Save RE Old Data"
+  },
+  {
+   "fieldname": "old_iym_settings",
+   "fieldtype": "Table",
+   "label": "Old IYM Settings",
+   "options": "RM Input Table1",
+   "read_only": 1
+  },
+  {
+   "fieldname": "old_re_settings",
+   "fieldtype": "Table",
+   "label": "Old RE Settings",
+   "options": "RM Input Table2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "download",
+   "fieldtype": "Button",
+   "label": "Download"
+  },
+  {
+   "fieldname": "download1",
+   "fieldtype": "Button",
+   "label": "Download"
+  },
+  {
+   "fieldname": "re_tube",
+   "fieldtype": "Table",
+   "label": "RE Tube",
+   "options": "RE Tube"
+  },
+  {
+   "fieldname": "iym_tube",
+   "fieldtype": "Table",
+   "label": "IYM Tube",
+   "options": "IYM Tube"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-05-04 13:02:10.557287",
+ "modified": "2023-10-07 12:37:02.359496",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "RM Input",

@@ -46,6 +46,6 @@ def get_data(filters):
 				status = '-'
 			else:
 				status = inv.status
-			row = [inv.supplier_name,inv.name,status,inv.invoice_date,item.mat_no,item.parts_no,item.parts_name,item.key_qty,item.unit_price,item.basic_amount,item.invoice_amount,item.grn_date,item.grn_no,item.grn_qty,'-']
+			row = [inv.supplier_name,inv.name,status,inv.invoice_date,item.mat_no,item.parts_no,item.parts_name,item.key_qty,item.unit_price,item.basic_amount,item.invoice_amount,item.grn_date,item.grn_no,item.grn_qty,item.basic_amount]
 			data.append(row)
 	return data

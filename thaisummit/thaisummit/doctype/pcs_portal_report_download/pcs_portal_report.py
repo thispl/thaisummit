@@ -36,6 +36,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import GradientFill, PatternFill
 from six import BytesIO, string_types
 
+
 @frappe.whitelist()
 def download():
 	filename = 'PCS Portal Report'
@@ -59,23 +60,13 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
 	price = 0
 	rm_cost = 0
 	gross_wt_cost = 0
-	for p in pcs_part_master:
+	for p in pcs_part_master[:100]:
 		rm_price_iym = frappe.get_single('RM Input').rm_input_table1
 		rm_price_re = frappe.get_single('RM Input').rm_input_table2
-		if p.customer == "IYM":
-			for r in rm_price_iym:
-				if p.grade == r.grade:
-					if p.size_type == ">100":
-						price = r.new1
-						# frappe.log_error(title='rm_input',message=r.std_old)
-					elif p.size_type == "<100":
-						price = r.new2
-					else:
-						price = 0
-		elif p.customer == "RE":
-			for r in rm_price_re:
-				if p.grade == r.grade:
-					if p.mat_type == 'STRIP':
+		if args.customer == "IYM":
+			if p.customer == "IYM":
+				for r in rm_price_iym:
+					if p.grade == r.grade:
 						if p.size_type == ">100":
 							price = r.new1
 							# frappe.log_error(title='rm_input',message=r.std_old)
@@ -83,25 +74,49 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
 							price = r.new2
 						else:
 							price = 0
-					elif p.mat_type == 'COIL':
-						if p.size_type == ">100":
-							price = r.coil_new
-							# frappe.log_error(title='rm_input',message=r.std_old)
-						elif p.size_type == "<100":
-							price = r.coil_new1
-						else:
-							price = 0
-		scrap_master = frappe.db.sql("""select iym from `tabScrap Master` where vendor_code = '%s' """%(p.vendor_code),as_dict=1)
-		for s in scrap_master:
-			gross_weight = float(p.gross_weight)
-			net_weight = float(p.net_weight)
-			gross_wt_cost = round((gross_weight * price),3)
-			scrap_weight = round((gross_weight - net_weight),3)
-			scrap_cost = round((scrap_weight * float(s.iym)),3)
-			rm_cost = round((gross_wt_cost - scrap_cost),3)
-			final_part_cost = round((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost)),3)
+						scrap_master = frappe.get_single('PCS Scrap Master').scrap_master
+						for s in scrap_master:
+							gross_weight = float(p.gross_weight)
+							net_weight = float(p.net_weight)
+							gross_wt_cost = round((gross_weight * price),3)
+							scrap_weight = round((gross_weight - net_weight),3)
+							scrap_cost = round((scrap_weight * float(s.iym)),3)
+							rm_cost = round((gross_wt_cost - scrap_cost),3)
+							final_part_cost = round((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost)),3)
+
+		elif args.customer == "RE":
+			if p.customer == "RE":
+				for r in rm_price_re:
+					if p.grade == r.grade:
+						if p.mat_type == 'STRIP':
+							if p.size_type == ">100":
+								price = r.new1
+								# frappe.log_error(title='rm_input',message=r.std_old)
+							elif p.size_type == "<100":
+								price = r.new2
+							else:
+								price = 0
+						elif p.mat_type == 'COIL':
+							if p.size_type == ">100":
+								price = r.coil_new
+								# frappe.log_error(title='rm_input',message=r.std_old)
+							elif p.size_type == "<100":
+								price = r.coil_new1
+							else:
+								price = 0
+						scrap_master = frappe.get_single('PCS Scrap Master').scrap_master
+						for s in scrap_master:
+							gross_weight = float(p.gross_weight)
+							net_weight = float(p.net_weight)
+							gross_wt_cost = round((gross_weight * price),3)
+							scrap_weight = round((gross_weight - net_weight),3)
+							scrap_cost = round((scrap_weight * float(s.iym)),3)
+							rm_cost = round((gross_wt_cost - scrap_cost),3)
+							final_part_cost = round((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost)),3)
+
+		
 			ws.append([p.customer,p.vendor_code,p.vendor_name,p.item_code,p.part_no,p.parts_name,p.model,p.grade,p.mat_type,p.size_type,p.rm_length,p.rm__width,p.rm_thick,p.strip_qty,round(float(p.gross_weight),3),p.net_weight,scrap_weight,price,gross_wt_cost,s.iym,scrap_cost,rm_cost,round(float(p.process_cost),3),round(float(p.admin_cost),3),round(float(p.transport_cost),3),final_part_cost])        
-		i=1+i
+		# i=1+i
    
 		ws.merge_cells(start_row=1,start_column=1,end_row=1,end_column=26)
 		# ws.merge_cells(start_row=2,start_column=1,end_row=2,end_column=19)

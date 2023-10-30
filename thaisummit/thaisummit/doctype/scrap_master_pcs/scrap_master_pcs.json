@@ -1,0 +1,51 @@
+{
+ "actions": [],
+ "creation": "2023-05-25 09:55:46.855833",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vendor_code",
+  "vendor_name",
+  "iym",
+  "re"
+ ],
+ "fields": [
+  {
+   "fieldname": "vendor_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vendor Code"
+  },
+  {
+   "fieldname": "vendor_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vendor Name"
+  },
+  {
+   "fieldname": "iym",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "IYM"
+  },
+  {
+   "fieldname": "re",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "RE"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-05-25 09:56:54.450895",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Scrap Master PCS",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

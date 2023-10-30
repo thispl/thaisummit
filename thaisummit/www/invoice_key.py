@@ -22,13 +22,128 @@ from frappe.utils import (
     format_duration,
 )
 
+@frappe.whitelist(allow_guest=True)
+def get_test_data():
+    supplier_code = frappe.db.get_value(
+        'TSAI Supplier', {'email': 'm0006@thaisummit.co.in'}, 'name')
+    if supplier_code:
+        url = "http://apioso.thaisummit.co.th:10401/api/POLineDetails"
+        date = datetime.strptime(today(), '%Y-%m-%d')
+        date = datetime.strftime(date, "%Y%m%d")
+        payload = json.dumps({
+            "Fromdate": "",
+            "Todate": "",
+            "SupplierCode": supplier_code,
+            "DeliveryDate": date,
+            # "DeliveryDate": '20220228'
+        })
+        headers = {
+            'Content-Type': 'application/json',
+            'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
+        }
+        response = requests.request("POST", url, headers=headers, data=payload)
+        try:
+            pos = json.loads(response.text)
+        except :
+            frappe.msgprint("Unable to display Invoice Key due to API Issue")
+        data = []
+
+        for po in pos:
+            if frappe.db.exists('TSAI Part Master', po['Mat_No']):
+                pr_name = frappe.db.get_value(
+                    'Prepared Report', {'report_name': 'Supplier Daily Order','status':'Completed'}, 'name')
+                attached_file_name = frappe.db.get_value(
+                    "File",
+                    {"attached_to_doctype": 'Prepared Report',
+                        "attached_to_name": pr_name},
+                    # {"attached_to_doctype": 'Prepared Report',
+                    #     "attached_to_name": pr_name},
+                    "name",
+                )
+                attached_file = frappe.get_doc("File", attached_file_name)
+                compressed_content = attached_file.get_content()
+                uncompressed_content = gzip_decompress(compressed_content)
+                dos = json.loads(uncompressed_content.decode("utf-8"))
+                
+                daily_order = 0
+                min_qty = 0
+                max_qty = 0
+                # for do in dos:
+                #     if str(do['item']) == po['Mat_No']:
+                #         daily_order = cint(do['daily_order'])
+                #         min_qty = cint(do['min_qty'])
+                #         max_qty = cint(do['max_qty'])
+                # url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
+                # payload = json.dumps({
+                #     "ItemCode": po['Mat_No']
+                # })
+                # headers = {
+                #     'Content-Type': 'application/json',
+                #     'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU',
+                # }
+                # response = requests.request(
+                #     "POST", url, headers=headers, data=payload)
+                # stock = 0
+                # if response:
+                #     stocks = json.loads(response.text)
+                #     if stocks:
+                #         ica = frappe.db.sql(
+                #             "select warehouse from `tabInventory Control Area` where invoice_key = 'Y' ", as_dict=True)
+
+                #         wh_list = [d['warehouse'] for d in ica if 'warehouse' in d]
+                #         df = pd.DataFrame(stocks)
+                #         df = df[df['Warehouse'].isin(wh_list)]
+                #         stock = pd.to_numeric(df["Qty"]).sum()
+
+                # in_transit_qty_po = frappe.db.sql("""select sum(`tabInvoice Items`.key_qty) as key_qty from `tabTSAI Invoice`
+                #         left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent
+                #         where `tabTSAI Invoice`.status = 'OPEN' and `tabTSAI Invoice`.po_no = '%s' and `tabInvoice Items`.mat_no = '%s' and `tabTSAI Invoice`.supplier_code = '%s' and `tabInvoice Items`.grn = 0 """ % (po['PoNo'],po['Mat_No'],supplier_code), as_dict=True)[0].key_qty or 0
+
+                # in_transit_qty = frappe.db.sql("""select sum(`tabInvoice Items`.key_qty) as key_qty from `tabTSAI Invoice`
+                #         left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent
+                #         where `tabTSAI Invoice`.status = 'OPEN' and `tabInvoice Items`.mat_no = '%s' and `tabTSAI Invoice`.supplier_code = '%s' and `tabInvoice Items`.grn = 0 """ % (po['Mat_No'],supplier_code), as_dict=True)[0].key_qty or 0
+                # t_qty = stock + in_transit_qty
+                # req_qty = 0
+                # open_qty = float(po['Open_Qty'])
+                # if open_qty > 0:
+                #     open_percent = round((open_qty/float(po['Po_Qty']))*100)
+                # else:
+                #     open_percent = 0
+                # packing_std = frappe.db.get_value(
+                #     "TSAI Part Master", po['Mat_No'], 'packing_std')
+                # po_date = pd.to_datetime(po['Po_Date']).date()
+                # delivery_date = pd.to_datetime(po['Delivery_Date']).date()
+                # share = frappe.db.get_value('Shares of Business Entry',{'supplier_code':supplier_code,'mat_no':po['Mat_No']},'share_of_business') or '-'
+                # # if open_qty > 0:
+                
+                # if t_qty < min_qty:
+                #     try:
+                #         req_qty = math.ceil((max_qty - t_qty)/packing_std)*packing_std
+                #     except:
+                #         req_qty = 0
+                #     if req_qty < 0:
+                #         req_qty = 0
+                
+                # mrp_daily_order = frappe.db.get_value(
+                #     "TSAI Part Master", po['Mat_No'], 'mrp_daily_order')
+                # if open_qty > 0:
+                #     if daily_order == 0:
+                #         if t_qty == 0:
+                #             try:
+                #                 req_qty = math.ceil((mrp_daily_order * min_qty)/packing_std)*packing_std
+                #             except:
+                #                 req_qty = 0
+                        # if open_qty < req_qty:
+                        #     req_qty = math.floor(open_qty/packing_std)*packing_std
+                        
+                # data.append([po['Mat_No'], po['Part_No'], po['Part_Name'], po['PoNo'], po_date, delivery_date, po['Supplier_name'], po['Uom'], round(float(po['Unit_Pice']), 2), round(float(po['Po_Qty'])), open_qty, round(
+                #     (open_qty/float(po['Po_Qty']))*100), packing_std, daily_order, share, max_qty, min_qty, stock, in_transit_qty, t_qty, req_qty, '', '', float(po['GSTPercentage']), '', ''])
+                data.append([po['Mat_No'], po['Part_No'], po['Part_Name'],po['PoNo'],po['PoEntry'], po['Uom'],round(float(po['Unit_Pice']), 2),po['HSN_code'],'', '', float(po['CGST']),float(po['SGST']),float(po['IGST']), '', ''])
+        return data
+
 
 @frappe.whitelist()
 def get_data():
-    # if 'System Manager' not in frappe.get_roles(frappe.session.user):
-    #     if 'Supplier' in frappe.get_roles(frappe.session.user):
-    # supplier_code = ''
-    # if 'System Manager' not in frappe.get_roles(frappe.session.user):
     supplier_code = frappe.db.get_value(
         'TSAI Supplier', {'email': frappe.session.user}, 'name')
     if supplier_code:

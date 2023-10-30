@@ -107,7 +107,7 @@ def get_columns():
 
 @frappe.whitelist()
 def get_tag_list():
-    total_tbs = frappe.db.sql("""select * from `tabTSAI Part Master` where customer in ('IYM','HPS') """,as_dict=1)
+    total_tbs = frappe.db.sql("""select * from `tabTSAI Part Master` where customer in ('IYM','HPS')""",as_dict=1)
     
     updated_tbs_list = []
     updated_tbs_dict = {}
@@ -313,21 +313,19 @@ def get_live_stock(mat_no):
             stock = pd.to_numeric(df["Qty"]).sum()
         return stock or 0
 
-
-
-
 def get_opq(fm):
     total_open_qty = 0
     if frappe.db.exists('TSAI Part Master',{'mat_no':fm}):
-        if frappe.get_value('TSAI Part Master',{'mat_no':fm},['mat_type']) == 'FG':
-            url = "http://172.16.1.18/StockDetail/Service1.svc/GetOpenProductionOrder"
+        if frappe.get_value('TSAI Part Master',{'mat_no':fm},['mat_type']) in ['FG','INH','BOP']:
+            url = "http://apioso.thaisummit.co.th:10401/api/OpenProductionOrder"
             payload = json.dumps({
                 "ProductNo": fm,
                 "Fromdate": "",
                 "Todate": ""
             })
             headers = {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
             }
             response = requests.request(
                 "POST", url, headers=headers, data=payload)
@@ -337,7 +335,7 @@ def get_opq(fm):
                 if stocks:
                     openqty = stocks[0]['OpenQty']
                     completed_qty = stocks[0]['CmpltQty']
-                    planned_qty = stocks[0]['PlannedQty']
+                    # planned_qty = stocks[0]['PlannedQty']
                     for stock in stocks:
                         total_open_qty += cint(stock['OpenQty'])
     return total_open_qty

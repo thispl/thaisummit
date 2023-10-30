@@ -189,12 +189,22 @@ doc_events = {
 	"TSAI Invoice":{
 		'after_insert':[
 			"thaisummit.api.push_invoice",
-
 		],
 		'on_update': "thaisummit.custom.get_gst_percent"
 
-
 	},
+    "Leave Application":{
+		"validate":["thaisummit.custom.leave_att"]
+	},
+    "Miss Punch Application":{
+		"validate":["thaisummit.custom.miss_att"]
+	},
+    "Overtime Request":{
+		"validate":["thaisummit.custom.ot_att"]
+	},
+    # "On Duty Application":{
+	# 	"validate":["thaisummit.custom.od_att"]
+	# },
 	# 'Tag Card':{
 	# 	'after_insert': "thaisummit.thaisummit.doctype.generate_tag_card.generate_tag_card.link_document_name"
 	# },

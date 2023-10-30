@@ -16,6 +16,25 @@ def ping():
 def get_server_date():
     return today()
 
+
+from datetime import datetime, timedelta
+@frappe.whitelist()
+def get_server_dates(from_date):
+    today = datetime.now().date()
+    allow_dat = frappe.db.get_single_value('HR Time Settings','allowed__after')
+    # frappe.errprint(today)
+    # frappe.errprint(allow_dat)
+    new_date = today - timedelta(days=allow_dat)
+    # frappe.errprint(new_date)
+    # frappe.errprint(type(new_date))
+    # frappe.errprint(type(from_date))
+    date_object = datetime.strptime(from_date, "%Y-%m-%d").date()
+    # frappe.errprint(type(date_object))
+    if new_date > date_object:
+        return "ok"
+
+
+
 @frappe.whitelist()
 def reset_supplier_invoice_no():
     suppliers = frappe.get_all('TSAI Supplier')

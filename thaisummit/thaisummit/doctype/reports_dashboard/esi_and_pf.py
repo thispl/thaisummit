@@ -35,7 +35,7 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
     column_widths = column_widths or []
     if wb is None:
         wb = openpyxl.Workbook()
-
+        
     ws = wb.create_sheet(sheet_name, 0)
     ws.append(["S No","Emp No","Cost Center No","DOJ","Employee Name","Designation","Payable Days","ESI","","","","","","EPF","","","","","","","",""])  
     ws.append(["","","","","","","","Standard Gross","Earned Gross","ESI Wages","ESI @ 0,75%","ESI @ 3.25%","Total","PF Wages","EPF Wages","EDLI Wages","EE @ 12%","EPS @ 8.33%","Diff @ 3.67%","ER @ 12%","Total"])  

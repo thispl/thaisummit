@@ -261,18 +261,18 @@ frappe.ui.form.on('Overtime Request', {
 					}
 				})
 		}
-		if (frm.doc.ot_date) {
-			frappe.call({
-				method: 'thaisummit.custom.application_allowed_from',
-				args: {
-					date: frm.doc.ot_date
-				},
-				callback(r) {
-					if (r.message == 'NO') {
-						frm.set_value('ot_date', '')
-					}
-				}
-			})
-		}
+		// if (frm.doc.ot_date) {
+		// 	frappe.call({
+		// 		method: 'thaisummit.custom.application_allowed_from',
+		// 		args: {
+		// 			date: frm.doc.ot_date
+		// 		},
+		// 		callback(r) {
+		// 			if (r.message == 'NO') {
+		// 				frm.set_value('ot_date', '')
+		// 			}
+		// 		}
+		// 	})
+		// }
 	}
 });

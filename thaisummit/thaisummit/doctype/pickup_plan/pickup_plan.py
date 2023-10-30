@@ -75,7 +75,7 @@ class PickupPlan(Document):
                 pos = json.loads(response.text)
             except:
                 frappe.msgprint("Unable to display Pickup Plan due to API Issue")
-
+        frappe.errprint(pos)
         x = 1
         if pos:
             for po in pos:

@@ -115,7 +115,7 @@ def get_tag_list():
 	updated_tbs_list = []
 	updated_tbs_dict = {}
 	pr_name = frappe.db.get_value(
-		'Prepared Report', {'report_name': 'RE Production Plan', 'status': 'Completed'}, 'name')
+		'Prepared Report', {'report_name': 'Production Plan', 'status': 'Completed'}, 'name')
 
 	attached_file_name = frappe.db.get_value(
 		"File",
@@ -141,14 +141,15 @@ def get_tag_list():
 		
 	for do in dos[:-1]:
 		tody_qty = 0
-		man_power = frappe.get_single('Ekanban Settings').iym_manpower_limit
-		percentage = [100,95,90,85,80,75,70,65,60,55,50,45,40,35]
+		percent = frappe.get_single('Ekanban Settings').adjustable_percent
+		# percentage = [100,95,90,85,80,75,70,65,60,55,50,45,40,35]
 		today_qty = do['today_qty_after_adj']
 		packing_std = do['packing_std']
-		for p in percentage:
+		# for p in percentage:
 			# if man_power > sum:
 				# if sum_today_qty > sum_adj_today_qty_witout_percent:
-			adj_percent = (p / 100)
+		adj_percent = (percent / 100)
+		
 		tody_qty = round((today_qty * adj_percent) / packing_std)*packing_std
 		
 		mat_number = do['mat_no']
@@ -157,12 +158,15 @@ def get_tag_list():
 		date_string = date_today.strftime('%d-%m-%Y')
 		new_date_string = date_string.replace("-", "")
 
-		# if do['unit_per_shift'] > 0 :
-		# 	today_headcount1 = round((tody_qty / (do['unit_per_shift'])) * do['manpower_std'],2)
-		
+		if do['unit_per_shift'] > 0 :
+			today_headcount1 = round((tody_qty / (do['unit_per_shift'])) * do['manpower_std'],2)
+		if do['uph'] > 0:
+			today_hr1 = round((today_headcount1 / do['uph']),2)
 		total_qty = tody_qty + do['pending_qty']
-		
-		
+		if do['unit_per_shift'] > 0 :
+			total_headcount = round((total_qty / do['unit_per_shift']) * do['manpower_std'],2)
+		if do['uph'] > 0:
+			total_hr = round((total_qty / do['uph']),2)
 	
 		updated_tbs_dict['mat_no'] = do['mat_no']
 		updated_tbs_dict['parts_name'] = (do['parts_name'])
@@ -194,31 +198,11 @@ def get_tag_list():
 		updated_tbs_dict['today_headcount'] = do['today_headcount']
 		updated_tbs_dict['today_hr'] = do['today_hr']
 		updated_tbs_dict['today_qty_after_adj'] = tody_qty
-		if do['unit_per_shift'] > 0 :
-			today_headcount1 = round((tody_qty / (do['unit_per_shift'])) * do['manpower_std'],2)
-			updated_tbs_dict['today_headcount_after_adj'] = today_headcount1
-		else:
-			updated_tbs_dict['today_headcount_after_adj'] = 0
-
-		if do['uph'] > 0:
-			today_hr1 = round((today_headcount1 / do['uph']),2)
-			updated_tbs_dict['today_hr_after_adj'] = today_hr1
-		else:
-			updated_tbs_dict['today_hr_after_adj'] = 0
-
+		updated_tbs_dict['today_headcount_after_adj'] = today_headcount1
+		updated_tbs_dict['today_hr_after_adj'] = today_hr1
 		updated_tbs_dict['total_qty'] = total_qty
-		if do['unit_per_shift'] > 0 :
-			total_headcount = round((total_qty / do['unit_per_shift']) * do['manpower_std'],2)
-			updated_tbs_dict['total_headcount'] = total_headcount
-		else:
-			updated_tbs_dict['total_headcount'] = 0
-
-		if do['uph'] > 0:
-			total_hr = round((total_qty / do['uph']),2)
-			updated_tbs_dict['total_hr'] = total_hr
-		else:
-			updated_tbs_dict['total_hr'] = 0
-
+		updated_tbs_dict['total_headcount'] = total_headcount
+		updated_tbs_dict['total_hr'] = total_hr
 		updated_tbs_dict['check'] = do['check']
 		if tody_qty > 0:
 			updated_tbs_dict['mat_number'] = mat_number
@@ -239,6 +223,7 @@ def get_tag_list():
 			response = requests.request("POST", url, headers=headers, data=payload)
 
 			frappe.log_error(response.text)
+
 		else:
 			updated_tbs_dict['mat_number'] = '-'
 			updated_tbs_dict['qty_today'] = '-'
@@ -256,6 +241,7 @@ def get_tag_list():
 
 	
 	return updated_tbs_list
+
 
 
 # head_count = do['today_headcount_after_adj']

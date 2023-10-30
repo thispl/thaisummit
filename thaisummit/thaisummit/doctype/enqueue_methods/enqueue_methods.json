@@ -14,7 +14,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Method",
-   "options": "\nOverall Invoice Key\nInvoice Key Date Wise\nDelivery Plan vs Actual",
+   "options": "\nOverall Invoice Key\nInvoice Key Date Wise\nDelivery Plan vs Actual\nDownload",
    "reqd": 1
   },
   {
@@ -28,7 +28,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-05-09 00:09:21.839977",
+ "modified": "2023-05-25 17:31:54.192114",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Enqueue Methods",

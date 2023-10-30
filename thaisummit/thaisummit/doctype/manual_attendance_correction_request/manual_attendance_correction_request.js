@@ -53,6 +53,16 @@ frappe.ui.form.on('Manual Attendance Correction Request', {
 
 		// }
 	},
+	attendance_date(frm){
+		frappe.call({
+			method:'thaisummit.thaisummit.doctype.manual_attendance_correction_request.manual_attendance_correction_request.check',
+			callback(mp){
+				if (mp.message == 'ok') {
+					console.log("HI")
+				}
+			}
+		})
+	},
 	mp_child_on_form_rendered: function (frm, cdt, cdn) {
 		frm.fields_dict['mp_child'].grid.wrapper.find('.grid-delete-row').hide();
 		frm.fields_dict['mp_child'].grid.wrapper.find('.grid-duplicate-row').hide();

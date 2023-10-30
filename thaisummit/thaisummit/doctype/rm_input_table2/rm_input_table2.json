@@ -13,12 +13,20 @@
   "old2",
   "impact2",
   "new2",
+  "column_break_9",
   "coil_old",
   "coil_impact",
   "coil_new",
   "coil_old1",
   "coil_impact1",
-  "coil_new1"
+  "coil_new1",
+  "column_break_15",
+  "tube_100_old",
+  "tube_100_impact",
+  "tube_100_new",
+  "tube_old",
+  "tube_impact",
+  "tube_new"
  ],
  "fields": [
   {
@@ -104,12 +112,50 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Coil <100 New"
+  },
+  {
+   "fieldname": "column_break_15",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "tube_100_old",
+   "fieldtype": "Float",
+   "label": "Tube >2 Old"
+  },
+  {
+   "fieldname": "tube_100_impact",
+   "fieldtype": "Float",
+   "label": "Tube >2 Impact"
+  },
+  {
+   "fieldname": "tube_100_new",
+   "fieldtype": "Float",
+   "label": "Tube >2 New"
+  },
+  {
+   "fieldname": "tube_old",
+   "fieldtype": "Float",
+   "label": "Tube <2 Old"
+  },
+  {
+   "fieldname": "tube_impact",
+   "fieldtype": "Float",
+   "label": "Tube <2 Impact"
+  },
+  {
+   "fieldname": "tube_new",
+   "fieldtype": "Float",
+   "label": "Tube <2 New"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-05-04 14:01:37.208534",
+ "modified": "2023-09-28 15:43:54.872092",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "RM Input Table2",

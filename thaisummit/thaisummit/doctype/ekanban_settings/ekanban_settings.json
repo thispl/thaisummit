@@ -131,7 +131,7 @@
   {
    "fieldname": "bob_file",
    "fieldtype": "Attach",
-   "label": "Attach BOM File"
+   "label": "Attach BOM File (Note: Attach CSV File Only)"
   },
   {
    "fieldname": "upolad",
@@ -143,7 +143,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-02-13 10:30:01.771400",
+ "modified": "2023-06-06 18:55:43.427199",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Ekanban Settings",

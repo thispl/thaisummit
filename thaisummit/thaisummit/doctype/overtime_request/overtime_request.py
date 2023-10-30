@@ -260,22 +260,44 @@ def ot_hours(shift,from_time,to_time,ot_date):
         time_diff = datetime.strptime(str(t_diff), '%H:%M:%S')
         if time_diff.hour > 24:
             frappe.throw('OT cannot applied for more than 24 hours')
-        ot_hours = time(0,0,0)
-        if time_diff.hour >= 1:
+    ot_hours = time(0,0,0)
+    if time_diff.hour >= 1:
+        if time_diff.minute <= 29:
+            ot_hours = time(time_diff.hour,0,0)
+        else:
+            ot_hours = time(time_diff.hour,30,0)
+    if time_diff.hour > 3:
+        if shift == '1':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour-1,30,0)
+            else:
+                ot_hours = time(time_diff.hour,0,0)
+        elif shift == '2':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour-1,30,0)
+            else:
+                ot_hours = time(time_diff.hour,0,0)
+        elif  shift == '3':
             if time_diff.minute <= 29:
                 ot_hours = time(time_diff.hour,0,0)
             else:
                 ot_hours = time(time_diff.hour,30,0)
-        if time_diff.hour > 4:
-            if shift != '3':
-                if time_diff.minute <= 29:
-                    ot_hours = time(time_diff.hour-1,30,0)
-                else:
-                    ot_hours = time(time_diff.hour,0,0)
+    if time_diff.hour > 12:
+        # ot_hours = time(time_diff.hour-1,0,0)
+        if shift == '1':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour-1,0,0)
             else:
-                if time_diff.minute <= 29:
-                    ot_hours = time(time_diff.hour,0,0)
-                else:
-                    ot_hours = time(time_diff.hour,30,0)
-                    
+                ot_hours = time(time_diff.hour-1,30,0)
+        elif shift == '2':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour-1,30,0)
+            else:
+                ot_hours = time(time_diff.hour,0,0)
+        elif  shift == '3':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour,0,0)
+            else:
+                ot_hours = time(time_diff.hour,30,0)
+                
     return [str(t_diff),str(ot_hours)]

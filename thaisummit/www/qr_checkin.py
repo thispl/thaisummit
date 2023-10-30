@@ -60,23 +60,23 @@ def mark_checkin(employee=None):
 	total_working_days = date_diff(end_date,start_date) - holidays
 	# frappe.errprint(type(total_working_days))
 	if emp[3] != 'CL':
-	    if emp[1]:
-	        per_day_basic = emp[1] / total_working_days
-	    else:
-	        per_day_basic = 0   
-	    if emp[2]:    
-	        per_days_ctc = emp[2] / total_working_days 
-	    else:
-	        per_day_ctc = 0    
+		if emp[1]:
+			per_day_basic = emp[1] / total_working_days
+		else:
+			per_day_basic = 0   
+		if emp[2]:    
+			per_days_ctc = emp[2] / total_working_days 
+		else:
+			per_day_ctc = 0    
 	else:
-	    if emp[1]: 
-	        per_day_basic = emp[1] 
-	    else: 
-	        per_day_basic = 0 
-	    if emp[2]:
-	        per_day_ctc = emp[2] 
-	    else: 
-	        per_day_ctc = 0      
+		if emp[1]: 
+			per_day_basic = emp[1] 
+		else: 
+			per_day_basic = 0 
+		if emp[2]:
+			per_day_ctc = emp[2] 
+		else: 
+			per_day_ctc = 0      
 
 
 	existing_employee = frappe.db.exists('Employee',{'employee':employee, 'status':'Active','employee_type':('!=','WC')})
@@ -92,23 +92,23 @@ def mark_checkin(employee=None):
 		holidays = len(get_holiday_dates_for_employee(emp[0],start_date,end_date))
 		total_working_days = date_diff(end_date,start_date) - holidays
 		if emp[3] != 'CL':
-		    if emp[1]:
-		        per_day_basic = emp[1] / total_working_days
-		    else:
-		        per_day_basic = 0   
-		    if emp[2]:    
-		        per_days_ctc = emp[2] / total_working_days 
-		    else:
-		        per_day_ctc = 0    
+			if emp[1]:
+				per_day_basic = emp[1] / total_working_days
+			else:
+				per_day_basic = 0   
+			if emp[2]:    
+				per_days_ctc = emp[2] / total_working_days 
+			else:
+				per_day_ctc = 0    
 		else:
-		    if emp[1]:
-		        per_day_basic = emp[1] 
-		    else:
-		        per_day_basic = 0
-		    if emp[2]:        
-		        per_day_ctc = emp[2] 
-		    else:
-		        per_day_ctc = 0 
+			if emp[1]:
+				per_day_basic = emp[1] 
+			else:
+				per_day_basic = 0
+			if emp[2]:        
+				per_day_ctc = emp[2] 
+			else:
+				per_day_ctc = 0 
 		employee_name,employee_type = frappe.get_value('Employee',employee,['employee_name','employee_type'])
 		qr_checkin = frappe.new_doc('QR Checkin')
 		qr_checkin.update({
@@ -138,23 +138,23 @@ def mark_checkin(employee=None):
 		holidays = len(get_holiday_dates_for_employee(emp[0],start_date,end_date))
 		total_working_days = date_diff(end_date,start_date) - holidays
 		if emp[3] != 'CL':
-		    if emp[1]:
-		        per_day_basic = emp[1] / total_working_days
-		    else:
-		        per_day_basic = 0   
-		    if emp[2]:    
-		        per_days_ctc = emp[2] / total_working_days 
-		    else:
-		        per_day_ctc = 0    
+			if emp[1]:
+				per_day_basic = emp[1] / total_working_days
+			else:
+				per_day_basic = 0   
+			if emp[2]:    
+				per_days_ctc = emp[2] / total_working_days 
+			else:
+				per_day_ctc = 0    
 		else:
-		    if emp[1]:
-		        per_day_basic = emp[1] 
-		    else:
-		        per_day_basic = 0
-		    if emp[2]:        
-		        per_day_ctc = emp[2] 
-		    else:
-		        per_day_ctc = 0 
+			if emp[1]:
+				per_day_basic = emp[1] 
+			else:
+				per_day_basic = 0
+			if emp[2]:        
+				per_day_ctc = emp[2] 
+			else:
+				per_day_ctc = 0 
 		employee_name,employee_type = frappe.get_value('Employee',employee,['employee_name','employee_type'])
 		qr_checkin = frappe.new_doc('QR Checkin')
 		qr_checkin.update({
@@ -223,7 +223,7 @@ def set_tag_card_work_flow_for_approve(tag_card_no):
 	u_name = frappe.db.sql("""select username from `tabUser` where name='%s' """%(frappe.session.user),as_dict=1)[0]
 	tag_card = frappe.db.sql("""select name,production_line from `tabTag Card` where name ='%s' and docstatus = 0 """%(tag_card_no),as_dict =1)[0]
 	card_no = tag_card['name']
-	if user == 'Administrator':
+	if user in ['Administrator','gururaja528@gmail.com']:
 		if card_no:
 			current_row_no = frappe.db.sql("""select workflow,roleflow from `tabTag Card` where name = '%s' """%(card_no),as_dict=1)[0]
 			current_no = current_row_no['workflow']
@@ -325,7 +325,7 @@ def set_tag_card_work_flow_for_reject(tag_card_no):
 	user = frappe.session.user
 	tag_card = frappe.db.sql("""select name,production_line from `tabTag Card` where name ='%s' and docstatus = 0 """%(tag_card_no),as_dict =1)[0]
 	card_no = tag_card['name']
-	if user == 'Administrator':
+	if user in ['Administrator','gururaja528@gmail.com']:
 		if card_no:
 			current_row_no = frappe.db.sql("""select workflow,roleflow from `tabTag Card` where name = '%s' """%(card_no),as_dict=1)[0]
 			current_no = current_row_no['workflow']

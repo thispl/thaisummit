@@ -234,9 +234,13 @@ def mark_checkin(**args):
         frappe.log_error(title="checkin error no emp", message=args)
         return "No Emp"
 
-
-def generate_daily_order_test():
-    report_name = "Supplier Daily Order Test"
+def generate_production_daily_order():
+    report_name = "Production Daily Order"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
+    
+def generate_production_daily_order_test():
+    report_name = "Production Daily Order Test"
     filters = "{}"
     background_enqueue_run(report_name, filters)
 
@@ -245,8 +249,8 @@ def generate_daily_order():
     filters = "{}"
     background_enqueue_run(report_name, filters)
 
-def generate_iym_production_plan_test():
-    report_name = "Production Plan Test"
+def generate_daily_order_test():
+    report_name = "Supplier Daily Order Test"
     filters = "{}"
     background_enqueue_run(report_name, filters)
 
@@ -255,8 +259,8 @@ def generate_iym_production_plan():
     filters = "{}"
     background_enqueue_run(report_name, filters)
 
-def generate_re_production_plan_test():
-    report_name = "RE Production Plan Test"
+def generate_iym_production_plan_test():
+    report_name = "IYM Production Plan Report"
     filters = "{}"
     background_enqueue_run(report_name, filters)
 
@@ -265,6 +269,10 @@ def generate_re_production_plan():
     filters = "{}"
     background_enqueue_run(report_name, filters)
 
+def generate_re_production_plan_test():
+    report_name = "RE Production Plan Report"
+    filters = "{}"
+    background_enqueue_run(report_name, filters)
 
 
 def generate_transfer_plan():
@@ -300,23 +308,19 @@ def generate_transfer_plan():
     filters = "{}"
     background_enqueue_run(report_name, filters)
 
-    report_name = "Production Plan"
-    filters = "{}"
-    background_enqueue_run(report_name, filters)
+def clear_error_log():
+    frappe.db.sql("delete from `tabError Log`")
 
-
-
-def generate_production_daily_order_test():
-    report_name = "Production Daily Order Test"
-    filters = "{}"
-    background_enqueue_run(report_name, filters)
-
-
-def generate_production_daily_order():
-    report_name = "Production Daily Order"
-    filters = "{}"
-    background_enqueue_run(report_name, filters)
-
+def create_scheduled_job_type():
+    pos = frappe.db.exists('Scheduled Job Type', 'api.generate_re_production_plan_test')
+    if not pos:
+        sjt = frappe.new_doc("Scheduled Job Type")
+        sjt.update({
+            "method" : 'thaisummit.api.generate_re_production_plan_test',
+            "frequency" : 'Cron',
+            "cron_format":"15 08 * * mon-sat"  
+        })
+        sjt.save(ignore_permissions=True)
 
 @frappe.whitelist(allow_guest=True)
 def test_checkin():
@@ -345,6 +349,8 @@ def fetch_grn_details_8am():
     invs = frappe.db.sql("""select `tabInvoice Items`.mat_no as mat_no, `tabTSAI Invoice`.name as name, `tabTSAI Invoice`.po_no from `tabTSAI Invoice`
     left join `tabInvoice Items` on `tabTSAI Invoice`.name = `tabInvoice Items`.parent where `tabInvoice Items`.grn = 0 """, as_dict=True)
     for inv in invs:
+        print(inv.mat_no)
+        print(inv.po_no)
         url = "http://apioso.thaisummit.co.th:10401/api/PODetails"
         payload = json.dumps({
             "Fromdate": "", "Todate": "", "MatNo": inv.mat_no, "PONO": inv.po_no

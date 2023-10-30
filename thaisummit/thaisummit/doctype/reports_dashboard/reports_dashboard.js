@@ -43,8 +43,6 @@ frappe.ui.form.on('Reports Dashboard', {
 		}
 		else if (frm.doc.report == 'Overall Monthly Manpower Report') {
 			if(frappe.user.has_role('System Manager')){
-			// var path = "thaisummit.thaisummit.doctype.reports_dashboard.overall_monthly_manpower_report.download"
-			// var args = 'from_date=%(from_date)s&to_date=%(to_date)s'
 			frm.set_value('attach','')
 			frm.save();
 			frappe.call({
@@ -131,6 +129,10 @@ frappe.ui.form.on('Reports Dashboard', {
 			var path = "thaisummit.thaisummit.doctype.reports_dashboard.cl_salary_register.download"
 			var args = 'employee_type=nt&from_date=%(from_date)s&to_date=%(to_date)s'	
 		}
+		else if (frm.doc.report == 'Payroll Cost Center - Report') {
+			var path = "thaisummit.thaisummit.doctype.reports_dashboard.payroll_cost_centre.download"
+			var args = 'employee_type=%(employee_type)s&from_date=%(from_date)s&to_date=%(to_date)s'		
+		}
 
 		if (path) {
 			window.location.href = repl(frappe.request.url +
@@ -166,6 +168,7 @@ frappe.ui.form.on('Reports Dashboard', {
 			var path = "thaisummit.thaisummit.doctype.reports_dashboard.labour_and_head_cost.download"
 			var args = 'from_date=%(from_date)s&to_date=%(to_date)s'	
 		}
+		
 
 		if(path) {
 			window.location.href = repl(frappe.request.url +

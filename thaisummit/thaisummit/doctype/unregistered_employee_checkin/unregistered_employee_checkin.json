@@ -16,22 +16,30 @@
   {
    "fieldname": "biometric_pin",
    "fieldtype": "Data",
-   "label": "Biometric PIN"
+   "in_list_view": 1,
+   "label": "Biometric PIN",
+   "reqd": 1
   },
   {
    "fieldname": "biometric_time",
    "fieldtype": "Data",
-   "label": "Biometric Time"
+   "in_list_view": 1,
+   "label": "Biometric Time",
+   "reqd": 1
   },
   {
    "fieldname": "locationdevice_id",
    "fieldtype": "Data",
-   "label": "Location/Device ID"
+   "in_list_view": 1,
+   "label": "Location/Device ID",
+   "reqd": 1
   },
   {
    "fieldname": "log_type",
    "fieldtype": "Data",
-   "label": "Log Type"
+   "in_list_view": 1,
+   "label": "Log Type",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_3",
@@ -40,7 +48,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-09-17 17:05:23.928854",
+ "modified": "2023-10-27 14:37:39.800262",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Unregistered Employee Checkin",

@@ -207,19 +207,21 @@ frappe.ui.form.on('Approval', {
 			frm.fields_dict["ot_approval"].grid.add_custom_button(__('Approve'),
 				function () {
 					$.each(frm.doc.ot_approval, function (i, d) {
+						// console.log("HI")
 						if (d.__checked == 1) {
+							// console.log("HI")
 							if (d.workflow_state == 'Pending for HOD') {
-								if (d.ot_hours >= 0.0){
+								console.log("HI")
 								// frappe.db.set_value('Overtime Request', d.overtime_request, 'workflow_state', 'Approved')
-									frm.call('submit_doc', {
-										doctype: "Overtime Request",
-										name: d.overtime_request,
-										workflow_state: 'Approved'
-									}).then(r => {
-										frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
-									})
+								frm.call('submit_doc', {
+									doctype: "Overtime Request",
+									name: d.overtime_request,
+									workflow_state: 'Approved'
+								}).then(r => {
+									// console.log("HI")
+									frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
+								})
 								// frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
-								}
 							}
 						}
 					})
@@ -518,7 +520,7 @@ frappe.ui.form.on('Approval', {
 							},
 							callback(r) {
 								if (r.message.ot_hours != '0:00:00' ){
-									console.log(r.message.ot_hours)
+									// console.log(r.message.ot_hours)
 									frm.add_child('ot_approval', {
 										'overtime_request': r.message.name,
 										'employee': r.message.employee,

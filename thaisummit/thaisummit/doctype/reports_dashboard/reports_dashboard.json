@@ -34,7 +34,7 @@
    "fieldname": "report",
    "fieldtype": "Select",
    "label": "Report",
-   "options": "Manpower Plan vs Actual Live Report (Shift Wise)\nShift Schedule Summary Report\nMonthly Manpower Report\nMonthly Manpower Plan vs Actual Report\nOverall Monthly Manpower Report\nMonthly Individual Attendance Report\nMonthly Overtime Person Report\nMonthly Overtime Amount Report\nCL Manpower Shortage Deduction Summary Report\nDaily Sales Report\nDaily Sales Report Summary\nN2 Sequence Plan vs Stock Report\nPayroll Cross Check Report\nCL Overtime Report (Shift Continue)\nWC Salary Register\nBC Salary Register\nFT Salary Register\nNT Salary Register\nCL Salary Register"
+   "options": "Manpower Plan vs Actual Live Report (Shift Wise)\nShift Schedule Summary Report\nMonthly Manpower Report\nMonthly Manpower Plan vs Actual Report\nOverall Monthly Manpower Report\nMonthly Individual Attendance Report\nMonthly Overtime Person Report\nMonthly Overtime Amount Report\nCL Manpower Shortage Deduction Summary Report\nDaily Sales Report\nDaily Sales Report Summary\nN2 Sequence Plan vs Stock Report\nPayroll Cross Check Report\nCL Overtime Report (Shift Continue)\nWC Salary Register\nBC Salary Register\nFT Salary Register\nNT Salary Register\nCL Salary Register\nPayroll Cost Center - Report"
   },
   {
    "fieldname": "column_break_3",
@@ -96,7 +96,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-29 14:51:41.540154",
+ "modified": "2023-09-25 11:23:38.139991",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Reports Dashboard",

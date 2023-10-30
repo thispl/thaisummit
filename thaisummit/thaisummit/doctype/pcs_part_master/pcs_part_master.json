@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "field:part_no",
+ "autoname": "field:item_code",
  "creation": "2023-04-11 11:40:40.583679",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -26,19 +26,21 @@
   "net_weight",
   "process_cost",
   "admin_cost",
-  "transport_cost"
+  "transport_cost",
+  "reduction_cost",
+  "final"
  ],
  "fields": [
   {
    "fieldname": "item_code",
    "fieldtype": "Data",
-   "label": "Item Code"
+   "label": "Item Code",
+   "unique": 1
   },
   {
    "fieldname": "part_no",
    "fieldtype": "Data",
-   "label": "Part No",
-   "unique": 1
+   "label": "Part No"
   },
   {
    "fieldname": "parts_name",
@@ -86,53 +88,65 @@
   },
   {
    "fieldname": "rm_thick",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "RM Thick"
   },
   {
+   "default": "0.000",
    "fieldname": "strip_qty",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Strip Qty"
   },
   {
    "fieldname": "gross_weight",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Gross Weight"
   },
   {
    "fieldname": "net_weight",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Net Weight"
   },
   {
    "fieldname": "process_cost",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Process Cost"
   },
   {
    "fieldname": "admin_cost",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Admin Cost"
   },
   {
    "fieldname": "transport_cost",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Transport Cost"
   },
   {
+   "default": "0.000",
    "fieldname": "rm_length",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "RM Length"
   },
   {
    "fieldname": "rm__width",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "RM  Width"
+  },
+  {
+   "fieldname": "final",
+   "fieldtype": "Float",
+   "label": "Final"
+  },
+  {
+   "fieldname": "reduction_cost",
+   "fieldtype": "Float",
+   "label": "Reduction Cost"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-11 12:43:16.013119",
+ "modified": "2023-10-27 12:21:34.564774",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "PCS Part Master",

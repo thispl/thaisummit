@@ -42,6 +42,7 @@
   "column_break_31",
   "machine",
   "fg_name",
+  "ndol",
   "section_break_35",
   "operator",
   "manual_welder",
@@ -77,6 +78,7 @@
   {
    "fieldname": "production_line",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "Production Line"
   },
   {
@@ -284,11 +286,16 @@
    "in_standard_filter": 1,
    "label": "Tag Card Flow Master",
    "options": "Tag Card Flow Master"
+  },
+  {
+   "fieldname": "ndol",
+   "fieldtype": "Data",
+   "label": "NDOL"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-04 16:20:21.966198",
+ "modified": "2023-10-12 13:57:41.790933",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI Part Master",

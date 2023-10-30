@@ -1,0 +1,115 @@
+{
+ "add_total_row": 0,
+ "columns": [
+  {
+   "fieldname": "Document Name",
+   "fieldtype": "Link",
+   "label": "Document Name",
+   "options": "Tag Card",
+   "width": 120
+  },
+  {
+   "fieldname": "Date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "width": 120
+  },
+  {
+   "fieldname": "Part Number",
+   "fieldtype": "Data",
+   "label": "Part Number",
+   "width": 180
+  },
+  {
+   "fieldname": "Production Line",
+   "fieldtype": "Data",
+   "label": "Production Line",
+   "width": 120
+  },
+  {
+   "fieldname": "Quantity",
+   "fieldtype": "Data",
+   "label": "Quantity",
+   "width": 120
+  },
+  {
+   "fieldname": "Mat Number",
+   "fieldtype": "Data",
+   "label": "Mat Number",
+   "width": 120
+  },
+  {
+   "fieldname": "Status",
+   "fieldtype": "Data",
+   "label": "Status",
+   "width": 120
+  }
+ ],
+ "creation": "2023-06-09 10:01:14.681072",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "mandatory": 1,
+   "options": "",
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "mandatory": 1,
+   "options": "",
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "mandatory": 1,
+   "options": "SUCCESS\nFAILED",
+   "wildcard_filter": 0
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letter_head": "TS_logo",
+ "modified": "2023-06-09 10:29:48.994242",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Tag Card SAP Status Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "Select name,date,part_number,production_line,quantity,mat_number,status\nfrom `tabTag Card`\nwhere date between %(from_date)s and %(to_date)s and status = %(status)s",
+ "ref_doctype": "Tag Card",
+ "report_name": "Tag Card SAP Status Report",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "Tag Card QA"
+  },
+  {
+   "role": "Tag Card PDI"
+  },
+  {
+   "role": "Tag Card Sales"
+  },
+  {
+   "role": "Tag Card Job Work"
+  },
+  {
+   "role": "Tag Card Manager"
+  },
+  {
+   "role": "Tag Card Production"
+  }
+ ]
+}

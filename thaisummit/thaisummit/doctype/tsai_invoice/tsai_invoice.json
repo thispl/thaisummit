@@ -56,6 +56,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_bulk_edit": 1,
    "fieldname": "invoice_items",
    "fieldtype": "Table",
    "label": "Invoice Items",
@@ -64,6 +65,7 @@
   {
    "fieldname": "po_no",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "PO No"
   },
   {
@@ -279,7 +281,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-17 14:00:01.694253",
+ "modified": "2023-10-10 15:36:39.750739",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "TSAI Invoice",

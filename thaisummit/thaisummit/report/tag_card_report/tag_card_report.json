@@ -10,18 +10,21 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "TS_logo",
- "modified": "2023-04-17 11:17:13.973437",
+ "modified": "2023-06-22 14:24:27.812844",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Tag Card Report",
  "owner": "Administrator",
- "prepared_report": 0,
+ "prepared_report": 1,
  "ref_doctype": "Generate Tag Card",
  "report_name": "Tag Card Report",
  "report_type": "Script Report",
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Tag Card Manager"
   }
  ]
 }
