@@ -875,6 +875,7 @@ def get_urc_to_ec(from_date):
 		typ = uc.log_type
 		nam = uc.name
 		if time != "":
+			frappe.errprint(nam)
 			if frappe.db.exists('Employee',{'biometric_pin':pin}):
 				if not frappe.db.exists('Employee Checkin',{'biometric_pin':pin,"time":time}):
 					ec = frappe.new_doc('Employee Checkin')
