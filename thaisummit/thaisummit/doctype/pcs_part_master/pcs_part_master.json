@@ -28,7 +28,8 @@
   "admin_cost",
   "transport_cost",
   "reduction_cost",
-  "final"
+  "final",
+  "final_amount"
  ],
  "fields": [
   {
@@ -100,27 +101,32 @@
   {
    "fieldname": "gross_weight",
    "fieldtype": "Float",
-   "label": "Gross Weight"
+   "label": "Gross Weight",
+   "precision": "5"
   },
   {
    "fieldname": "net_weight",
    "fieldtype": "Float",
-   "label": "Net Weight"
+   "label": "Net Weight",
+   "precision": "5"
   },
   {
    "fieldname": "process_cost",
    "fieldtype": "Float",
-   "label": "Process Cost"
+   "label": "Process Cost",
+   "precision": "5"
   },
   {
    "fieldname": "admin_cost",
    "fieldtype": "Float",
-   "label": "Admin Cost"
+   "label": "Admin Cost",
+   "precision": "5"
   },
   {
    "fieldname": "transport_cost",
    "fieldtype": "Float",
-   "label": "Transport Cost"
+   "label": "Transport Cost",
+   "precision": "5"
   },
   {
    "default": "0.000",
@@ -134,19 +140,27 @@
    "label": "RM  Width"
   },
   {
-   "fieldname": "final",
-   "fieldtype": "Float",
-   "label": "Final"
-  },
-  {
    "fieldname": "reduction_cost",
    "fieldtype": "Float",
-   "label": "Reduction Cost"
+   "label": "Reduction Cost",
+   "precision": "5"
+  },
+  {
+   "fieldname": "final",
+   "fieldtype": "Float",
+   "label": "Final",
+   "precision": "2"
+  },
+  {
+   "fieldname": "final_amount",
+   "fieldtype": "Float",
+   "label": "Final Amount",
+   "precision": "2"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-27 12:21:34.564774",
+ "modified": "2023-11-22 11:19:39.857029",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "PCS Part Master",

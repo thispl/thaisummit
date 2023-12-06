@@ -6,6 +6,21 @@ frappe.ui.form.on('Attendance Summary', {
 		frm.fields_dict.html.$wrapper.empty()
 		frm.disable_save()
 		frappe.model.clear_table(frm.doc,"attendance");
+		if (!frappe.user.has_role('System Manager')) {
+			frappe.db.get_value("Employee",{'user_id':frappe.session.user},['department'], (r) => {
+				if (r){
+					console.log(r.department)
+					frm.set_query('employee', function(doc) {
+						return {
+							filters: {
+								"status": "Active",
+								"department" : r.department
+							}
+						};
+					})
+				}
+			});
+		}
 		frappe.db.get_value("Employee",{'user_id':frappe.session.user},['employee','employee_name'], (r) => {
 			if (r){
 				frm.set_value('employee',r.employee)
@@ -17,6 +32,23 @@ frappe.ui.form.on('Attendance Summary', {
 		frm.set_value('from_date',frappe.datetime.add_days(d, 25))
 	},
 	onload(frm){
+		console.log(frappe.session.user)
+		console.log("HI")
+		if (!frappe.user.has_role('System Manager')) {
+			frappe.db.get_value("Employee",{'user_id':frappe.session.user},['department'], (r) => {
+				if (r){
+					console.log(r.department)
+					frm.set_query('employee', function(doc) {
+						return {
+							filters: {
+								"status": "Active",
+								"department" : r.department
+							}
+						};
+					})
+				}
+			});
+		}
 		frm.fields_dict.html.$wrapper.empty()
 		frappe.model.clear_table(frm.doc,"attendance");
 		frappe.call({

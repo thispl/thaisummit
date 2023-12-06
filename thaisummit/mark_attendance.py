@@ -6,6 +6,7 @@ import datetime
 from frappe.utils.csvutils import read_csv_content
 from six.moves import range
 from six import string_types
+from frappe.utils import  formatdate
 from frappe.utils import (getdate, cint, add_months, date_diff, add_days,get_time,
 	nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime)
 from datetime import datetime
@@ -56,6 +57,16 @@ def mark_att_daily_hooks():
 	mark_att(from_date)
 	from_date = add_days(today(),-1)
 	mark_att(from_date)
+	# from_date = "2023-11-24"
+	# to_date = "2023-11-24"
+	# dates = get_dates(from_date,to_date)
+	# for date in dates:
+	# 	mark_att(date)
+	
+def get_dates(from_date,to_date):
+	no_of_days = date_diff(add_days(to_date, 1), from_date)
+	dates = [add_days(from_date, i) for i in range(0, no_of_days)]
+	return dates
 
 @frappe.whitelist()
 def enqueue_mark_att():
@@ -65,13 +76,14 @@ def enqueue_mark_att():
 def mark_att(from_date):
 	mark_on_duty(from_date)
 	checkins = frappe.db.sql(
-		"""select * from `tabEmployee Checkin` where skip_auto_attendance = 0 and date(time) = '%s' order by time """%(from_date),as_dict=1)
+		"""select * from `tabEmployee Checkin` where skip_auto_attendance = 0 and date(time) = '%s' order by time ASC"""%(from_date),as_dict=1)
 	if checkins:
 		for c in checkins:
 			print(c.name)
 			if frappe.db.exists("Employee",{'employee_number':c.employee,'status':"Active"}):
 				att = mark_attendance_from_checkin(c.name,c.employee,c.log_type,c.time)
 				if att:
+					frappe.db.set_value("Employee Checkin",c.name, "attendance", att.name)
 					frappe.db.set_value("Employee Checkin",c.name, "skip_auto_attendance", "1")
 		mark_qr_checkin(from_date)
 		mark_permission(from_date)  
@@ -151,10 +163,10 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
 			att = frappe.db.exists("Attendance",{'employee':employee,'attendance_date':att_date,'docstatus': ['!=',2]})
 			if not att:
 				if shift != '3':
-					checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'IN' and date(time) = '%s' and time(time) between '%s' and '%s' order by time "%(employee,att_date,min_in_time,max_in_time),as_dict=True)
+					checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'IN' and date(time) = '%s' and time(time) between '%s' and '%s' order by time ASC "%(employee,att_date,min_in_time,max_in_time),as_dict=True)
 				else:
 					yesterday = add_days(att_date,1)
-					checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'IN' and date(time) = '%s' and time(time) between '%s' and '%s' order by time "%(employee,yesterday,min_in_time,max_in_time),as_dict=True)
+					checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'IN' and date(time) = '%s' and time(time) between '%s' and '%s' order by time ASC"%(employee,yesterday,min_in_time,max_in_time),as_dict=True)
 				if checkins:
 					att = frappe.new_doc("Attendance")
 					att.employee = employee
@@ -167,14 +179,16 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
 					att.in_time = checkins[0].time
 					att.save(ignore_permissions=True)
 					frappe.db.commit()
-					frappe.db.set_value("Employee Checkin",checkins[0].name, "attendance", att.name)
+					for c in checkins:
+						frappe.db.set_value('Employee Checkin',c.name,'skip_auto_attendance','1')
+						frappe.db.set_value("Employee Checkin",c.name, "attendance", att.name)
 					return att
 			else:
 				if shift != '3':
-					checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'IN' and date(time) = '%s' and time(time) between '%s' and '%s' order by time "%(employee,att_date,min_in_time,max_in_time),as_dict=True)
+					checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'IN' and date(time) = '%s' and time(time) between '%s' and '%s' order by time ASC"%(employee,att_date,min_in_time,max_in_time),as_dict=True)
 				else:
 					yesterday = add_days(att_date,1)
-					checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'IN' and date(time) = '%s' and time(time) between '%s' and '%s' order by time "%(employee,yesterday,min_in_time,max_in_time),as_dict=True)
+					checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'IN' and date(time) = '%s' and time(time) between '%s' and '%s' order by time ASC"%(employee,yesterday,min_in_time,max_in_time),as_dict=True)
 				if checkins:
 					att = frappe.get_doc("Attendance",att)
 					if att.docstatus == 0:
@@ -186,15 +200,16 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
 						att.in_time = checkins[0].time
 						att.save(ignore_permissions=True)
 						frappe.db.commit()
-						frappe.db.set_value("Employee Checkin",checkins[0].name, "attendance", att.name)
-						return att
-					
+						for c in checkins:
+							frappe.db.set_value('Employee Checkin',c.name,'skip_auto_attendance','1')
+							frappe.db.set_value("Employee Checkin",c.name, "attendance", att.name)
+					return att	
 
 	if log_type == 'OUT':
 		max_out = datetime.strptime('11:30', '%H:%M').time()
 		if att_time < max_out:
 			yesterday = add_days(att_date,-1)
-			checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'OUT' and date(time) = '%s' and time(time) < '%s' order by time "%(employee,att_date,max_out),as_dict=True)
+			checkins = frappe.db.sql("select name,time from `tabEmployee Checkin` where employee = '%s' and log_type = 'OUT' and date(time) = '%s' and time(time) < '%s' order by time ASC"%(employee,att_date,max_out),as_dict=True)
 			att = frappe.db.exists("Attendance",{'employee':employee,'attendance_date':yesterday})
 			if att:
 				att = frappe.get_doc("Attendance",att)
@@ -203,10 +218,12 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
 						if len(checkins) > 0:
 							att.out_time = checkins[-1].time
 						else:
-							att.out_time = checkins[-1].time
+							att.out_time = checkins[0].time
 						att.save(ignore_permissions=True)
 						frappe.db.commit()
-						frappe.db.set_value("Employee Checkin",checkins[0].name, "attendance", att.name)
+						for c in checkins:
+							frappe.db.set_value('Employee Checkin',c.name,'skip_auto_attendance','1')
+							frappe.db.set_value("Employee Checkin",c.name, "attendance", att.name)
 						return att
 					else:
 						return att
@@ -218,13 +235,15 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
 				if len(checkins) > 0:
 					att.out_time = checkins[-1].time
 				else:
-					att.out_time = checkins[-1].time
+					att.out_time = checkins[0].time
 				att.save(ignore_permissions=True)
 				frappe.db.commit()
-				frappe.db.set_value("Employee Checkin",checkins[0].name, "attendance", att.name)
+				for c in checkins:
+					frappe.db.set_value('Employee Checkin',c.name,'skip_auto_attendance','1')
+					frappe.db.set_value("Employee Checkin",c.name, "attendance", att.name)
 				return att
 		else:
-			checkins = frappe.db.sql("select name,time,docstatus from `tabEmployee Checkin` where employee ='%s' and log_type = 'OUT' and date(time) = '%s' order by time "%(employee,att_date),as_dict=True)
+			checkins = frappe.db.sql("select name,time,docstatus from `tabEmployee Checkin` where employee ='%s' and log_type = 'OUT' and date(time) = '%s' order by time ASC"%(employee,att_date),as_dict=True)
 			att = frappe.db.exists("Attendance",{'employee':employee,'attendance_date':att_date})
 			if att:
 				att = frappe.get_doc("Attendance",att)
@@ -233,10 +252,12 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
 						if len(checkins) > 0:
 							att.out_time = checkins[-1].time
 						else:
-							att.out_time = checkins[-1].time
+							att.out_time = checkins[0].time
 						att.save(ignore_permissions=True)
 						frappe.db.commit()
-						frappe.db.set_value("Employee Checkin",checkins[0].name, "attendance", att.name)
+						for c in checkins:
+							frappe.db.set_value('Employee Checkin',c.name,'skip_auto_attendance','1')
+							frappe.db.set_value("Employee Checkin",c.name, "attendance", att.name)
 						return att
 					else:
 						return att
@@ -248,17 +269,19 @@ def mark_attendance_from_checkin(checkin,employee,log_type,time):
 				if len(checkins) > 0:
 					att.out_time = checkins[-1].time
 				else:
-					att.out_time = checkins[-1].time
+					att.out_time = checkins[0].time
 				att.save(ignore_permissions=True)
 				frappe.db.commit()
-				frappe.db.set_value("Employee Checkin",checkins[0].name, "attendance", att.name)
+				for c in checkins:
+					frappe.db.set_value('Employee Checkin',c.name,'skip_auto_attendance','1')
+					frappe.db.set_value("Employee Checkin",c.name, "attendance", att.name)
 				return att
 
 
 def mark_qr_checkin(from_date):
 	hh = check_holiday(from_date)
 	if hh:
-		qr_checkins = frappe.db.sql("select name, employee,qr_shift,qr_scan_time,shift_date from `tabQR Checkin` where shift_date = '%s' and ot = 1 order by qr_scan_time "%(from_date),as_dict=True)
+		qr_checkins = frappe.db.sql("select name, employee,qr_shift,qr_scan_time,shift_date from `tabQR Checkin` where shift_date = '%s' and ot = 1 order by qr_scan_time ASC"%(from_date),as_dict=True)
 		for qr in qr_checkins:
 			if frappe.db.exists('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee,'docstatus':'0'}):
 				att = frappe.get_doc('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee})
@@ -268,7 +291,7 @@ def mark_qr_checkin(from_date):
 				frappe.db.commit()
 				frappe.db.set_value("QR Checkin",qr.name, "attendance", att.name)
 	else:
-		qr_checkins = frappe.db.sql("select name, employee,qr_shift,qr_scan_time,shift_date from `tabQR Checkin` where shift_date = '%s' and ot = 0 order by qr_scan_time "%(from_date),as_dict=True)
+		qr_checkins = frappe.db.sql("select name, employee,qr_shift,qr_scan_time,shift_date from `tabQR Checkin` where shift_date = '%s' and ot = 0 order by qr_scan_time ASC"%(from_date),as_dict=True)
 		for qr in qr_checkins:
 			if frappe.db.exists('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee,'docstatus':'0'}):
 				att = frappe.get_doc('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee})
@@ -298,41 +321,55 @@ def mark_shift_status(from_date):
 	from_date = add_days(from_date,-1)
 	atts = frappe.get_all('Attendance',{'attendance_date':('between',(from_date,to_date))},['*'])
 	for att in atts:
-		late = ''
-		shift_status = ''
-		if att.late_entry:
-			late = 'L'
-		if att.employee_type != "WC":
-			if not att.in_time or not att.out_time:
-				if att.qr_shift:
-					shift_status = "M" + str(att.qr_shift)
+		hh = check_holiday(att.attendance_date)
+		if hh:
+			frappe.errprint("HI")
+			if att.in_time and att.out_time and att.shift:
+				if hh == 'WW':
+					shift_status = att.shift + "W"
+				else:
+					shift_status = att.shift + "H"
+				frappe.db.set_value('Attendance',att.name,'shift_status',shift_status)
+				frappe.db.set_value('Attendance',att.name,'status',"Present")
+			elif att.on_duty_application:
+				if hh == 'WW':
+					shift_status = "ODW"
+				else:
+					shift_status = "ODH"
+				frappe.db.set_value('Attendance',att.name,'shift_status',shift_status)
+				frappe.db.set_value('Attendance',att.name,'status',"Present")
+			else:
+				if hh == 'WW':
+					shift_status = "WW"
+				else:
+					shift_status = "HH"
+				frappe.db.set_value('Attendance',att.name,'shift_status',shift_status)
+				frappe.db.set_value('Attendance',att.name,'status',"Absent")
+		else:
+			frappe.errprint("HII")
+			late = ''
+			shift_status = ''
+			if att.late_entry:
+				late = 'L'
+			if att.employee_type != "WC":
+				if not att.in_time or not att.out_time:
+					if att.qr_shift:
+						shift_status = "M" + str(att.qr_shift)
+					else:
+						shift_status = "AA"
+				if att.in_time and att.out_time:
+					if not att.qr_shift:
+						shift_status = str(att.shift) + late + "M"
+					else:
+						shift_status = str(att.shift) + late + str(att.qr_shift)         
+			else:
+				if att.shift:
+					if att.in_time and att.out_time:
+						shift_status = str(att.shift) + late
+					if not att.out_time or not att.in_time:
+						shift_status = str(att.shift) + 'M'
 				else:
 					shift_status = "AA"
-			if att.in_time and att.out_time:
-				if not att.qr_shift:
-					shift_status = str(att.shift) + late + "M"
-				else:
-					shift_status = str(att.shift) + late + str(att.qr_shift)         
-			if att.status == 'Half Day':
-				if att.leave_type:
-					if not late:
-						shift_status = str(0.5) + att.leave_type
-					else:
-						shift_status = late + str(att.leave_type) + str('/2')
-				else:
-					shift_status = '0.5Leave Without Pay'
-			if att.status == 'On Leave':
-				shift_status = att.leave_type   
-			if att.on_duty_application:
-				hh = check_holiday(from_date)
-				if hh:
-					if hh == 'WW':
-						shift_status = "ODW"
-					else:
-						shift_status = "ODH"
-				else:
-					shift_status = "OD"
-		else:
 			if att.status == 'Half Day':
 				if att.leave_type:
 					shift_status = str(0.5) + att.leave_type
@@ -342,22 +379,14 @@ def mark_shift_status(from_date):
 				shift_status = att.leave_type
 			elif att.on_duty_application:
 				shift_status = "OD"
-			elif att.shift:
-				if att.in_time and att.out_time:
-					shift_status = str(att.shift) + late
-						
-				if not att.out_time:
-					shift_status = str(att.shift) + 'M'
-			else:
-				shift_status = 'AA'
-		if not att.manually_corrected:
-			frappe.db.set_value('Attendance',att.name,'shift_status',shift_status)
-			absent = ('12','13','21','23','31','32','1L2','1L3','2L1','2L3','3L1','3L2','PP1L2','PP2L3','1M','2M','3M','MM','M1','M2','M3','MPP2','AA','LA','LOP','1LM','2LM','3LM','PP2LM','PP2M')
-			if att.status != 'On Leave':
-				if att.status not in ('Half Day','On Leave'):
-					frappe.db.set_value('Attendance',att.name,'status','Present')
-				if shift_status in absent:
-					frappe.db.set_value('Attendance',att.name,'status','Absent')
+			if not att.manually_corrected:
+				frappe.db.set_value('Attendance',att.name,'shift_status',shift_status)
+				absent = ('12','13','21','23','31','32','1L2','1L3','2L1','2L3','3L1','3L2','PP1L2','PP2L3','1M','2M','3M','MM','M1','M2','M3','MPP2','AA','LA','LOP','1LM','2LM','3LM','PP2LM','PP2M')
+				if att.status != 'On Leave':
+					if att.status not in ('Half Day','On Leave'):
+						frappe.db.set_value('Attendance',att.name,'status','Present')
+					if shift_status in absent:
+						frappe.db.set_value('Attendance',att.name,'status','Absent')
 	return 'ok'
 
 
@@ -387,7 +416,7 @@ def mark_on_duty(from_date):
 			att.attendance_date = from_date
 			att.on_duty_application = od.name
 			att.save(ignore_permissions=True)
-			# att.submit()
+			att.submit()
 			frappe.db.commit()
 		else:
 			frappe.db.set_value('Attendance',onduty,"on_duty_application",od.name)
@@ -451,7 +480,7 @@ def mark_permission(from_date):
 def mark_overtime(from_date):
 	ots = frappe.db.sql("select * from `tabOvertime Request` where ot_date = '%s' and docstatus != 1 "%(from_date),as_dict=True)
 	for ot in ots:
-		frappe.errprint(ot.name)
+		# frappe.errprint(ot.name)
 		od = frappe.db.sql("""select `tabOn Duty Application`.name from `tabOn Duty Application` 
 		left join `tabMulti Employee` on `tabOn Duty Application`.name = `tabMulti Employee`.parent where 
 		`tabMulti Employee`.employee = '%s' and '%s' between `tabOn Duty Application`.from_date and `tabOn Duty Application`.to_date and `tabOn Duty Application`.workflow_state = 'Approved' """%(ot.employee,from_date),as_dict=True)
@@ -839,7 +868,6 @@ def submit_att(employee_type,from_date):
 
 
 def method():
-	import pandas as pd
 	ots = frappe.get_all('Overtime Request',{'ot_date':('>=','2021-06-25')},['name','employee','ot_hours','employee_type'])
 	for ot in ots:
 		if ot.employee_type != 'CL':
@@ -875,7 +903,6 @@ def get_urc_to_ec(from_date):
 		typ = uc.log_type
 		nam = uc.name
 		if time != "":
-			frappe.errprint(nam)
 			if frappe.db.exists('Employee',{'biometric_pin':pin}):
 				if not frappe.db.exists('Employee Checkin',{'biometric_pin':pin,"time":time}):
 					ec = frappe.new_doc('Employee Checkin')
@@ -888,3 +915,79 @@ def get_urc_to_ec(from_date):
 					frappe.db.commit()
 					attendance = frappe.db.sql(""" delete from `tabUnregistered Employee Checkin` where name = '%s' """%(nam))      
 	return "ok"
+
+@frappe.whitelist()
+def delete_urc_automatically():
+	from_date = add_days(today(),-100)  
+	to_date = add_days(today(),-34)  
+	urc = frappe.db.sql("""delete from `tabUnregistered Employee Checkin` where date(biometric_time) between '%s' and '%s'  """%(from_date,to_date),as_dict = True)
+	
+
+@frappe.whitelist()
+def cron_job2():
+	job = frappe.db.exists('Scheduled Job Type', 'delete_urc_automatically')
+	if not job:
+		sjt = frappe.new_doc("Scheduled Job Type")  
+		sjt.update({
+			"method" : 'thaisummit.mark_attendance.delete_urc_automatically',
+			"frequency" : 'Cron',
+			"cron_format" : '30 00 * * *'
+		})
+		sjt.save(ignore_permissions=True)
+
+@frappe.whitelist()
+def update_att():  
+	from_date = "2023-11-18"
+	checkins = frappe.db.sql(
+		"""select * from `tabEmployee Checkin` where skip_auto_attendance = 0 and date(time) = '%s' order by time """%(from_date),as_dict=1)
+	if checkins:
+		d = 0
+		for c in checkins:
+			# print(c.name)
+			if frappe.db.exists("Employee",{'employee_number':c.employee,'status':"Active"}):
+				print("HI")
+				print(c.name)
+				d += 1
+		print(d)
+
+@frappe.whitelist()
+def att_status_auto_email(): 
+	ec = 0
+	from_date = add_days(today(),-1) 
+	ec_count = frappe.db.sql("""select count(*) as count from `tabEmployee Checkin` where date(time) = '%s' """%(from_date),as_dict=True)[0]
+	uec_count = frappe.db.sql("""select count(*) as count from `tabUnregistered Employee Checkin` where date(biometric_time) = '%s' """%(from_date),as_dict=True)[0]
+	att_count = frappe.db.sql("""select count(*) as count from `tabAttendance` where attendance_date = '%s' """%(from_date),as_dict=True)[0]
+	pre_count = frappe.db.sql("""select count(*) as count from `tabAttendance` where attendance_date = '%s' and status = "Present" and on_duty_application = '' """%(from_date),as_dict=True)[0]
+	pre_od_count = frappe.db.sql("""select count(*) as count from `tabAttendance` where attendance_date = '%s' and status = "Present" and on_duty_application != ''"""%(from_date),as_dict=True)[0]
+	abs_count = frappe.db.sql("""select count(*) as count from `tabAttendance` where attendance_date = '%s' and status = "Absent" """%(from_date),as_dict=True)[0]
+	leav_count = frappe.db.sql("""select count(*) as count from `tabAttendance` where attendance_date = '%s' and status = "On Leave" """%(from_date),as_dict=True)[0]
+	skec_count = frappe.db.sql("""select * from `tabEmployee Checkin` where date(time) = '%s' and skip_auto_attendance = 0 """%(from_date),as_dict=True)
+	d = 0
+	for c in skec_count:
+		if frappe.db.exists("Employee",{'employee_number':c.employee,'status':"Active"}):
+			d += 1
+	ec == ((d/ec_count['count'])*100)
+	if ec > 95 :
+		status = "Success"
+	else:
+		status = "Failure"
+	data = ''
+	data += """<tr><td>Description</td><td>Count</td></tr>"""
+	data += """<tr><td>Total Attendance Count</td><td>'%s'</td></tr>"""%(att_count['count'])
+	data += """<tr><td>Total Att-Present Count</td><td>'%s'</td></tr>"""%(pre_count['count'])
+	data += """<tr><td>Total Att-OnDuty Count</td><td>'%s'</td></tr>"""%(pre_od_count['count'])
+	data += """<tr><td>Total Att-Absent Count</td><td>'%s'</td></tr>"""%(abs_count['count'])
+	data += """<tr><td>Total Att-On Leave Count</td><td>'%s'</td></tr>"""%(leav_count['count'])
+	data += """<tr><td>Overall Status</td><td>'%s'</td></tr>"""%(status)
+	data_1 = "<table border='1' " + data + "</table>"
+	frappe.sendmail(
+		recipients=['veeramayandi.p@groupteampro.com'],
+		subject= '%s' " Attendance Status"%(formatdate(from_date)),
+		message=data_1)
+
+
+	
+	
+
+
+

@@ -37,7 +37,7 @@ from datetime import datetime
 from erpnext.hr.utils import get_holiday_dates_for_employee
 import pandas as pd
 from frappe.utils import getdate, cint, add_months, date_diff, add_days, nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime
-from frappe import _
+from frappe import throw,_
 
 
 @frappe.whitelist()
@@ -1340,9 +1340,6 @@ def get_gst_percent(doc,method):
 		frappe.db.set_value("TSAI Invoice",doc.name,"total_gst_amount",grand_total_gst)
 		frappe.db.set_value("TSAI Invoice",doc.name,"total_invoice_amount",tot_amount)
 
-
-
-
 @frappe.whitelist()
 def update_ots():
 	ot = frappe.db.sql(""" select * from `tabQR Checkin` where shift_date between '2023-04-15' and '2023-04-15' and ot = 1 """,as_dict=True)
@@ -1455,18 +1452,11 @@ def miss_att(doc,method):
 def ot_att(doc,method):
 	user = frappe.session.user
 	user_roles = frappe.get_roles(user)
-	# if not ("HR User" in user_roles):
-	if frappe.db.exists("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1}):
-		att = frappe.get_doc("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1},["*"])
-		if att.shift_status not in ["OD","ODW","ODH"]:
-			frappe.throw(_('Attendance Closed for this day %s. For additional details kindly contact the HR Team'%(doc.ot_date)))
-
-
-@frappe.whitelist()
-def get_checkin():
-	ot = frappe.db.sql("""delete from `tabLeave Application` where name = "HR-LAP-2023-05078" """,as_dict = True)
-	print(ot)
- 
+	if not ("System Manager" in user_roles):
+		if frappe.db.exists("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1}):
+			att = frappe.get_doc("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1},["*"])
+			if att.shift_status not in ["OD","ODW","ODH"]:
+				frappe.throw(_('Attendance Closed for this day %s. For additional details kindly contact the HR Team'%(doc.ot_date)))
 
 @frappe.whitelist()
 def make_old_iym_sheet():
@@ -1548,18 +1538,6 @@ def get_live_stock():
 			df = df[df['Warehouse'].isin(wh_list)]
 			stock = pd.to_numeric(df["Qty"]).sum()
 		print(stock or 0)
-	
-@frappe.whitelist()
-def update_checkin_bc():
-	checkin = frappe.db.sql("""select * from  `tabEmployee Checkin` where skip_auto_attendance = 0 and date(time) between "2023-08-26" and "2023-09-07" """,as_dict = True)
-	# print(checkin)
-	for c in checkin:
-		# print(c.name)
-		if frappe.db.exists("Employee",{'name':c.name,'status':"Active"}):
-			print("HI")
-		else:
-			print("HII")
-	# return "ok"
 
 @frappe.whitelist()
 def enqueue_checkin_bulk_upload_csv(filename):
@@ -1625,7 +1603,11 @@ def cost_cen(filename):
 
 
 @frappe.whitelist()
-def update_leave():
-	print("HI")
-	urc = frappe.db.sql("""delete from `tabUnregistered Employee Checkin` where biometric_time < "2023-09-26" """,as_dict = True)
-	print(urc)
+def inactive_employee(doc,method):
+	if doc.status=="Active":
+		if doc.relieving_date:
+			throw(_("Please remove the relieving date for the Active Employee."))
+
+
+
+	

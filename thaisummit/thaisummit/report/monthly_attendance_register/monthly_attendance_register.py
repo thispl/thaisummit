@@ -17,6 +17,7 @@ bc_status_map = {
 	"Holiday": "HH",
 	"Weekly Off": "WW",
 	"WW":"WW",
+	"HH":"HH",
 	"1H": "1H",
 	"2H": "2H",
 	"3H": "3H",
@@ -118,6 +119,7 @@ wc_status_map = {
 	"Half Day": "HD",
 	"Holiday": "HH",
 	"WW":"WW",
+	"HH":"HH",
 	"1H": "1H",
 	"2H": "2H",
 	"3H": "3H",
@@ -281,30 +283,13 @@ def add_data(employee_map, att_map, filters, holiday_map, conditions, default_ho
 						if filtered_date == holiday_map[emp_holiday_list][idx][0]:
 							if frappe.db.exists('Attendance',{'attendance_date':filterdate,'employee':emp}):
 								shift = frappe.get_value('Attendance',{'attendance_date':filterdate,'employee':emp },['employee_type','shift','qr_shift','late_entry','shift_status','in_time','out_time']) or ''
-								if shift[2]	!= '' or shift[5]	!= '' or shift[6]	!= '':
-									late = ''
+								if shift[4] == "AA":
 									if holiday_map[emp_holiday_list][idx][1]:
-										if shift[0] == 'WC':
-											if shift[1]:
-												status = shift[1] + late + "W"
-											elif shift[4]:
-												status = 'ODW'	
-											elif shift[4]:
-												status = 'ODH'	
-											else:
-												status = "WW"
-										else:
-											if shift[2]:
-												status = shift[2] + late + "W"
-											else:
-												status = "WW"
+										status = "Weekly Off"
 									else:
-										if shift[0] == 'WC':
-											if shift[1]:
-												status = shift[1] + late+ "H"
-										else:
-											if shift[2]:
-												status = shift[2] + late + "H"
+										status = "Holiday"
+								else:
+									status = shift[4]
 							else:
 								if holiday_map[emp_holiday_list][idx][1]:
 									status = "Weekly Off"

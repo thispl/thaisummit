@@ -170,7 +170,7 @@ def get_data(filters):
                     gross_weight = 0
                     net_weight = 0
                     gross_wt_cost = 0
-                    final_part_cost = p.final
+                    final_part_cost = round((p.final_amount),2)
                     rm_cost = 0
                     scrap_weight = 0
                     scrap_cost = 0
@@ -188,19 +188,19 @@ def get_data(filters):
                             else:
                                 price = 0
                                    
-                    scrap_master = frappe.get_doc('PCS Scrap Master','PCS Scrap Master')
-                    frappe.errprint("hi")
-                    for s in scrap_master.scrap_master:
-                        if p.vendor_name == s.vendor_name:
-                            cus = s.iym
-                        gross_weight = float(p.gross_weight)
-                        net_weight = float(p.net_weight)
-                        gross_wt_cost = round((gross_weight * price),3)
-                        scrap_weight = round((gross_weight - net_weight),3)
-                        scrap_cost = round((scrap_weight * float(s.iym)),2)
-                        rm_cost = round((gross_wt_cost - scrap_cost),2)
-                        # final_part_cost = round((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost)),3)
-                        final_part_cost = round(((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost)) - float(p.reduction_cost)),2)
+                        scrap_master = frappe.get_doc('PCS Scrap Master','PCS Scrap Master')
+                        frappe.errprint("hi")
+                        for s in scrap_master.scrap_master:
+                            if p.vendor_name == s.vendor_name:
+                                cus = s.iym
+                            gross_weight = float(p.gross_weight)
+                            net_weight = float(p.net_weight)
+                            gross_wt_cost = (gross_weight * price)
+                            scrap_weight = (gross_weight - net_weight)
+                            scrap_cost = (scrap_weight * float(cus))
+                            rm_cost = (gross_wt_cost - scrap_cost)
+                            # final_part_cost = round((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost)),3)
+                            final_part_cost = round((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost) - float(p.reduction_cost)),2)
 
         elif filters.customer == "RE":
             if p.customer == "RE":
@@ -209,7 +209,7 @@ def get_data(filters):
                     gross_weight = 0
                     net_weight = 0
                     gross_wt_cost = 0
-                    final_part_cost = p.final
+                    final_part_cost = round((p.final_amount),2)
                     rm_cost = 0
                     scrap_weight = 0
                     scrap_cost = 0
@@ -238,10 +238,10 @@ def get_data(filters):
                                     cus = s.re
                                 gross_weight = float(p.gross_weight)
                                 net_weight = float(p.net_weight)
-                                gross_wt_cost = round((gross_weight * price),3)
-                                scrap_weight = round((gross_weight - net_weight),3)
-                                scrap_cost = round((scrap_weight * float(s.re)),2)
-                                rm_cost = round((gross_wt_cost - scrap_cost),2)
+                                gross_wt_cost = (gross_weight * price)
+                                scrap_weight = (gross_weight - net_weight)
+                                scrap_cost = (scrap_weight * float(cus))
+                                rm_cost = (gross_wt_cost - scrap_cost)
                                 # rm_cost = round((price * gross_weight),3)
                                 # final_part_cost = round((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost)),3)
                                 final_part_cost = round(((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost)) - float(p.reduction_cost)),2)
@@ -267,7 +267,7 @@ def get_data(filters):
                             rm_cost = round((price * gross_weight),2)
                             final_part_cost = round(((float(p.process_cost) + float(p.admin_cost) + float(rm_cost) + float(p.transport_cost)) - float(p.reduction_cost)),2)
         
-        row =[p.customer,p.vendor_code,p.vendor_name,p.item_code,p.part_no,p.parts_name,p.model,p.grade,p.mat_type,p.size_type,p.rm_length,p.rm__width,p.rm_thick,p.strip_qty,round(float(p.gross_weight),3),p.net_weight,scrap_weight,price,gross_wt_cost,cus,scrap_cost,rm_cost,round(float(p.process_cost),3),round(float(p.admin_cost),3),round(float(p.transport_cost),3),final_part_cost]
+        row =[p.customer,p.vendor_code,p.vendor_name,p.item_code,p.part_no,p.parts_name,p.model,p.grade,p.mat_type,p.size_type,p.rm_length,p.rm__width,p.rm_thick,p.strip_qty,p.gross_weight,p.net_weight,scrap_weight,price,gross_wt_cost,cus,scrap_cost,rm_cost,(float(p.process_cost)),(float(p.admin_cost)),(float(p.transport_cost)),(final_part_cost)]
         data.append(row)
     return data
 

@@ -176,9 +176,9 @@ doc_events = {
 	"Employee": {
 		"on_update":[ 
 			"thaisummit.custom.delete_left_att",
-			"thaisummit.custom.mark_biometric_pin"
-
-		]
+			"thaisummit.custom.mark_biometric_pin",
+		],
+		"validate": "thaisummit.custom.inactive_employee"
 
 		# "on_cancel": "method",
 		# "on_trash": "method"
