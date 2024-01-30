@@ -127,49 +127,49 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
 	ws.merge_cells(start_row=2, start_column=18, end_row=2, end_column= 24)
 	ws.merge_cells(start_row=2, start_column=25, end_row=2, end_column= 26)
 
-	ws.merge_cells(start_row=56, start_column=1, end_row=56, end_column= 26)
+	ws.merge_cells(start_row=len(data)+4, start_column=1, end_row=len(data)+4, end_column= 26)
 	
 	total1= get_total1(args)
 	for val in total1:
 		ws.append(val)
-		ws.merge_cells(start_row=57, start_column=1, end_row=57, end_column= 3)
+		ws.merge_cells(start_row=len(data)+5, start_column=1, end_row=len(data)+5, end_column= 3)
 	total2 = get_total2(args)
 	for val in total2:
 		ws.append(val)
-		ws.merge_cells(start_row=58, start_column=1, end_row=58, end_column= 3)
+		ws.merge_cells(start_row=len(data)+6, start_column=1, end_row=len(data)+6, end_column= 3)
 	total3 = get_total3(args)
 	for val in total3:
 		ws.append(val)
-		ws.merge_cells(start_row=59, start_column=1, end_row=59, end_column= 3)
+		ws.merge_cells(start_row=len(data)+7, start_column=1, end_row=len(data)+7, end_column= 3)
 	total4 = get_total4(args)
 	for val in total4:
 		ws.append(val)
-		ws.merge_cells(start_row=60, start_column=1, end_row=60, end_column= 3)
+		ws.merge_cells(start_row=len(data)+8, start_column=1, end_row=len(data)+8, end_column= 3)
 	total= get_total(args)
 	for val in total:
 		ws.append(val)
-		ws.merge_cells(start_row=61, start_column=1, end_row=61, end_column= 3)
+		ws.merge_cells(start_row=len(data)+9, start_column=1, end_row=len(data)+9, end_column= 3)
 	border = Border(left=Side(border_style='thin', color='000000'),
 			right=Side(border_style='thin', color='000000'),
 			top=Side(border_style='thin', color='000000'),
 			bottom=Side(border_style='thin', color='000000')) 
 	align_center = Alignment(horizontal='center',vertical='center')
-	for cell in ws["57:57"]:
-		cell.alignment = align_center
-	for cell in ws['58:58']:
-		cell.alignment = align_center
-	for cell in ws["59:59"]:
-		cell.alignment = align_center
-	for cell in ws['60:60']:
-		cell.alignment = align_center
-	for cell in ws['61:61']:
-		cell.alignment = align_center
-		cell.font = Font(bold=True)
+	# for cell in ws["57:57"]:
+	# 	cell.alignment = align_center
+	# for cell in ws['58:58']:
+	# 	cell.alignment = align_center
+	# for cell in ws["59:59"]:
+	# 	cell.alignment = align_center
+	# for cell in ws['60:60']:
+	# 	cell.alignment = align_center
+	# for cell in ws['61:61']:
+	# 	cell.alignment = align_center
+		# cell.font = Font(bold=True)
 	border = Border(left=Side(border_style='thin', color='000000'),
 			right=Side(border_style='thin', color='000000'),
 			top=Side(border_style='thin', color='000000'),
 			bottom=Side(border_style='thin', color='000000')) 
-	for rows in ws.iter_rows(min_row=57,max_row=61, min_col=1, max_col=26):
+	for rows in ws.iter_rows(min_row=len(data)+4,max_row=len(data)+9, min_col=1, max_col=26):
 		for cell in rows:
 			cell.border = border
 
@@ -199,7 +199,7 @@ def title1(args):
 
 @frappe.whitelist()
 def get_column(args):
-	data=["Cost Center Parent","CC","Dept","BAS","HRA","CON","SPA","CH","WA","P ALLO",'ATA','SHT','Additional Allowance','Arrear','Transport allowance','OT AMT','Gross','PF','ESI','CAT','PTAX','LWF','othe Deduc','TOTAL','NET SALARY','Bonus']
+	data=["Cost Center Parent","CC","Dept","BAS","HRA","CON","SPA","CH","WA","P ALLO",'ATA','SHT','Additional Allowance','Attendance Bonus','Arrear','Transport allowance','OT AMT','Gross','PF','ESI','CAT','PTAX','LWF','othe Deduc','TOTAL','NET SALARY','Bonus']
 	return data
 
 @frappe.whitelist()
@@ -210,6 +210,7 @@ def get_data(args):
 	total_hra = 0
 	total_con = 0
 	total_spa = 0
+	total_ab=0
 	total_aa = 0
 	total_a = 0
 	total_ch = 0
@@ -272,8 +273,14 @@ def get_data(args):
 			aa = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as aa from `tabSalary Slip`
 			left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Additional Allowance' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].aa
 
-			a = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as sht from `tabSalary Slip`
+			ab = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as ab from `tabSalary Slip`
+			left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Attendance Bonus' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].ab
+
+
+			a = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as a from `tabSalary Slip`
 			left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Arrear' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].a 
+
+			
 
 			ta = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as ta from `tabSalary Slip`
 			left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Transport Allowance' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].ta
@@ -314,7 +321,7 @@ def get_data(args):
 			if(basic):
 				bonus = round(basic / 12)
 
-			row = [group,dept.cost_centre,dept.name,basic or 0,hra or 0,con or 0,spa or 0,ch or 0,wa or 0,pa or 0,ata or 0,sht or 0,aa or 0,a or 0,ta or 0,ot or 0,gross or 0,pf or 0,esi or 0,can or 0,ptax or 0,tds or 0,od or 0,total_deduct or 0,net_pay or 0,bonus or 0]
+			row = [group,dept.cost_centre,dept.name,basic or 0,hra or 0,con or 0,spa or 0,ch or 0,wa or 0,pa or 0,ata or 0,sht or 0,aa or 0,ab or 0, a or 0,ta or 0,ot or 0,gross or 0,pf or 0,esi or 0,can or 0,ptax or 0,tds or 0,od or 0,total_deduct or 0,net_pay or 0,bonus or 0]
 			data.append(row)
 			total_basic += basic or 0
 			total_hra +=  hra or 0
@@ -326,6 +333,7 @@ def get_data(args):
 			total_ata += ata or 0
 			total_sht += sht or 0
 			total_aa += aa or 0
+			total_ab += ab or 0
 			total_a += a or 0
 			total_ta += ta or 0
 			total_ot += ot or 0
@@ -340,7 +348,7 @@ def get_data(args):
 			total_net_pay += net_pay or 0
 			total_bonus += bonus or 0
 
-	row = ['Total','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
+	row = ['Total','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_ab or 0 ,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
 	data.append(row)  
 			
 	return data
@@ -354,6 +362,8 @@ def get_total1(args):
 	total_con = 0
 	total_spa = 0
 	total_aa = 0
+	total_ab = 0
+
 	total_a = 0
 	total_ch = 0
 	total_wa = 0
@@ -413,6 +423,9 @@ def get_total1(args):
 		aa = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as aa from `tabSalary Slip`
 		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Additional Allowance' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].aa
 
+		ab = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as ab from `tabSalary Slip`
+		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Attendance Bonus' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].ab
+
 		a = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as sht from `tabSalary Slip`
 		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Arrear' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].a 
 
@@ -464,6 +477,7 @@ def get_total1(args):
 		total_ata += ata or 0
 		total_sht += sht or 0
 		total_aa += aa or 0
+		total_ab += ab or 0
 		total_a += a or 0
 		total_ta += ta or 0
 		total_ot += ot or 0
@@ -477,7 +491,7 @@ def get_total1(args):
 		total_total_deduct += total_deduct or 0
 		total_net_pay += net_pay or 0
 		total_bonus += bonus or 0
-		row = ['Management','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
+	row = ['Management','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_ab or 0, total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
 	data.append(row)  
 			
 	return data
@@ -489,6 +503,8 @@ def get_total2(args):
 	total_con = 0
 	total_spa = 0
 	total_aa = 0
+	total_ab = 0
+
 	total_a = 0
 	total_ch = 0
 	total_wa = 0
@@ -548,6 +564,10 @@ def get_total2(args):
 		aa = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as aa from `tabSalary Slip`
 		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Additional Allowance' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].aa
 
+		ab = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as ab from `tabSalary Slip`
+		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Attendance Bonus' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].ab
+
+
 		a = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as sht from `tabSalary Slip`
 		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Arrear' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].a 
 
@@ -598,6 +618,8 @@ def get_total2(args):
 		total_ata += ata or 0
 		total_sht += sht or 0
 		total_aa += aa or 0
+		total_ab += ab or 0
+		
 		total_a += a or 0
 		total_ta += ta or 0
 		total_ot += ot or 0
@@ -611,7 +633,7 @@ def get_total2(args):
 		total_total_deduct += total_deduct or 0
 		total_net_pay += net_pay or 0
 		total_bonus += bonus or 0
-		row = ['Admin','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
+	row = ['Admin','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_ab or 0 ,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
 	data.append(row)  
 	return data
 @frappe.whitelist()
@@ -628,6 +650,8 @@ def get_total3(args):
 	total_pa = 0
 	total_ata = 0
 	total_sht = 0
+	total_ab = 0
+
 	total_ta =0
 	total_ot = 0
 	total_gross = 0
@@ -681,6 +705,10 @@ def get_total3(args):
 		aa = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as aa from `tabSalary Slip`
 		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Additional Allowance' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].aa
 
+		ab = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as ab from `tabSalary Slip`
+		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Attendance Bonus' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].ab
+
+
 		a = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as sht from `tabSalary Slip`
 		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Arrear' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].a 
 
@@ -732,6 +760,7 @@ def get_total3(args):
 		total_ata += ata or 0
 		total_sht += sht or 0
 		total_aa += aa or 0
+		total_ab += ab or 0
 		total_a += a or 0
 		total_ta += ta or 0
 		total_ot += ot or 0
@@ -745,7 +774,7 @@ def get_total3(args):
 		total_total_deduct += total_deduct or 0
 		total_net_pay += net_pay or 0
 		total_bonus += bonus or 0
-		row = ['Support','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
+	row = ['Support','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_ab or 0 ,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
 	data.append(row)  
 	return data
 @frappe.whitelist()
@@ -754,6 +783,8 @@ def get_total4(args):
 	total_basic  = 0
 	total_hra = 0
 	total_con = 0
+	total_ab = 0
+
 	total_spa = 0
 	total_aa = 0
 	total_a = 0
@@ -815,6 +846,10 @@ def get_total4(args):
 		aa = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as aa from `tabSalary Slip`
 		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Additional Allowance' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].aa
 
+		ab = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as ab from `tabSalary Slip`
+		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Attendance Bonus' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].ab
+
+
 		a = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as sht from `tabSalary Slip`
 		left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Arrear' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].a 
 
@@ -866,6 +901,7 @@ def get_total4(args):
 		total_ata += ata or 0
 		total_sht += sht or 0
 		total_aa += aa or 0
+		total_ab += ab or 0
 		total_a += a or 0
 		total_ta += ta or 0
 		total_ot += ot or 0
@@ -879,7 +915,7 @@ def get_total4(args):
 		total_total_deduct += total_deduct or 0
 		total_net_pay += net_pay or 0
 		total_bonus += bonus or 0
-		row = ['Production','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
+	row = ['Production','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_ab or 0 ,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
 	data.append(row)  
 	return data
 @frappe.whitelist()
@@ -889,6 +925,8 @@ def get_total(args):
 	total_basic  = 0
 	total_hra = 0
 	total_con = 0
+	total_ab = 0
+
 	total_spa = 0
 	total_aa = 0
 	total_a = 0
@@ -952,6 +990,10 @@ def get_total(args):
 			aa = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as aa from `tabSalary Slip`
 			left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Additional Allowance' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].aa
 
+			ab = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as ab from `tabSalary Slip`
+		    left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Attendance Bonus' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].ab
+
+
 			a = frappe.db.sql("""select sum(`tabSalary Detail`.amount) as sht from `tabSalary Slip`
 			left join `tabSalary Detail` on `tabSalary Slip`.name = `tabSalary Detail`.parent where `tabSalary Slip`.department = '%s' and `tabSalary Detail`.salary_component = 'Arrear' and `tabSalary Slip`.employee_type='%s' and`tabSalary Slip`.start_date ='%s' and `tabSalary Slip`.end_date = '%s' """%(dept.name,args.employee_type,args.from_date,args.to_date),as_dict=True)[0].a 
 
@@ -1003,6 +1045,7 @@ def get_total(args):
 			total_ata += ata or 0
 			total_sht += sht or 0
 			total_aa += aa or 0
+			total_ab += ab or 0
 			total_a += a or 0
 			total_ta += ta or 0
 			total_ot += ot or 0
@@ -1016,7 +1059,7 @@ def get_total(args):
 			total_total_deduct += total_deduct or 0
 			total_net_pay += net_pay or 0
 			total_bonus += bonus or 0
-	row = ['Total','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
+	row = ['Total','','',total_basic or 0, total_hra or 0,total_con or 0,total_spa or 0,total_ch or 0,total_wa or 0,total_pa or 0,total_ata or 0,total_sht or 0,total_aa or 0,total_ab or 0 ,total_a or 0,total_ta or 0,total_ot or 0,total_gross,total_pf or 0,total_esi or 0,total_can or 0,total_ptax or 0,total_tds or 0,total_od or 0,total_total_deduct or 0,total_net_pay or 0,total_bonus or 0]
 	data.append(row)  
 			
 	return data

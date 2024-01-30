@@ -33,7 +33,6 @@
    "options": "\nJan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSep\nOct\nNov\nDec"
   },
   {
-   "default": "2022",
    "fieldname": "year",
    "fieldtype": "Link",
    "label": "Year",
@@ -68,7 +67,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-29 20:51:12.035017",
+ "modified": "2023-12-18 15:17:40.205413",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Download Salary Slip",

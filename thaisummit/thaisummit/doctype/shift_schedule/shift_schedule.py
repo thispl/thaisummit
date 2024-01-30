@@ -640,6 +640,17 @@ def get_count(from_date,to_date,filename):
 	_file = frappe.get_doc("File", {"file_url":filename})
 	filepath = get_file(filename)
 	pps = read_csv_content(filepath[1])
+	for pp in pps:
+		if pp[5] != 'Shift':
+			if not frappe.db.exists("Employee",{'name':pp[0],'status':"Active"}):
+				frappe.throw(_("Please Upload the Valid Employee.Kindly check the file %s and try again"%(pp[0])))
+			if not frappe.db.exists("Department",{'name':pp[2]}):
+				frappe.throw(_("Please Upload the Valid Department.Kindly check the file %s and try again"%(pp[2])))
+			if not frappe.db.exists("Shift Type",{'name':pp[5]}):
+				frappe.throw(_("Please Upload the Valid Shift Type.Kindly check the file %s and try again"%(pp[5])))
+			if not frappe.db.exists("Route No",{'name':pp[6]}):
+				frappe.throw(_("Please Upload the Valid Route No.Kindly check the file %s and try again"%(pp[6])))
+		
 	sr1_count = 0
 	sr2_count = 0
 	sr3_count = 0

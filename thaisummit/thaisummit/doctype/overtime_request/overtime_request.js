@@ -196,17 +196,7 @@ frappe.ui.form.on('Overtime Request', {
 	},
 	to_time(frm) {
 		// if (frm.doc.to_time) {
-		// 	frappe.call({
-		// 		method: 'thaisummit.custom.roundoff_time',
-		// 		args: {
-		// 			time: frm.doc.to_time
-		// 		},
-		// 		callback(r) {
-		// 			if (r.message) {
-		// 				frm.set_value('to_time', r.message)
-		// 			}
-		// 		}
-		// 	})
+			
 		// }
 		if (frm.doc.from_time && frm.doc.to_time) {
 			frappe.call({
@@ -274,5 +264,20 @@ frappe.ui.form.on('Overtime Request', {
 		// 		}
 		// 	})
 		// }
+		frappe.call({
+			method: 'thaisummit.thaisummit.doctype.overtime_request.overtime_request.check_holidays',
+			args: {
+				'ot_date':frm.doc.ot_date
+			},
+			callback(r) {
+				if (r.message) {
+					frm.set_df_property('to_time', 'read_only', 1);
+				
+				}
+				else{
+					frm.set_df_property('to_time', 'read_only', 0);
+				}
+			}
+		})
 	}
 });

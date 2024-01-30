@@ -374,7 +374,7 @@ class GenerateTagCard(Document):
 			}
 			response = requests.request("POST", url, headers=headers, data=payload)
 			res = json.loads(response.text)
-			frappe.log_error(res['Status'])
+			# frappe.log_error(res['Status'])
 			tab.status = res['Status']
 			tab.append('workflow_tracker_table',{
 				'flow_name': children[0].workflow,
@@ -382,9 +382,9 @@ class GenerateTagCard(Document):
 				'date':date.today(),
 				'user_name':self.user_name
 			})
-			frappe.log_error(title="generate_tag_card",message=payload)
+			# frappe.log_error(title="generate_tag_card",message=payload)
 			u_name = frappe.db.sql("""select username from `tabUser` where name='%s' """%(frappe.session.user),as_dict=1)[0]
-			frappe.log_error(title="generate_tag_card",message=u_name['username'])
+			# frappe.log_error(title="generate_tag_card",message=u_name['username'])
 			tab.save(ignore_permissions=True)
 			frappe.db.commit()
 

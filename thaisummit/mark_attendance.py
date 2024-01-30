@@ -53,12 +53,12 @@ def mark_shift_status():
 		from_date = add_days(from_date,1)
 	
 def mark_att_daily_hooks():
-	from_date = today()
-	mark_att(from_date)
 	from_date = add_days(today(),-1)
 	mark_att(from_date)
-	# from_date = "2023-11-24"
-	# to_date = "2023-11-24"
+	from_date = today()
+	mark_att(from_date)
+	# from_date = "2023-12-11"
+	# to_date = "2023-12-16"
 	# dates = get_dates(from_date,to_date)
 	# for date in dates:
 	# 	mark_att(date)
@@ -284,7 +284,8 @@ def mark_qr_checkin(from_date):
 		qr_checkins = frappe.db.sql("select name, employee,qr_shift,qr_scan_time,shift_date from `tabQR Checkin` where shift_date = '%s' and ot = 1 order by qr_scan_time ASC"%(from_date),as_dict=True)
 		for qr in qr_checkins:
 			if frappe.db.exists('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee,'docstatus':'0'}):
-				att = frappe.get_doc('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee})
+				att = frappe.get_doc('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee,'docstatus':('!=',2)})
+				frappe.errprint(att)
 				att.qr_shift = qr.qr_shift
 				att.qr_scan_time = qr.qr_scan_time
 				att.save(ignore_permissions=True)
@@ -294,7 +295,8 @@ def mark_qr_checkin(from_date):
 		qr_checkins = frappe.db.sql("select name, employee,qr_shift,qr_scan_time,shift_date from `tabQR Checkin` where shift_date = '%s' and ot = 0 order by qr_scan_time ASC"%(from_date),as_dict=True)
 		for qr in qr_checkins:
 			if frappe.db.exists('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee,'docstatus':'0'}):
-				att = frappe.get_doc('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee})
+				att = frappe.get_doc('Attendance',{'attendance_date':qr.shift_date,'employee':qr.employee,'docstatus':('!=',2)})
+				frappe.errprint(att)
 				att.qr_shift = qr.qr_shift
 				att.qr_scan_time = qr.qr_scan_time
 				att.save(ignore_permissions=True)
@@ -416,7 +418,7 @@ def mark_on_duty(from_date):
 			att.attendance_date = from_date
 			att.on_duty_application = od.name
 			att.save(ignore_permissions=True)
-			att.submit()
+			# att.submit()
 			frappe.db.commit()
 		else:
 			frappe.db.set_value('Attendance',onduty,"on_duty_application",od.name)
@@ -895,6 +897,8 @@ def method():
 				
 @frappe.whitelist()
 def get_urc_to_ec(from_date):
+	frappe.errprint(from_date)
+	frappe.errprint("HI")
 	urc = frappe.db.sql("""select biometric_pin,biometric_time,log_type,locationdevice_id,name from `tabUnregistered Employee Checkin` where date(biometric_time) = '%s' """%(from_date),as_dict=True)
 	for uc in urc:
 		pin = uc.biometric_pin
@@ -905,6 +909,7 @@ def get_urc_to_ec(from_date):
 		if time != "":
 			if frappe.db.exists('Employee',{'biometric_pin':pin}):
 				if not frappe.db.exists('Employee Checkin',{'biometric_pin':pin,"time":time}):
+					frappe.errprint(pin)
 					ec = frappe.new_doc('Employee Checkin')
 					ec.biometric_pin = pin
 					ec.employee = frappe.db.get_value('Employee',{'biometric_pin':pin},['employee_number'])
@@ -913,8 +918,9 @@ def get_urc_to_ec(from_date):
 					ec.log_type = typ
 					ec.save(ignore_permissions=True)
 					frappe.db.commit()
+					frappe.errprint("Created")
 					attendance = frappe.db.sql(""" delete from `tabUnregistered Employee Checkin` where name = '%s' """%(nam))      
-	return "ok"
+	return "OK"
 
 @frappe.whitelist()
 def delete_urc_automatically():
@@ -922,6 +928,61 @@ def delete_urc_automatically():
 	to_date = add_days(today(),-34)  
 	urc = frappe.db.sql("""delete from `tabUnregistered Employee Checkin` where date(biometric_time) between '%s' and '%s'  """%(from_date,to_date),as_dict = True)
 	
+from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
+@frappe.whitelist()
+def update_leave_att():
+	from_date = add_days(today(),-10)  
+	to_date = add_days(today(),-0)  
+	date_list = get_dates(from_date,to_date)
+	for d in date_list:
+		leave_list = frappe.db.sql("""select * from `tabLeave Application` where docstatus != '2' and from_date between '%s' and '%s' and to_date between '%s' and '%s' """%(d,d,d,d), as_dict=True)
+		for l in leave_list:
+			if l.status == "Approved":
+				for dt in daterange(getdate(l.from_date), getdate(l.to_date)):
+					date = dt.strftime("%Y-%m-%d")
+					status = "Half Day" if l.half_day_date and getdate(date) == getdate(l.half_day_date) else "On Leave"
+					attendance_name = frappe.db.exists('Attendance', dict(employee = l.employee,
+						attendance_date = date, docstatus = ('!=', 2)))
+					if attendance_name:
+						doc = frappe.get_doc('Attendance', attendance_name)
+						if status:
+							doc.db_set('status', status)
+							doc.db_set('leave_type', l.leave_type)
+							doc.db_set('leave_application', l.name)
+							if status == "On Leave":
+								doc.db_set('shift_status', l.leave_type)
+							else:
+								doc.db_set('shift_status', "0.5" + l.leave_type)
+							doc.db_set('docstatus', 1)
+					else:
+						doc = frappe.new_doc("Attendance")
+						doc.employee = l.employee
+						doc.employee_name = l.employee_name
+						doc.attendance_date = date
+						doc.company = l.company
+						doc.leave_type = l.leave_type
+						doc.leave_application = l.name
+						doc.status = status
+						if status == "On Leave":
+							doc.db_set('shift_status', l.leave_type)
+						else:
+							doc.db_set('shift_status', "0.5" + l.leave_type)
+						doc.flags.ignore_validate = True
+						doc.save(ignore_permissions=True)
+						doc.db_set('docstatus', 1)
+
+		miss_punch = frappe.db.sql("""select * from `tab Miss Punch Application` where docstatus != '2' and attendance_date between '%s' and '%s' """%(d,d), as_dict=True)
+		for m in miss_punch:
+			if m.workflow_state == "Approved":
+				frappe.db.set_value("Attendance",m.attendance,"in_time",m.in_time)
+				frappe.db.set_value("Attendance",m.attendance,"out_time",m.out_time)
+				frappe.db.set_value("Attendance",m.attendance,"qr_shift",m.qr_shift)
+				frappe.db.set_value("Attendance",m.attendance,"status","Present")
+				if not frappe.db.get_value("Attendance",m.attendance,"shift"):
+					if m.qr_shift:
+						frappe.db.set_value("Attendance",m.attendance,"shift",m.qr_shift)
+					else:
+						frappe.db.set_value("Attendance",m.attendance,"shift",'1')
 
 @frappe.whitelist()
 def cron_job2():
@@ -936,19 +997,29 @@ def cron_job2():
 		sjt.save(ignore_permissions=True)
 
 @frappe.whitelist()
-def update_att():  
-	from_date = "2023-11-18"
-	checkins = frappe.db.sql(
-		"""select * from `tabEmployee Checkin` where skip_auto_attendance = 0 and date(time) = '%s' order by time """%(from_date),as_dict=1)
-	if checkins:
-		d = 0
-		for c in checkins:
-			# print(c.name)
-			if frappe.db.exists("Employee",{'employee_number':c.employee,'status':"Active"}):
-				print("HI")
-				print(c.name)
-				d += 1
-		print(d)
+def cron_job3():
+	job = frappe.db.exists('Scheduled Job Type', 'mark_att_daily_hooks')
+	if not job:
+		sjt = frappe.new_doc("Scheduled Job Type")  
+		sjt.update({
+			"method" : 'thaisummit.mark_attendance.mark_att_daily_hooks',
+			"frequency" : 'Cron',
+			"cron_format" : '0 */1 * * *'
+		})
+		sjt.save(ignore_permissions=True)
+
+@frappe.whitelist()
+def cron_job4():
+	job = frappe.db.exists('Scheduled Job Type', 'update_leave_att')
+	if not job:
+		sjt = frappe.new_doc("Scheduled Job Type")  
+		sjt.update({
+			"method" : 'thaisummit.mark_attendance.update_leave_att',
+			"frequency" : 'Cron',
+			"cron_format" : '30 09 * * *'
+		})
+		sjt.save(ignore_permissions=True)
+
 
 @frappe.whitelist()
 def att_status_auto_email(): 
@@ -986,8 +1057,21 @@ def att_status_auto_email():
 		message=data_1)
 
 
-	
-	
-
-
-
+@frappe.whitelist()
+def update_att_shift_status(doc,method):
+	if doc.leave_application:
+		leave = doc.leave_type
+		ss = ''
+		if doc.status == "On Leave":
+			if leave != '':
+				ss = leave
+			else:
+				ss = ''
+		elif doc.status == "Half Day":
+			if leave:
+				ss = str(0.5) + leave
+			else:
+				ss = '0.5 Leave Without Pay'
+		frappe.db.set_value('Attendance',doc.name,'shift_status',str(ss))
+		
+			

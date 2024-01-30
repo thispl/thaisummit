@@ -45,9 +45,16 @@ def reset_supplier_invoice_no():
 def leave_restriction(leave,from_date):
     before = frappe.get_value('Leave Type',{'name':leave},['before'])*-1
     after = frappe.get_value('Leave Type',{'name':leave},['after'])
+    frappe.errprint(before)
+    frappe.errprint(after)
+    frappe.errprint(add_days(today(),after))
+    frappe.errprint(add_days(today(),before))
     if from_date > add_days(today(),after):
+        frappe.errprint("HI")
         return 'No'
+        
     elif from_date < add_days(today(),before):
+        frappe.errprint("HII")
         return 'No'
 
 @frappe.whitelist()

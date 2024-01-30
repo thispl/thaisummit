@@ -189,8 +189,8 @@ def build_xlsx_response(filename,args):
 				'fcontent': xlsx_file.getvalue()
 			}]
     frappe.sendmail(
-            recipients= ['abdulla.pi@groupteampro.com','Dittavarong.Gat@thaisummit.co.th','chaiyasit.sas@thaisummit.co.in','ravi.nar@thaisummit.co.in','sugu.aru@thaisummit.co.in','saravanan.sub@thaisummit.co.in','gopi.sek@thaisummit.co.in','vasanth.sol@thaisummit.co.in','rajaguru.sad@thaisummit.co.in','asha.ntr@thaisummit.co.in','abhishek.sha@thaisummit.co.th','atichat.kum@thaisummit.co.th','uthaiporn.pun@thaisummit.co.th','rajaram.ram@thaisummit.co.in',' kumaresan.sel@thaisummit.co.in','deepanch.jay@thaisummit.co.in'],
-            # recipients= ['subash.p@groupteampro.com'],
+            recipients= ['Dittavarong.Gat@thaisummit.co.th','chaiyasit.sas@thaisummit.co.in','ravi.nar@thaisummit.co.in','sugu.aru@thaisummit.co.in','saravanan.sub@thaisummit.co.in','gopi.sek@thaisummit.co.in','vasanth.sol@thaisummit.co.in','rajaguru.sad@thaisummit.co.in','asha.ntr@thaisummit.co.in','abhishek.sha@thaisummit.co.th','atichat.kum@thaisummit.co.th','uthaiporn.pun@thaisummit.co.th','rajaram.ram@thaisummit.co.in',' kumaresan.sel@thaisummit.co.in','deepanch.jay@thaisummit.co.in'],
+            # recipients= ['veeramayandi.p@groupteampro.com'],
             subject="Daily Sales Report",
             attachments= attachments,
             message= """Dear Team, <br><br> Kindly find the attached Daily Sales Report.""")

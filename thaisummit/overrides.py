@@ -108,9 +108,6 @@ class CustomSalarySlip(SalarySlip):
 				if d.status == "Absent" or \
 					(d.leave_type and d.leave_type in leave_type_map.keys() and not leave_type_map[d.leave_type]['include_holiday']):
 						continue
-				# elif d.status in ("Present","Half Day"):
-				#     frappe.errprint(d.attendance_date)
-
 			if d.leave_type:
 				fraction_of_daily_salary_per_leave = leave_type_map[d.leave_type]["fraction_of_daily_salary_per_leave"]
 
@@ -155,8 +152,6 @@ class CustomSalarySlip(SalarySlip):
 		for d in od_attendances:
 			transport_days += 1
 		for d in present_attendances:
-			# holiday = check_holiday(d.attendance_date)
-			# if not holiday:
 			if d.shift_status in ("11",'1L1'):
 				shift1 += 1
 			if d.shift_status in ('2','22', '2L2', '2W', '2LW'):
@@ -177,8 +172,6 @@ class CustomSalarySlip(SalarySlip):
 		self.transport_days = transport_days
 		self.leave_days = leave_days
 		self.transport_allowance = frappe.db.get_value('Designation',self.designation,'transport_allowance')
-		# frappe.db.set_value('Salary Slip',self.name,'transport_allowance',transport_allowance)
-		frappe.errprint(self.transport_allowance)
 		if self.employee_type == 'WC':
 			self.attendance_bonus_days = frappe.db.get_value('Payroll Settings',None,'wc_att_bonus')
 		elif self.employee_type == 'BC':
@@ -229,12 +222,12 @@ class CustomShiftAssignment(ShiftAssignment):
 		if self.end_date and self.end_date < self.start_date:
 			frappe.throw(_("End Date must not be lesser than Start Date"))
 
-class CustomLeaveApplication(LeaveApplication):
-	def on_update(self):
-		self.status = self.workflow_state
-		if self.status == "Open" and self.docstatus < 1:
-			# notify leave approver about creation
-			self.notify_leave_approver()
+# class CustomLeaveApplication(LeaveApplication):
+# 	def on_update(self):
+# 		self.status = self.workflow_state
+# 		if self.status == "Open" and self.docstatus < 1:
+# 			# notify leave approver about creation
+# 			self.notify_leave_approver()
 
 class CustomCompensatoryLeaveRequest(CompensatoryLeaveRequest):
 	def validate(self):

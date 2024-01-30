@@ -17,10 +17,10 @@
  ],
  "fields": [
   {
-   "default": "CL Wages Contractor Wise",
    "fieldname": "reports",
-   "fieldtype": "Data",
-   "label": "Reports"
+   "fieldtype": "Select",
+   "label": "Reports",
+   "options": "CL Wages Contractor Wise\nCL Manpower Summary\nCL Monthly OT Register"
   },
   {
    "fieldname": "download",
@@ -62,10 +62,11 @@
    "fieldtype": "Column Break"
   }
  ],
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-01-12 16:21:27.282155",
+ "modified": "2023-12-28 05:42:01.698347",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "CL Reports",

@@ -473,7 +473,6 @@ def get_attendance_list(conditions, filters):
 		query = """select employee, day(attendance_date) as day_of_month,attendance_date,status,shift,shift_status,late_entry,qr_shift,leave_type,on_duty_application,in_time,out_time,employee_type from tabAttendance where docstatus != 2 and attendance_date between '%s' and '%s' and employee='%s' and company = '%s' order by employee, attendance_date""" % (filters.from_date,filters.to_date,filters.employee,filters.company)
 
 	attendance_list = frappe.db.sql(query,as_dict=1)
-
 	if not attendance_list:
 		msgprint(_("No attendance record found"), alert=True, indicator="orange")
 
@@ -481,7 +480,7 @@ def get_attendance_list(conditions, filters):
 	for d in attendance_list:
 		att_map.setdefault(d.employee, frappe._dict()).setdefault(d.day_of_month, "")
 		att_map[d.employee][d.day_of_month] = d.shift_status
-		frappe.errprint(d.shift_status)
+		# frappe.errprint(d.shift_status)
 
 	return att_map
 

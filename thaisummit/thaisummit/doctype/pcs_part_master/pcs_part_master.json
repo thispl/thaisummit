@@ -148,6 +148,7 @@
   {
    "fieldname": "final",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "Final",
    "precision": "2"
   },
@@ -160,7 +161,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-22 11:19:39.857029",
+ "modified": "2023-12-29 20:03:46.852103",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "PCS Part Master",

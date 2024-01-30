@@ -256,4 +256,4 @@ def upload(file):
             doc.ndol = pp[34]
             doc.save(ignore_permissions=True)
             frappe.db.commit()
-    frappe.log_error('Part Master Uploaded successfully')
+    # frappe.log_error('Part Master Uploaded successfully')

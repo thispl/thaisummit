@@ -41,19 +41,96 @@ scheduler_events = {
 # 	"monthly": [
 # 		"thaisummit.tasks.monthly"
 # 	]
-	# "weekly": [
-    #     "thaisummit.custom.mail_wc_get_trainee",
-    #     "thaisummit.custom.mail_wc_get_probation",
-    #     "thaisummit.custom.mail_wc_probation"
-	# ],
-	# "yearly": [
-	# 	"thaisummit.custom.el_leave_policy",
-	# 	"thaisummit.custom.el_leave_encashment"
-	# ],
+	"weekly": [
+		"thaisummit.api.clear_error_log",
+        "thaisummit.custom.mail_wc_get_trainee",
+        "thaisummit.custom.mail_wc_get_probation",
+        "thaisummit.custom.mail_wc_probation"
+	],
+	"yearly": [
+		"thaisummit.custom.el_leave_policy",
+		"thaisummit.custom.el_leave_encashment"
+	],
 	"cron": {
-		"* * * * *": [
-            "thaisummit.custom.test_hook"
+		"0 */1 * * *": [
+            "thaisummit.mark_attendance.mark_att_daily_hooks"
         ],
+		"30 00 * * *": [
+			"thaisummit.mark_attendance.delete_urc_automatically"
+		],
+        "30 09 * * *": [
+			"thaisummit.mark_attendance.update_leave_att"
+		],
+		"15 08 * * mon-sat": [
+			"thaisummit.api.generate_re_production_plan_test"
+		],
+		"15 07 * * mon-sat": [
+			"thaisummit.api.generate_iym_production_plan_test"
+		],
+		"30 07 * * mon-sat": [
+			"thaisummit.api.generate_re_production_plan"
+		],
+		"30 06 * * mon-sat": [
+			"thaisummit.api.generate_iym_production_plan"
+		],
+		"30 21 * * *": [
+			"thaisummit.thaisummit.doctype.ekanban_settings.ekanban_settings.enqueue_overall_invoice_key_cron_930pm"
+		],
+		"30 07 * * *": [
+			"thaisummit.api.generate_transfer_plan"
+		],
+		"45 01 * * *": [
+			"thaisummit.thaisummit.doctype.ekanban_settings.ekanban_settings.enqueue_overall_invoice_key_cron_145am"
+		],
+		"10 01 * * *": [
+			"thaisummit.api.generate_daily_order"
+		],
+		"10 00 * * *": [
+			"thaisummit.api.generate_production_daily_order_test"
+		],
+		"0,30 * * * *": [
+			"thaisummit.utils.get_live_stock"
+		],
+		"0,30 * * * *": [
+			"thaisummit.utils.get_open_production_qty"
+		],
+		"45 8 * * *": [
+			"thaisummit.api.fetch_ekanban_po"
+		],
+		"15 1 * * *": [
+			"thaisummit.api.generate_production_daily_order"
+		],
+		"5 0 1 * *": [
+			"thaisummit.custom.mark_deductions"
+		],
+		"0 9 * * *": [
+			"thaisummit.custom.bulk_mail_alerts"
+		],
+		"0 1 * * *": [
+			"thaisummit.custom.fetch_sap_stock"
+		],
+		"0 1 * * *": [
+			"thaisummit.custom.fetch_sap_production"
+		],
+		"10 1 * * *": [
+			"thaisummit.api.fetch_ekanban_stock"
+		],
+		"0 2 * * *": [
+			"thaisummit.thaisummit.doctype.daily_sales_report.daily_sales_report_mail.send_mail"
+		],
+		"0 3 * * *": [
+			"thaisummit.mark_attendance.mark_att_monthly_hooks"
+		],
+		"58 23 31 3 *": [
+			"thaisummit.utils.reset_supplier_invoice_no"
+		],
+		"0 1 * * *": [
+			"thaisummit.api.fetch_grn_details_1am"
+		],
+		"0 8 * * *": [
+			"thaisummit.api.fetch_grn_details_8am"
+		]
+
         # "0 1 * * *": [
         #     "thaisummit.custom.fetch_sap_stock"
         # ],
@@ -142,7 +219,7 @@ override_doctype_class = {
 	"Salary Slip": "thaisummit.overrides.CustomSalarySlip",
 	"Payroll Entry": "thaisummit.overrides.CustomPayrollEntry",
 	"Shift Assignment": "thaisummit.overrides.CustomShiftAssignment",
-	"Leave Application": "thaisummit.overrides.CustomLeaveApplication",
+	# "Leave Application": "thaisummit.overrides.CustomLeaveApplication",
 	"Compensatory Leave Request": "thaisummit.overrides.CustomCompensatoryLeaveRequest",
 	"Employee":"thaisummit.overrides.CustomEmployee",
 	"Additional Salary":"thaisummit.overrides.CustomAdditionalSalary"
@@ -179,9 +256,6 @@ doc_events = {
 			"thaisummit.custom.mark_biometric_pin",
 		],
 		"validate": "thaisummit.custom.inactive_employee"
-
-		# "on_cancel": "method",
-		# "on_trash": "method"
 	},
 	"IYM Sequence Plan Upload":{
 		'on_submit': "thaisummit.thaisummit.doctype.tsa_master.tsa_master.enqueue_master_creation"
@@ -202,13 +276,9 @@ doc_events = {
     "Overtime Request":{
 		"validate":["thaisummit.custom.ot_att"]
 	},
-    # "On Duty Application":{
-	# 	"validate":["thaisummit.custom.od_att"]
-	# },
-	# 'Tag Card':{
-	# 	'after_insert': "thaisummit.thaisummit.doctype.generate_tag_card.generate_tag_card.link_document_name"
-	# },
-	
+    "Attendance":{
+        'on_update': 'thaisummit.mark_attendance.update_att_shift_status'
+	}
 }
 
 # Testing

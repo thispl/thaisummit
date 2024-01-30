@@ -7,7 +7,7 @@ frappe.ui.form.on('CL Reports', {
 	// }
 	download: function (frm){
 		if(frm.doc.reports == 'CL Wages Contractor Wise'){
-			var path = "thaisummit.thaisummit.doctype.cl_reports.cl_wages_contractor_wise.download"
+			var path = "thaisummit.thaisummit.doctype.cl_reports.cl_summary.download"
 			var args = 'from_date=%(from_date)s&to_date=%(to_date)s&contractor=%(contractor)s'
 		}
 		else if(frm.doc.reports == 'CL Manpower Summary'){

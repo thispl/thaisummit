@@ -109,7 +109,7 @@ def build_xlsx_response(filename,args):
         })
     ret.save(ignore_permissions=True)
     frappe.db.commit()
-    frappe.log_error(message=ret)
+    # frappe.log_error(message=ret)
     attached_file = frappe.get_doc("File", ret.name)
     frappe.db.set_value('CL Reports',None,'attach',attached_file.file_url)
 

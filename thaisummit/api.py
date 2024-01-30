@@ -42,7 +42,7 @@ def push_invoice(doc,method):
 # APi call(http://182.156.241.11/api/method/thaisummit.api.get_invoice_data?po_no=name)
 @frappe.whitelist(allow_guest=True)
 def sync_grn_data(**args):
-    frappe.log_error(title='grn_data',message=args['invoice_name'])
+    # frappe.log_error(title='grn_data',message=args['invoice_name'])
     if args['invoice_name'] and frappe.db.exists('TSAI Invoice',args['invoice_name']):
         inv_name = args['invoice_name']
         url = "http://apioso.thaisummit.co.th:10401/api/GRNData"
@@ -59,7 +59,7 @@ def sync_grn_data(**args):
             grns = json.loads(response.text)
             doc = frappe.get_doc('TSAI Invoice',inv_name)
             for grn in grns:
-                frappe.log_error(title='grn_data',message=grn['MatNo'])
+                # frappe.log_error(title='grn_data',message=grn['MatNo'])
                 for d in doc.invoice_items:
                     if grn['MatNo'] == str(d.mat_no):
                         d.grn = 1

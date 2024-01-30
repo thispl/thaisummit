@@ -17,6 +17,10 @@ from pytz import HOUR
 class OvertimeRequest(Document):
     
     def on_submit(self):
+        user = frappe.session.user
+        employee = frappe.get_value("Employee",{'user_id':user},['name'])
+        if self.employee == employee :
+            frappe.throw(_("HODs can't approve their own Overtime Application"))
         if self.workflow_state == 'Approved':
             if not frappe.db.exists('Overtime Request',{'overtime_request':self.name}):
                 doc = frappe.new_doc('Timesheet')
@@ -218,8 +222,20 @@ class OvertimeRequest(Document):
         if self.ot_date:
             holiday = frappe.db.sql("""select `tabHoliday`.holiday_date from `tabHoliday List`
             left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(self.ot_date),as_dict=True)
+
             if not holiday:
                 return 'NO'
+
+@frappe.whitelist()
+def check_holidays(ot_date):
+    if ot_date:
+        holiday = frappe.db.sql("""select `tabHoliday`.holiday_date from `tabHoliday List`
+        left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(ot_date),as_dict=True)
+        # return holiday
+        if holiday:
+            return holiday
+        
+
 
 
 @frappe.whitelist()

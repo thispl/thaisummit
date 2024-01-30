@@ -162,7 +162,7 @@ frappe.ui.form.on('Reports Dashboard', {
 
 		else if (frm.doc.payroll_reports == 'Cost Center Wise WC Wages') {
 			var path = "thaisummit.thaisummit.doctype.reports_dashboard.cost_center_wise_wc_wages.download"
-			var args = 'from_date=%(from_date)s&to_date=%(to_date)s'	
+			var args = 'employee_type=%(employee_type)s&from_date=%(from_date)s&to_date=%(to_date)s'	
 		}
 		else if (frm.doc.payroll_reports == 'Labour and Head cost') {
 			var path = "thaisummit.thaisummit.doctype.reports_dashboard.labour_and_head_cost.download"

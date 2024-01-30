@@ -222,7 +222,7 @@ def get_tag_list():
 
 			response = requests.request("POST", url, headers=headers, data=payload)
 
-			frappe.log_error(response.text)
+			# frappe.log_error(response.text)
 
 		else:
 			updated_tbs_dict['mat_number'] = '-'
