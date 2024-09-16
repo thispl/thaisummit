@@ -32,6 +32,7 @@ frappe.ui.form.on('Attendance Summary', {
 		frm.set_value('from_date',frappe.datetime.add_days(d, 25))
 	},
 	onload(frm){
+		frm.disable_save()
 		console.log(frappe.session.user)
 		console.log("HI")
 		if (!frappe.user.has_role('System Manager')) {

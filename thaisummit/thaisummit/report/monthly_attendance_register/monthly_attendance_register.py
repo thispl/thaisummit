@@ -480,7 +480,7 @@ def get_attendance_list(conditions, filters):
 	for d in attendance_list:
 		att_map.setdefault(d.employee, frappe._dict()).setdefault(d.day_of_month, "")
 		att_map[d.employee][d.day_of_month] = d.shift_status
-		# frappe.errprint(d.shift_status)
+		frappe.errprint(d.shift_status)
 
 	return att_map
 

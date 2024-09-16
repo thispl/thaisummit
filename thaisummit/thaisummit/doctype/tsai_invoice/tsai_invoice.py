@@ -83,3 +83,35 @@ class TSAIInvoice(Document):
     #         frappe.log_error(title="grn_test",message=json.dumps(payload))
     #         response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
     #         # frappe.log_error(title='grn_response',message=response.text)
+
+
+
+# calculating cgst and sgst for tsai invoice
+@frappe.whitelist()
+def get_gst_percent(doc,method):
+    doc_name = frappe.get_doc("TSAI Invoice",doc.name)
+    children = doc_name.invoice_items
+    cgst = 0
+    count = 0
+    sgst = 0
+    igst = 0
+    for c in children:
+        cgst += c.cgst
+        count += 1
+        sgst += c.sgst
+        igst += c.igst
+    tot_cgst = cgst/count
+    tot_sgst = sgst/count
+    tot_igst = igst/count
+    if doc.igst > 0 :
+        igst_amount = float(tot_igst / 100) * float(doc.total_basic_amount)
+        tot_amount = igst_amount + doc.total_basic_amount
+        frappe.db.set_value("TSAI Invoice",doc.name,"total_invoice_amount",tot_amount)
+    else:
+        total_gst_amount = (tot_cgst / 100) * 2
+        grand_total_gst = ((float(doc.total_basic_amount) * (total_gst_amount)))
+        tot_amount = (grand_total_gst + doc.total_basic_amount)
+        frappe.db.set_value("TSAI Invoice",doc.name,"cgst",tot_cgst)
+        frappe.db.set_value("TSAI Invoice",doc.name,"sgst",tot_sgst)
+        frappe.db.set_value("TSAI Invoice",doc.name,"total_gst_amount",grand_total_gst)
+        frappe.db.set_value("TSAI Invoice",doc.name,"total_invoice_amount",tot_amount)

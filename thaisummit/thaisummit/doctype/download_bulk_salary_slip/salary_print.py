@@ -22,16 +22,14 @@ from frappe.www.printview import validate_print_permission
 def enqueue_download_multi_pdf(start_date,employee_type):
 	frappe.errprint(start_date)
 	frappe.errprint(employee_type)
-	result = frappe.db.sql("SELECT name FROM `tabSalary Slip` WHERE start_date = '%s' AND employee_type = '%s'" % (start_date, employee_type), as_dict=True)
-	salary_slips = [row.name for row in result]
-	# result = frappe.db.sql("Select name from `tabSalary Slip` where start_date = '%s' and employee_type = '%s'" % (start_date,employee_type),as_list=1)
-	# salary_slips = []
-	# for i in result:
-	# 	salary_slips = i.name
-	# frappe.errprint(salary_slips)
-	enqueue(download_multi_pdf, queue='default', timeout=15000, event='download_multi_pdf',doctype="Salary Slip", name=json.dumps(salary_slips), format='Salary Slip New')
-	frappe.msgprint("Bulk Salary Slip Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
-
+	# result = frappe.db.sql("SELECT name FROM `tabSalary Slip` WHERE start_date = '%s' AND employee_type = '%s' AND docstatus = 1 " % (start_date, employee_type), as_dict=True)
+	result = frappe.get_all("Salary Slip",{'start_date':start_date,'employee_type':employee_type,'docstatus':1})
+	if result:
+		salary_slips = [row.name for row in result]
+		enqueue(download_multi_pdf, queue='default', timeout=15000, event='download_multi_pdf',doctype="Salary Slip", name=json.dumps(salary_slips), format='Salary Slip New')
+		frappe.msgprint("Bulk Salary Slip Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
+	else:
+		frappe.msgprint("Salary Slip Not Found")
 
 @frappe.whitelist()
 def download_multi_pdf(doctype, name, format=None, no_letterhead=0,letterhead=None, options=None):

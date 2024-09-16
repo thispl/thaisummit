@@ -278,6 +278,9 @@ doc_events = {
 	},
     "Attendance":{
         'on_update': 'thaisummit.mark_attendance.update_att_shift_status'
+	},
+    "Salary Slip":{
+        "validate":"thaisummit.custom.round_up_to_pf_esi"
 	}
 }
 

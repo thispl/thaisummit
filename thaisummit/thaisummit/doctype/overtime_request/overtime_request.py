@@ -51,7 +51,6 @@ class OvertimeRequest(Document):
         if self.workflow_state == 'Approved':
             payroll_start_date = frappe.db.get_value('Payroll Dates',{'name':'PAYROLL OT PERIOD DATE 0001'},['payroll_start_date'])
             payroll_end_date = frappe.db.get_value('Payroll Dates',{'name':'PAYROLL OT PERIOD DATE 0001'},['payroll_end_date'])
-            # employee = frappe.db.get_value('Employee',{'name':self.employee},['department'])
             get_ot_hour_dept = frappe.db.get_value('Department',{'name':self.department},['overtime_hours_limit'])
             ot_request = frappe.db.get_all('Overtime Request',{'department':self.department,'ot_date':('between',(payroll_start_date,payroll_end_date)),'workflow_state':'Approved'},['*'])
             for ot in ot_request:
@@ -231,7 +230,6 @@ def check_holidays(ot_date):
     if ot_date:
         holiday = frappe.db.sql("""select `tabHoliday`.holiday_date from `tabHoliday List`
         left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(ot_date),as_dict=True)
-        # return holiday
         if holiday:
             return holiday
         
@@ -299,7 +297,7 @@ def ot_hours(shift,from_time,to_time,ot_date):
             else:
                 ot_hours = time(time_diff.hour,30,0)
     if time_diff.hour > 12:
-        # ot_hours = time(time_diff.hour-1,0,0)
+        # /ot_hours = time(time_diff.hour-1,0,0)
         if shift == '1':
             if time_diff.minute <= 29:
                 ot_hours = time(time_diff.hour-1,0,0)
@@ -315,5 +313,6 @@ def ot_hours(shift,from_time,to_time,ot_date):
                 ot_hours = time(time_diff.hour,0,0)
             else:
                 ot_hours = time(time_diff.hour,30,0)
-                
+    frappe.errprint(str(t_diff)) 
+    frappe.errprint(str(ot_hours))         
     return [str(t_diff),str(ot_hours)]

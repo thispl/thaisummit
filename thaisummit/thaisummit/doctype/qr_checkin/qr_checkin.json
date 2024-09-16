@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "QRC-.####",
  "creation": "2021-04-20 18:58:57.087444",
  "doctype": "DocType",
@@ -60,8 +61,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "QR Shift",
-   "options": "Shift Type",
-   "read_only": 1
+   "options": "Shift Type"
   },
   {
    "fieldname": "qr_scan_time",
@@ -160,7 +160,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-22 00:39:11.071172",
+ "modified": "2024-06-13 12:34:45.705590",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "QR Checkin",
@@ -171,6 +171,7 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "import": 1,
    "print": 1,
    "read": 1,
    "report": 1,

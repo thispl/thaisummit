@@ -23,6 +23,7 @@ from six import BytesIO, string_types
 
 @frappe.whitelist()
 def download():
+    
     filename = 'BC Salary Register'
     test = build_xlsx_response(filename)
 
@@ -59,8 +60,8 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
 
     ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column= 9)
     ws.merge_cells(start_row=1, start_column=10, end_row=1, end_column= 14) 
-    ws.merge_cells(start_row=1, start_column=15, end_row=1, end_column= 26)
-    ws.merge_cells(start_row=1, start_column=27, end_row=1, end_column= 32)
+    ws.merge_cells(start_row=1, start_column=15, end_row=1, end_column= 39)
+    ws.merge_cells(start_row=1, start_column=40, end_row=1, end_column= 45)
 
 
 
@@ -91,7 +92,7 @@ def title1(args):
     month = datetime.strptime(str(args.to_date),'%Y-%m-%d')
     mon = str(month.strftime('%b')) + ' ' + str(month.strftime('%Y'))
     data = ["TSAI BC Wages for the Month of %s"%mon,'','','','','','','','','Standard Structure Month','','','','',
-    'Earnings Per Month','','','','','','','','','','','','Deductions','','','','','']
+    'Earnings Per Month','','','','','','','','','','','','','','','','','','','','','','','','','Deductions','','','','','']
     return data
 
 def get_dates(args):
@@ -102,8 +103,8 @@ def get_dates(args):
 @frappe.whitelist()
 def get_column(args):
     data = ["SR No","Cost C ","Emp No","Employee_Name","DOJ","Department","Designation",
-    "Paid Days 100 %","OT Hours","Basic & DA","House Rent Allow","Other Allw","Position All","Gross Wage",
-    "Basic","HRA","Other Allw","Position All","Additional Bonus","ATA","SHT","ARR","PP Allowance","Transport Allowance","Additional Allowance","Others",
+    "Paid Days 100 %","OT Hours","Basic & DA","House Rent Allow","Welfare","Position All","Gross Wage",
+    "Basic","HRA","Welfare","Position All","Additional Bonus","ATA","SHT","ARR","PP Allowance","Transport Allowance","Conveyance Allowance","Special Allowance","Medical Allowance","Leave Travel Allowance","Washing Allowance","Welding Allowance","Temp Allowance","Children Education","Children Hostel","Service Charges","Personal Protective Equipment","Cost to Company","Employer Provident Fund","Additional Allowance","Others",
     "Gross","PF","ESI","Can","P Tax","PPE","Other Deduction","Total","Net Wage","Bonus"]
     
     return data      
@@ -114,7 +115,7 @@ def get_data(args):
     row = []
     basic_component_amount = earning_component_amount = deduction_component_amount = gross_wage = total_deduction = 0
 
-    earning_comp = ["Basic","House Rent Allowance","Other Allowance","Position Allowance","Attendance Allowance","Attendance Bonus","Shift Allowance","Arrear","PP Allowance","Transport Allowance","Additional Allowance","Others",]
+    earning_comp = ["Basic","House Rent Allowance","Other Allowance","Position Allowance","Attendance Allowance","Attendance Bonus","Shift Allowance","Arrear","PP Allowance","Transport Allowance","Conveyance Allowance","Special Allowance","Medical Allowance","Leave Travel Allowance","Washing Allowance","Welding Allowance","Temp Allowance","Children Education","Children Hostel","Service Charges","Personal Protective Equipment","Cost to Company","Employer Provident Fund","Additional Allowance","Others",]
 
     dedcution_comp = ["Provident Fund","Employee State Insurance","Canteen Charges","Professional Tax","Personal Protective Equipment","Other Deduction"]
 
@@ -123,7 +124,6 @@ def get_data(args):
 
     if args.employee:
         salary_slips = frappe.get_all("Salary Slip",{'employee_type':'BC','employee':args.employee,'start_date':args.from_date,'end_date':args.to_date},['*'])	
-    
     else:
         salary_slips = frappe.get_all("Salary Slip",{'employee_type':'BC','start_date':args.from_date,'end_date':args.to_date},['*'])	
     i =1
@@ -131,6 +131,8 @@ def get_data(args):
         row = [i,]
         cost_center = frappe.get_value('Department',ss.department,'cost_centre')
         emp = frappe.get_doc("Employee",ss.employee)
+        # ot_records = frappe.get_all("Overtime Request",{'employee':ss.employee,'employee_type':'BC','ot_date': ['between', (ss.start_date,ss.end_date)]},['ot_hours'])
+        # ot_hours = sum(timedelta_to_hours(record['ot_hours']) for record in ot_records)
         row += [cost_center,emp.name,emp.employee_name,emp.date_of_joining,emp.department,emp.designation,ss.payment_days,ss.total_working_hours,emp.basic,emp.house_rent_allowance,emp.other_allowance,emp.position_allowance,emp.basic+emp.house_rent_allowance+emp.other_allowance+emp.position_allowance]
             
         for ec in earning_comp:
@@ -152,7 +154,7 @@ def get_data(args):
             bonus = round(bonus_value/12)
 
         row.append(ss.total_deduction)
-        row += [ ss.net_pay ]
+        row += [ ss.rounded_total ]
         row += [ bonus ]
         # row += [ frappe.get_value('Salary Detail',{'salary_component':'Others','parent':ss.name},['amount']) ]
         # row += [ss.gross_pay]
@@ -160,3 +162,6 @@ def get_data(args):
         i+=1
         
     return data
+
+def timedelta_to_hours(td):
+    return td.total_seconds() / 60.0 if isinstance(td, timedelta) else td

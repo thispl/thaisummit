@@ -44,7 +44,6 @@ def get_qr_details(user):
     if shift_type == 'NA':
         scan_active = 0
     planned_bc_count = frappe.db.count('Shift Assignment',{'employee_type':('in',['BC']),'shift_type':shift_type,'start_date': shift_date, 'docstatus':1, 'department':department})
-    frappe.errprint(planned_bc_count)
     planned_nt_count = frappe.db.count('Shift Assignment',{'employee_type':('in',['NT']),'shift_type':shift_type,'start_date': shift_date, 'docstatus':1, 'department':department})
     planned_ft_count = frappe.db.count('Shift Assignment',{'employee_type':('in',['FT']),'shift_type':shift_type,'start_date': shift_date, 'docstatus':1, 'department':department})
     planned_cl_count = frappe.db.count('Shift Assignment',{'employee_type':'CL','shift_type':shift_type,'start_date': shift_date, 'docstatus':1, 'department':department})
@@ -132,6 +131,9 @@ def get_shift_type():
     shift1_time = [time(hour=shift1[0].seconds//3600,minute=((shift1[0].seconds//60)%60),second=0),time(hour=shift1[1].seconds//3600,minute=((shift1[1].seconds//60)%60),second=0)]
     shift2 = frappe.db.get_value('Shift Type',{'name':'2'},['qr_start_time','qr_end_time'])
     shift2_time = [time(hour=shift2[0].seconds//3600,minute=((shift2[0].seconds//60)%60),second=0),time(hour=shift2[1].seconds//3600,minute=((shift2[1].seconds//60)%60),second=0)]
+    shiftpp2 = frappe.db.get_value('Shift Type',{'name':'PP2'},['qr_start_time','qr_end_time'])
+    shiftpp2_time = [time(hour=shiftpp2[0].seconds//3600,minute=((shiftpp2[0].seconds//60)%60),second=0),time(hour=shiftpp2[1].seconds//3600,minute=((shiftpp2[1].seconds//60)%60),second=0)]
+    
     shift3 = frappe.db.get_value('Shift Type',{'name':'3'},['qr_start_time','qr_end_time'])
     shift3_time = [time(hour=shift3[0].seconds//3600,minute=((shift3[0].seconds//60)%60),second=0),time(hour=shift3[1].seconds//3600,minute=((shift3[1].seconds//60)%60),second=0)]
     curtime = time(hour=nowtime.hour, minute=nowtime.minute, second=nowtime.second)
@@ -140,6 +142,8 @@ def get_shift_type():
         shift_type = '1'
     if is_between(curtime,shift2_time):
         shift_type = '2'
+    if is_between(curtime,shiftpp2_time):
+        shift_type = 'PP2'
     if is_between(curtime,shift3_time):
         shift_type = '3'
         shift_date = shift_date + timedelta(days=-1)
@@ -282,10 +286,8 @@ def get_food_time():
     return food_type 
 
 @frappe.whitelist()
-def validation_scan_qr(user):
-    # frappe.errprint("HI")
+def validation_scan_qr(user,result):
     data = []
-    employee_name = ''
     department = ''
     if user != 'Administrator':
         employee_name,department = frappe.get_value('Employee',{ 'user_id' : user }, ['employee_name','department'])
@@ -306,47 +308,36 @@ def validation_scan_qr(user):
     actual_nt_count = frappe.db.count('QR Checkin',{'employee_type':('in',['NT']),'ot':0,'qr_shift':shift_type,'shift_date': shift_date,'department':department})
     actual_ft_count = frappe.db.count('QR Checkin',{'employee_type':('in',['FT']),'ot':0,'qr_shift':shift_type,'shift_date': shift_date,'department':department})
     actual_cl_count = frappe.db.count('QR Checkin',{'employee_type':'CL','ot':0,'qr_shift':shift_type,'shift_date': shift_date,'department':department })
-    ot_bc_count = frappe.db.count('QR Checkin',{'employee_type':('in',['BC']),'ot':1,'qr_shift':shift_type,'shift_date': shift_date,'department':department })
-    ot_ft_count = frappe.db.count('QR Checkin',{'employee_type':('in',['FT']),'ot':1,'qr_shift':shift_type,'shift_date': shift_date,'department':department })
-    ot_nt_count = frappe.db.count('QR Checkin',{'employee_type':('in',['NT']),'ot':1,'qr_shift':shift_type,'shift_date': shift_date,'department':department })
-    ot_cl_count = frappe.db.count('QR Checkin',{'employee_type':'CL','ot':1,'qr_shift':shift_type,'shift_date': shift_date,'department':department })
-
-    planned_nt_ft_count = planned_nt_count + planned_ft_count
-    actual_nt_ft_count = actual_nt_count + actual_ft_count
-    ot_nt_ft_count = ot_ft_count + ot_nt_count
-
+     
     planned_nt_ft_cl_count = planned_nt_count + planned_ft_count + planned_cl_count
     actual_nt_ft_cl_count = actual_nt_count + actual_ft_count + actual_cl_count
-    ot_nt_ft_cl_count = ot_ft_count + ot_nt_count + ot_cl_count
 
-    frappe.errprint(planned_bc_count)
-    frappe.errprint(planned_nt_count)
-    frappe.errprint(planned_ft_count)
-    frappe.errprint(planned_cl_count)
-    frappe.errprint(actual_bc_count)
-    frappe.errprint(actual_nt_count)
-    frappe.errprint(actual_ft_count)
-    frappe.errprint(actual_cl_count)
-        
-    if planned_nt_ft_cl_count:
-        if actual_nt_ft_cl_count < planned_nt_ft_cl_count:
-            nt_ft_cl_shortage = planned_nt_ft_cl_count - actual_nt_ft_cl_count
-            data.append("Not Reach the Plan_NT/FT/CL")
+    employee_type = frappe.get_value('Employee',{ 'name' : result }, ['employee_type'])
+
+    frappe.errprint(employee_type)
+
+    if employee_type in ["NT","FT","CL"]:
+        frappe.errprint("HIII")
+        if planned_nt_ft_cl_count:
+            if actual_nt_ft_cl_count < planned_nt_ft_cl_count:
+                data.append("Not Reach the Plan_NT/FT/CL")
+                
+            elif actual_nt_ft_cl_count >= planned_nt_ft_cl_count:
+                frappe.throw(_('Plan Already Exceeded_NT/FT/CL'))
+                data.append('Plan Already Exceeded_NT/FT/CL')
+
+            # frappe.errprint(data)
+    if employee_type == "BC":
+        frappe.errprint("HIIIIIIIIII")
+        if planned_bc_count:
+            if actual_bc_count < planned_bc_count:
+                data.append("Not Reach the Plan_BC")
+
+            elif actual_bc_count >= planned_bc_count:
+                data.append('Plan Already Exceeded_BC')
+                frappe.throw(_('Plan Already Exceeded_BC'))
             
-        elif actual_nt_ft_cl_count >= planned_nt_ft_cl_count:
-            data.append('Plan Already Exceeded_NT/FT/CL')
-
-        frappe.errprint(data)
-    
-    if planned_bc_count:
-        if actual_bc_count < planned_bc_count:
-            bc_shortage = planned_bc_count - actual_bc_count
-            data.append("Not Reach the Plan_BC")
-
-        elif actual_bc_count >= planned_bc_count:
-            data.append('Plan Already Exceeded_BC')
-        
-        frappe.errprint(data)
+            # frappe.errprint(data)
             
     return data
 

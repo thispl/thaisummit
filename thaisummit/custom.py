@@ -13,7 +13,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import GradientFill, PatternFill
 from six import BytesIO, string_types
 
-import datetime
+import datetime,math
 from frappe.utils.background_jobs import enqueue
 from frappe import permissions
 from frappe.utils.file_manager import get_file
@@ -171,83 +171,6 @@ def bulk_update_from_csv(filename):
                         od.save(ignore_permissions=True)
                         od.submit()
                         frappe.db.commit()
-
-def bulk_update_emp(filename):
-    # below is the method to get file from Frappe File manager
-    from frappe.utils.file_manager import get_file
-    # Method to fetch file using get_doc and stored as _file
-    _file = frappe.get_doc("File", {"file_name": filename})
-    # Path in the system
-    filepath = get_file(filename)
-    # CSV Content stored as pps
-    pps = read_csv_content(filepath[1])
-    dates = datetime.now().date()
-    meal_type = 'Lunch Briyani Veg'
-    for pp in pps:
-        print([pp,dates,meal_type])
-        emp = frappe.new_doc('Employee Menu Preference')
-        emp.date = dates
-        emp.employee = pp[0]
-        emp.meal_type = meal_type
-        emp.save(ignore_permissions=True)
-        frappe.db.commit()
-
-
-def bulk_update_from_csv1(filename):
-    # below is the method to get file from Frappe File manager
-    from frappe.utils.file_manager import get_file
-    # Method to fetch file using get_doc and stored as _file
-    _file = frappe.get_doc("File", {"file_name": filename})
-    # Path in the system
-    filepath = get_file(filename)
-    # CSV Content stored as pps
-
-    pps = read_csv_content(filepath[1])
-    for pp in pps:
-        print(pp[0], pp[1])
-        if frappe.db.exists('Employee', {'name': pp[0]}):
-            doc = frappe.new_doc("QR Checkin")
-            doc.employee = pp[0]
-            doc.qr_shift = pp[2]
-            doc.qr_scan_time = pp[1]
-            doc.save(ignore_permissions=True)
-            frappe.db.commit()
-            att = frappe.db.exists(
-                'Attendance', {'employee': pp[0], 'attendance_date': pp[1]})
-            if att:
-                print(pp[2])
-                frappe.db.set_value('Attendance', att, 'qr_shift', pp[2])
-                print(doc.name)
-                frappe.db.set_value("QR Checkin", doc.name, 'attendance', att)
-
-def qr_checkin_manual():
-    emps = ["T0119",
-            "VRV2102",
-            "T1380",
-            "T1589",
-            "NT0346",
-            "NT0143",
-            "SRA0755",
-            "SRA0758",
-            "SRA1040",
-            "ASR2194",
-            "SRA0833",
-            ]
-    for emp in emps:
-        doc = frappe.new_doc("QR Checkin")
-        doc.employee = emp
-        doc.employee_name = frappe.db.get_value(
-            'Employee', emp, 'employee_name')
-        doc.department = frappe.db.get_value('Employee', emp, 'department')
-        doc.employee_type = frappe.db.get_value(
-            'Employee', emp, 'employee_type')
-        doc.qr_shift = '2'
-        doc.qr_scan_time = '2022-03-20 16:30:00'
-        doc.shift_date = '2022-03-20'
-        doc.created_date = '2022-03-20'
-        doc.save(ignore_permissions=True)
-        frappe.db.commit()
-
 
 def mail_wc_probation():
     employees = frappe.get_all("Employee", {"employment_type": "Probation", "employee_type": "WC"}, [
@@ -1262,7 +1185,7 @@ def get_dates():
 def mark_biometric_pin(doc,method):
     employee_series = 0
     if doc.employee_type == 'FT':
-        employee_series = 40
+        employee_series = 25
        
     elif doc.employee_type == 'NT':
         employee_series = 20
@@ -1310,35 +1233,35 @@ def ot_dept_count():
     print(sum(data))
 
 
-# calculating cgst and sgst for tsai invoice
-@frappe.whitelist()
-def get_gst_percent(doc,method):
-    doc_name = frappe.get_doc("TSAI Invoice",doc.name)
-    children = doc_name.invoice_items
-    cgst = 0
-    count = 0
-    sgst = 0
-    igst = 0
-    for c in children:
-        cgst += c.cgst
-        count += 1
-        sgst += c.sgst
-        igst += c.igst
-    tot_cgst = cgst/count
-    tot_sgst = sgst/count
-    tot_igst = igst/count
-    if doc.igst > 0 :
-        igst_amount = float(tot_igst / 100) * float(doc.total_basic_amount)
-        tot_amount = igst_amount + doc.total_basic_amount
-        frappe.db.set_value("TSAI Invoice",doc.name,"total_invoice_amount",tot_amount)
-    else:
-        total_gst_amount = (tot_cgst / 100) * 2
-        grand_total_gst = ((float(doc.total_basic_amount) * (total_gst_amount)))
-        tot_amount = (grand_total_gst + doc.total_basic_amount)
-        frappe.db.set_value("TSAI Invoice",doc.name,"cgst",tot_cgst)
-        frappe.db.set_value("TSAI Invoice",doc.name,"sgst",tot_sgst)
-        frappe.db.set_value("TSAI Invoice",doc.name,"total_gst_amount",grand_total_gst)
-        frappe.db.set_value("TSAI Invoice",doc.name,"total_invoice_amount",tot_amount)
+# # calculating cgst and sgst for tsai invoice
+# @frappe.whitelist()
+# def get_gst_percent(doc,method):
+#     doc_name = frappe.get_doc("TSAI Invoice",doc.name)
+#     children = doc_name.invoice_items
+#     cgst = 0
+#     count = 0
+#     sgst = 0
+#     igst = 0
+#     for c in children:
+#         cgst += c.cgst
+#         count += 1
+#         sgst += c.sgst
+#         igst += c.igst
+#     tot_cgst = cgst/count
+#     tot_sgst = sgst/count
+#     tot_igst = igst/count
+#     if doc.igst > 0 :
+#         igst_amount = float(tot_igst / 100) * float(doc.total_basic_amount)
+#         tot_amount = igst_amount + doc.total_basic_amount
+#         frappe.db.set_value("TSAI Invoice",doc.name,"total_invoice_amount",tot_amount)
+#     else:
+#         total_gst_amount = (tot_cgst / 100) * 2
+#         grand_total_gst = ((float(doc.total_basic_amount) * (total_gst_amount)))
+#         tot_amount = (grand_total_gst + doc.total_basic_amount)
+#         frappe.db.set_value("TSAI Invoice",doc.name,"cgst",tot_cgst)
+#         frappe.db.set_value("TSAI Invoice",doc.name,"sgst",tot_sgst)
+#         frappe.db.set_value("TSAI Invoice",doc.name,"total_gst_amount",grand_total_gst)
+#         frappe.db.set_value("TSAI Invoice",doc.name,"total_invoice_amount",tot_amount)
 
 @frappe.whitelist()
 def update_ots():
@@ -1568,6 +1491,7 @@ def checkin_bulk_upload_csv():
                 ec.biometric_pin = pp[0]
                 ec.employee = frappe.db.get_value('Employee',{'biometric_pin':pp[0]},['employee_number'])
                 ec.time = pp[1]
+
                 ec.device_id = pp[3]
                 ec.log_type = pp[2]
                 ec.save(ignore_permissions=True)
@@ -1607,29 +1531,138 @@ def inactive_employee(doc,method):
     if doc.status=="Active":
         if doc.relieving_date:
             throw(_("Please remove the relieving date for the Active Employee."))
+    
+
+@frappe.whitelist()
+def bulk_update_from_csv1(filename):
+    from frappe.utils.file_manager import get_file
+    _file = frappe.get_doc("File", {"file_name": filename})
+    filepath = get_file(filename)
+    pps = read_csv_content(filepath[1])
+    
+    for pp in pps:
+        print(pp[0], pp[1], pp[7], pp[5])
+        if pp[0] != "Employee ID":
+            print("HI")
+            if not frappe.db.exists('QR Checkin', {'employee': pp[0], 'shift_date': pp[7], 'qr_shift': pp[5]}):
+                print("HI")
+                emp = frappe.db.get_value('Employee', {'status': 'Active', 'employee': pp[0]}, ['name', 'basic', 'ctc', 'employee_type'])
+                
+                if not emp:
+                    print(f"No active employee found for ID {pp[0]}")
+                    continue  # Skip to the next iteration if no employee is found
+                
+                start_date, end_date = frappe.db.get_value('Payroll Dates', {'name': 'PAYROLL OT PERIOD DATE 0001'}, ['payroll_start_date', 'payroll_end_date'])
+                holidays = len(get_holiday_dates_for_employee(emp[0], start_date, end_date))
+                total_working_days = (int(date_diff(end_date, start_date)) + 1) - holidays
+                
+                per_day_basic = emp[1] / total_working_days if emp[1] else 0
+                per_day_ctc = emp[2] / total_working_days if emp[2] else 0
+                
+                if emp[3] == 'CL':
+                    per_day_basic = emp[1] if emp[1] else 0
+                    per_day_ctc = emp[2] if emp[2] else 0
+                
+                qr_checkin = frappe.new_doc('QR Checkin')
+                qr_checkin.employee = pp[0]
+                qr_checkin.employee_name = pp[1]
+                qr_checkin.department = pp[2]
+                qr_checkin.employee_type = pp[3]
+                qr_checkin.contractor = pp[4]
+                qr_checkin.basic = emp[1] if emp[1] else 0
+                qr_checkin.ctc = emp[2] if emp[2] else 0
+                qr_checkin.per_day_basic = per_day_basic
+                qr_checkin.per_day_ctc = per_day_ctc
+                qr_checkin.created_date = pp[6]
+                qr_checkin.shift_date = pp[7]
+                qr_checkin.qr_scan_time = pp[9]
+                qr_checkin.qr_shift = pp[5]
+                qr_checkin.ot = 0
+                
+                try:
+                    qr_checkin.save()
+                    frappe.db.commit()
+                    print("Created")
+                except Exception as e:
+                    print(f"Failed to insert QR Checkin for employee {pp[0]}: {e}")
+
+@frappe.whitelist()
+def update_salary_in_qr():
+    qr_checkins = frappe.db.sql("""
+        SELECT * FROM `tabQR Checkin` 
+        WHERE shift_date BETWEEN '2024-05-18' AND '2024-05-25'
+    """, as_dict=True)
+
+    for qr_checkin in qr_checkins:
+        print(qr_checkin.employee)
+        emp = frappe.db.get_value(
+            'Employee', 
+            {'name': qr_checkin.employee}, 
+            ['name', 'basic', 'ctc', 'employee_type']
+        )
+        total_working_days = 24
+        per_day_basic = 0
+        per_day_ctc = 0
+        per_day_basic = emp[1] / total_working_days if emp[1] else 0
+        per_day_ctc = emp[2] / total_working_days if emp[2] else 0
+
+        if emp[3] == 'CL':
+            per_day_basic = emp[1] if emp[1] else 0
+            per_day_ctc = emp[2] if emp[2] else 0
+
+        print(qr_checkin.name)
+        frappe.db.set_value("QR Checkin",qr_checkin.name,"basic",emp[1] if emp[1] else 0)
+        frappe.db.set_value("QR Checkin",qr_checkin.name,"ctc",emp[2] if emp[2] else 0)
+        frappe.db.set_value("QR Checkin",qr_checkin.name,"per_day_basic",per_day_basic)
+        frappe.db.set_value("QR Checkin",qr_checkin.name,"per_day_ctc",per_day_ctc)
+        print(f"Successfully updated QR Checkin for employee {qr_checkin.employee}")
+
+@frappe.whitelist()
+def update_leave_approver():
+    value = frappe.get_all("Department",["hod","name"])
+    for i in value:
+        employee = frappe.get_all("Employee",{"status":"Active","department":i.name},["name"])
+        for emp in employee:
+            frappe.db.set_value("Employee",emp.name,"leave_approver",i.hod)
+
+@frappe.whitelist()
+def update_attendance():
+    ot = frappe.db.sql("""update `tabAttendance` set out_time = NULL where name = "HR-ATT-2024-382011" """,as_dict = True)
 
 
 @frappe.whitelist()
-def updateatt():
-    leave = frappe.db.sql("""select * from  `tabShift Assignment` where docstatus = 0 and start_date between  "2023-12-26" between "2023-12-30" """,as_dict = True)
-    print(leave)
-    for l in leave:
-        if frappe.db.exists('Shift Assignment',{'employee':l.employee,'start_date':l.start_date,'docstatus':1}):
-            leave = frappe.db.sql("""delete from `tabShift Assignment`  where name = '%s' """%(l.name),as_dict = True)
-    # 
-    # leave = frappe.db.sql("""update `tabLeave Application` set workflow_state = "Pending for HOD" where name = "HR-LAP-2023-09065" """,as_dict = True)
-    # print(leave)
-    # leave = frappe.db.sql("""delete from `tabEmail Queue`  where status = "Error" """,as_dict = True)
-    # print(leave)
- 
-@frappe.whitelist()
-def mail_test():
-    data = '' 
-    data += 'Dear Sir/Mam,<br><br>TESt<br><table class="table table-bordered" border="1">'
-    data += '</table>'
-    frappe.sendmail(
-        recipients= ['sahayasterwin.a@groupteampro.com'],
-        subject="Daily Sales Report",
-        message= """Dear Team, <br><br> Kindly find the attached Daily Sales Report.""")
+def round_up_to_pf_esi(doc,method):	
+    amo = 0
+    for detail in doc.get('earnings'):
+        if detail.do_not_include_in_total==0:
+            amo += detail.amount
+        diff = detail.amount - int(detail.amount)
+        if diff >= 0.50:
+            amount = math.ceil(detail.amount)
+        else:
+            amount = math.floor(detail.amount)
+        detail.amount = amount
+        value = amo-int(amo)
+        if value >=0.5:
+            doc.gross_pay = math.ceil(amo)
+        else:
+            doc.gross_pay = math.floor(amo)
+      	
+    for detail in doc.get('deductions'):
+        if detail.salary_component == "Employee State Insurance" or "Canteen Charges":
+            diff = detail.amount - int(detail.amount)
+            if diff >= 0.50:
+                amount = math.ceil(detail.amount)
+            else:
+                amount = math.floor(detail.amount)
+            if detail.do_not_include_in_total==0:
+                detail.amount = amount
+    total_deduction_diff = doc.total_deduction - int(doc.total_deduction)
+    if total_deduction_diff >= 0.50:
+        doc.total_deduction = math.ceil(doc.total_deduction)
+    else:
+        doc.total_deduction = math.floor(doc.total_deduction)
+    
+    doc.net_pay = doc.gross_pay - doc.total_deduction
 
-        
+

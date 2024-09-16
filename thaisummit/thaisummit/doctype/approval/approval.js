@@ -1,5 +1,5 @@
-// Copyright (c) 2021, TEAMPRO and contributors
-// For license information, please see license.txt
+// // Copyright (c) 2021, TEAMPRO and contributors
+// // For license information, please see license.txt
 
 frappe.ui.form.on('Approval', {
 	refresh: function (frm) {
@@ -29,9 +29,9 @@ frappe.ui.form.on('Approval', {
 		$('*[data-fieldname="guest_entry_approval"]').find('.grid-add-row').remove()
 
 
-		if (frappe.user.has_role(['HOD', 'GM', 'HR GM', 'CEO'])) {
-			/* OD button start*/
-
+// 		// if (frappe.user.has_role(['HOD', 'GM', 'HR GM', 'CEO'])) {
+// 		// 	/* OD button start*/
+// 	// }
 			frm.fields_dict["od_approval"].grid.add_custom_button(__('Reject'),
 				function () {
 					$.each(frm.doc.od_approval, function (i, d) {
@@ -64,18 +64,18 @@ frappe.ui.form.on('Approval', {
 											frm.get_field("od_approval").grid.grid_rows[d.idx - 1].remove();
 										})
 								}
-								// else if (d.workflow_state == 'Pending for HR') {
-								// 	// frappe.db.set_value('On Duty Application', d.on_duty_application, 'workflow_state', 'Approved')
-								// 	// frm.get_field("od_approval").grid.grid_rows[d.idx - 1].remove();
-								// 	frm.call('submit_doc', {
-								// 		doctype: "On Duty Application",
-								// 		name: d.on_duty_application,
-								// 		workflow_state: 'Approved'
-								// 	})
-								// 	.then(r => {
-								// 		frm.get_field("od_approval").grid.grid_rows[d.idx - 1].remove();
-								// 	})
-								// }
+// 								// else if (d.workflow_state == 'Pending for HR') {
+// 								// 	// frappe.db.set_value('On Duty Application', d.on_duty_application, 'workflow_state', 'Approved')
+// 								// 	// frm.get_field("od_approval").grid.grid_rows[d.idx - 1].remove();
+// 								// 	frm.call('submit_doc', {
+// 								// 		doctype: "On Duty Application",
+// 								// 		name: d.on_duty_application,
+// 								// 		workflow_state: 'Approved'
+// 								// 	})
+// 								// 	.then(r => {
+// 								// 		frm.get_field("od_approval").grid.grid_rows[d.idx - 1].remove();
+// 								// 	})
+// 								// }
 							}
 							else {
 								if (d.workflow_state == 'Pending for HOD') {
@@ -101,10 +101,9 @@ frappe.ui.form.on('Approval', {
 						}
 					})
 				}).addClass('btn-primary').css({ "margin-left": "10px", "margin-right": "10px" })
+// 			/* OD button end*/
 
-			/* OD button end*/
-
-			/* PR button start*/
+// 			/* PR button start*/
 
 			frm.fields_dict["pr_approval"].grid.add_custom_button(__('Reject'),
 				function () {
@@ -141,9 +140,9 @@ frappe.ui.form.on('Approval', {
 					})
 				}).addClass('btn-primary').css({ "margin-left": "10px", "margin-right": "10px" })
 
-			/* PR button end*/
+// 			/* PR button end*/
 
-			/* LA button start*/
+// 			/* LA button start*/
 
 			frm.fields_dict["la_approval"].grid.add_custom_button(__('Reject'),
 				function () {
@@ -182,9 +181,9 @@ frappe.ui.form.on('Approval', {
 					})
 				}).addClass('btn-primary').css({ "margin-left": "10px", "margin-right": "10px" })
 
-			/* LA button end*/
+// 			/* LA button end*/
 
-			/* OT button start*/
+// 			/* OT button start*/
 
 			frm.fields_dict["ot_approval"].grid.add_custom_button(__('Reject'),
 				function () {
@@ -218,7 +217,7 @@ frappe.ui.form.on('Approval', {
 									name: d.overtime_request,
 									workflow_state: 'Approved'
 								}).then(r => {
-									// console.log("HI")
+// 									// console.log("HI")
 									frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
 								})
 								// frm.get_field("ot_approval").grid.grid_rows[d.idx - 1].remove();
@@ -227,9 +226,9 @@ frappe.ui.form.on('Approval', {
 					})
 				}).addClass('btn-primary').css({ "margin-left": "10px", "margin-right": "10px" })
 
-			/* OT button end*/
+// 			/* OT button end*/
 
-			/* MP button start*/
+// 			/* MP button start*/
 
 			frm.fields_dict["mp_approval"].grid.add_custom_button(__('Reject'),
 				function () {
@@ -269,9 +268,9 @@ frappe.ui.form.on('Approval', {
 					})
 				}).addClass('btn-primary').css({ "margin-left": "10px", "margin-right": "10px" })
 
-			/* MP button end*/
+// 			/* MP button end*/
 			
-			/*Guest Entry Button Start*/
+// 			/*Guest Entry Button Start*/
 
 			frm.fields_dict["guest_entry_approval"].grid.add_custom_button(__('Reject'),
 				function () {
@@ -312,10 +311,10 @@ frappe.ui.form.on('Approval', {
 				}).addClass('btn-primary').css({ "margin-left": "10px", "margin-right": "10px" })
 
 
-		}
 
 
-		/* OD fetch start*/
+
+// 		/* OD fetch start*/
 
 		var workflow_state = ''
 		if (frappe.user.has_role('GM')) {
@@ -339,8 +338,9 @@ frappe.ui.form.on('Approval', {
 				"doctype": "On Duty Application",
 				"filters": [
 					['workflow_state', 'in', workflow_state],
-					['employee', '!=', r.name,]
+					// ['employee', '!=', r.name,]
 				],
+				'field':['*'],
 				limit_page_length: 500
 			},
 			callback(r) {
@@ -377,23 +377,23 @@ frappe.ui.form.on('Approval', {
 			}
 		})
 	})
-		/* OD fetch end*/
+// 		/* OD fetch end*/
 
-		/* PR fetch start*/
-		// if (frappe.user.has_role(['HOD', 'GM'])) {
-		// frappe.call({
-		// 	"method": "frappe.client.get_value",
-		// 	"args": {
-		// 		"doctype": "Employee",
-		// 		"filters": {
-		// 			'user_id': frappe.session.user
-		// 		},
-		// 		"fieldname": 'name'
-		// 	},
-		// 	callback(r){
-		// 		var emp = r.message.name
-		// 	}
-		// })
+// 		/* PR fetch start*/
+// 		// if (frappe.user.has_role(['HOD', 'GM'])) {
+		frappe.call({
+			"method": "frappe.client.get_value",
+			"args": {
+				"doctype": "Employee",
+				"filters": {
+					'user_id': frappe.session.user
+				},
+				"fieldname": 'name'
+			},
+			callback(r){
+				var emp = r.message.name
+			}
+		})
 		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
 
 			frappe.call({
@@ -402,8 +402,9 @@ frappe.ui.form.on('Approval', {
 					"doctype": "Permission Request",
 					"filters": [
 						['workflow_state', '=', 'Pending for HOD'],
-						['employee', '!=', r.name,]
+						// ['employee', '!=', r.name,]
 					],
+					'field':['*'],
 					limit_page_length: 500
 				},
 				callback(r) {
@@ -442,20 +443,19 @@ frappe.ui.form.on('Approval', {
 				}
 			})
 		})
-		// }
-		/* PR fetch end*/
+// 		// }
+// 		/* PR fetch end*/
 
-		/* LA fetch start*/
-		// if (frappe.user.has_role(['HOD', 'GM'])) {
-		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
+// 		/* LA fetch start*/
+// 		// if (frappe.user.has_role(['First Manager'])) {
 			frappe.call({
 				"method": "frappe.client.get_list",
 				"args": {
 					"doctype": "Leave Application",
 					"filters": [
 						['workflow_state', '=', 'Pending for HOD'],
-						['employee', '!=', r.name,]
 					],
+					'field':['*'],
 					limit_page_length: 500
 				},
 				callback(r) {
@@ -493,12 +493,12 @@ frappe.ui.form.on('Approval', {
 					})
 				}
 			})
-		})
-		// }
-		/* LA fetch end*/
+	
+// 		// }
+// 		/* LA fetch end*/
 
-		/* OT fetch start*/
-		// if (frappe.user.has_role(['HOD', 'GM'])) {
+// 		/* OT fetch start*/
+// 		// if (frappe.user.has_role(['HOD', 'GM'])) {
 		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
 			frappe.call({
 				"method": "frappe.client.get_list",
@@ -506,8 +506,9 @@ frappe.ui.form.on('Approval', {
 					"doctype": "Overtime Request",
 					"filters": [
 						['workflow_state', '=', 'Pending for HOD'],
-						['employee', '!=', r.name]
+						// ['employee', '!=', r.name]
 					],
+					'field':['*'],
 					limit_page_length: 500
 				},
 				callback(r) {
@@ -549,10 +550,10 @@ frappe.ui.form.on('Approval', {
 				}
 			})
 		})
-		// }
-		/* OT fetch end*/
+// 		// }
+// 		/* OT fetch end*/
 
-		/* MP fetch start*/
+// 		/* MP fetch start*/
 		frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name', r => {
 			frappe.call({
 				"method": "frappe.client.get_list",
@@ -560,8 +561,9 @@ frappe.ui.form.on('Approval', {
 					"doctype": "Miss Punch Application",
 					"filters": [
 						['workflow_state', 'in', ['Pending for HOD', 'Pending for HR GM']],
-						['employee', '!=', r.name]
+						// ['employee', '!=', r.name]
 					],
+					'field':['*'],
 					limit_page_length: 500
 				},
 				callback(r) {
@@ -600,8 +602,9 @@ frappe.ui.form.on('Approval', {
 					"doctype": "Miss Punch Application",
 					"filters": [
 						['workflow_state', 'in', ['Pending for HOD', 'Pending for HR GM']],
-						['employee', '!=', r.name]
+						// ['employee', '!=', r.name]
 					],
+					'field':['*'],
 					limit_page_length: 500
 				},
 				callback(r) {
@@ -640,8 +643,9 @@ frappe.ui.form.on('Approval', {
 					"doctype": "Guest Entry",
 					"filters": [
 						['workflow_state', '=', 'Pending for HOD'],
-						['employee', '!=', r.name]
+						// ['employee', '!=', r.name]
 					],
+					'field':['*'],
 					limit_page_length: 500
 				},
 				callback(r) {
@@ -655,8 +659,8 @@ frappe.ui.form.on('Approval', {
 							callback(r) {
 								frm.add_child('guest_entry_approval', {
 									'from_date': r.message.from,
-									'to_sate': r.message.to,
-									'requster_id': r.message.requester_id,
+									'to_date': r.message.to,
+									'requester_id': r.message.requester_id,
 									'workflow_state': r.message.workflow_state,
 									'guest_id': r.message.name,
 									'party_name': r.message.party_name,
@@ -669,8 +673,7 @@ frappe.ui.form.on('Approval', {
 				}
 			})
 		})
-		/* Guest fetch end*/
-	},
+},
 	od_approval_on_form_rendered: function (frm, cdt, cdn) {
 		frm.fields_dict['od_approval'].grid.wrapper.find('.grid-delete-row').hide();
 		frm.fields_dict['od_approval'].grid.wrapper.find('.grid-duplicate-row').hide();
@@ -719,4 +722,5 @@ frappe.ui.form.on('Approval', {
 		frm.fields_dict['guest_entry_approval'].grid.wrapper.find('.grid-insert-row-below').hide();
 		frm.fields_dict['guest_entry_approval'].grid.wrapper.find('.grid-insert-row').hide();
 	},
+// },
 });

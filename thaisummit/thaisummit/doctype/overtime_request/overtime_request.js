@@ -195,9 +195,6 @@ frappe.ui.form.on('Overtime Request', {
 		frm.trigger('to_time')
 	},
 	to_time(frm) {
-		// if (frm.doc.to_time) {
-			
-		// }
 		if (frm.doc.from_time && frm.doc.to_time) {
 			frappe.call({
 				"method": "thaisummit.thaisummit.doctype.overtime_request.overtime_request.ot_hours",
@@ -209,6 +206,7 @@ frappe.ui.form.on('Overtime Request', {
 				},
 				callback(r) {
 					frm.set_value('ot_hours', r.message[1])
+					// console.log( r.message[0])
 					frm.set_value('total_hours', r.message[0])
 					frm.call('get_ot_amount').then(d => {
 						if (d.message) {
@@ -239,7 +237,6 @@ frappe.ui.form.on('Overtime Request', {
 				})
 			}
 		})
-		
 		if (frm.doc.shift) {
 			frm.trigger('shift')
 		}
@@ -251,19 +248,6 @@ frappe.ui.form.on('Overtime Request', {
 					}
 				})
 		}
-		// if (frm.doc.ot_date) {
-		// 	frappe.call({
-		// 		method: 'thaisummit.custom.application_allowed_from',
-		// 		args: {
-		// 			date: frm.doc.ot_date
-		// 		},
-		// 		callback(r) {
-		// 			if (r.message == 'NO') {
-		// 				frm.set_value('ot_date', '')
-		// 			}
-		// 		}
-		// 	})
-		// }
 		frappe.call({
 			method: 'thaisummit.thaisummit.doctype.overtime_request.overtime_request.check_holidays',
 			args: {

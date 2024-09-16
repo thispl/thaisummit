@@ -169,6 +169,7 @@ def get_data():
             frappe.msgprint("Unable to display Invoice Key due to API Issue")
         data = []
         if pos:
+            frappe.log_error(title='pos',message=pos)
             for po in pos:
                 if frappe.db.exists('TSAI Part Master', po['Mat_No']):
                     pr_name = frappe.db.get_value(

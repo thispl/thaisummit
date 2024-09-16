@@ -488,14 +488,6 @@ class ShiftSchedule(Document):
 def enqueue_shift_assignment(file,from_date,to_date,name):
 	enqueue(create_shift_assignment, queue='default', timeout=6000, event='create_shift_assignment',
 					file=file,from_date=from_date,to_date=to_date,name=name)
-
-# @frappe.whitelist()
-# def manual_shift_assignment():
-#     file = '/private/files/shift.csv'
-#     from_date = '2022-12-05' 
-#     to_date = '2022-12-10'
-#     name = "SC-5651"
-#     create_shift_assignment(file,from_date,to_date,name)
 	
 @frappe.whitelist()
 def create_shift_assignment(file,from_date,to_date,name):
@@ -503,24 +495,27 @@ def create_shift_assignment(file,from_date,to_date,name):
 	pps = read_csv_content(filepath[1])
 	no_of_days = date_diff(add_days(to_date, 1), from_date)
 	dates = [add_days(from_date, i) for i in range(0, no_of_days)]
+	# for pp in pps:
+	# 	if pp[5] and pp[5] != 'Shift':
+	# 		for date in dates:
+	# 			if frappe.db.exists("Shift Assignment", {'employee': pp[0], 'start_date': date, 'end_date': date, 'docstatus': ['in', [0, 1]]}):
+	# 				frappe.throw(_("Employee {0} already has assigned Shift for {1}").format(frappe.bold(pp[0]), frappe.bold(date)))
 	for pp in pps:
-		if pp[5] != 'Shift':
-			if pp[5]:
-				for date in dates:
-					if not frappe.db.exists("Shift Assignment",{'employee':pp[0],'start_date':date,'end_date':date,'docstatus':['in',[0,1]]}):
-						doc = frappe.new_doc("Shift Assignment")
-						doc.employee = pp[0]
-						doc.department = pp[2]
-						doc.shift_type = pp[5]
-						doc.start_date = date
-						doc.end_date = date
-						doc.route_no = pp[6]
-						doc.shift_schedule = name
-						doc.save(ignore_permissions=True)
-						frappe.db.commit()
-				frappe.db.set_value('Employee',pp[0],"default_shift",pp[5])
+		if pp[5] and pp[5] != 'Shift':
+			for date in dates:
+				if not frappe.db.exists("Shift Assignment", {'employee': pp[0], 'start_date': date, 'end_date': date, 'docstatus': ['in', [0, 1]]}):
+					doc = frappe.new_doc("Shift Assignment")
+					doc.employee = pp[0]
+					doc.department = pp[2]
+					doc.shift_type = pp[5]
+					doc.start_date = date
+					doc.end_date = date
+					doc.route_no = pp[6]
+					doc.shift_schedule = name
+					doc.save(ignore_permissions=True)
+					frappe.db.commit()
+			frappe.db.set_value('Employee', pp[0], "default_shift", pp[5])
 	frappe.msgprint('Shift Schedule uploaded successfully')
-	
 
 @frappe.whitelist()
 def get_template():
@@ -634,9 +629,6 @@ def shift_employees(doc,shift):
 @frappe.whitelist()
 def get_count(from_date,to_date,filename):
 	from frappe.utils.file_manager import get_file
-	# from_date = '2023-03-27'
-	# to_date = '2023-04-01'
-	# filename = '/private/files/19.03.2023 IYM PRESS SPM.csv'
 	_file = frappe.get_doc("File", {"file_url":filename})
 	filepath = get_file(filename)
 	pps = read_csv_content(filepath[1])

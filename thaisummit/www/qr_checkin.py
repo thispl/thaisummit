@@ -25,11 +25,14 @@ def mark_checkin(employee=None):
 	qr_scanned_by += frappe.get_value('Employee',{'user_id':frappe.session.user},'employee_name')
 	nowtime = datetime.now()
 	shift_date = date.today()
-	shift = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
-	shift1_time = [time(hour=shift[0].seconds//3600,minute=((shift[0].seconds//60)%60),second=0),time(hour=shift[1].seconds//3600,minute=((shift[1].seconds//60)%60),second=0)]
-	shift2_time = [time(hour=15, minute=31, second=0),time(hour=19, minute=0, second=0)]
-	shift3_time = [time(hour=00, minute=45, second=0),time(hour=7, minute=0, second=0)]
-	# shiftpp2_time = [time(hour=6, minute=20, second=0),time(hour=6, minute=30, second=0)]
+	shift1 = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
+	shift1_time = [time(hour=shift1[0].seconds//3600,minute=((shift1[0].seconds//60)%60),second=0),time(hour=shift1[1].seconds//3600,minute=((shift1[1].seconds//60)%60),second=0)]
+	shift2 = frappe.db.get_value('Shift Type',{'name':'2'},['qr_start_time','qr_end_time'])
+	shift2_time = [time(hour=shift2[0].seconds//3600,minute=((shift2[0].seconds//60)%60),second=0),time(hour=shift2[1].seconds//3600,minute=((shift2[1].seconds//60)%60),second=0)]
+	shift3 = frappe.db.get_value('Shift Type',{'name':'3'},['qr_start_time','qr_end_time'])
+	shift3_time = [time(hour=shift3[0].seconds//3600,minute=((shift3[0].seconds//60)%60),second=0),time(hour=shift3[1].seconds//3600,minute=((shift3[1].seconds//60)%60),second=0)]
+	shiftpp2 = frappe.db.get_value('Shift Type',{'name':'PP2'},['qr_start_time','qr_end_time'])
+	shiftpp2_time = [time(hour=shiftpp2[0].seconds//3600,minute=((shiftpp2[0].seconds//60)%60),second=0),time(hour=shiftpp2[1].seconds//3600,minute=((shiftpp2[1].seconds//60)%60),second=0)]
 	curtime = time(hour=nowtime.hour, minute=nowtime.minute, second=nowtime.second)
 	shift_type = 'NA'
 	if is_between(curtime,shift1_time):
@@ -39,8 +42,8 @@ def mark_checkin(employee=None):
 	if is_between(curtime,shift3_time):
 		shift_type = '3'
 		shift_date = shift_date + timedelta(days=-1)
-	# if is_between(curtime,shiftpp2_time):
-	# 	shift_type = 'PP2'
+	if is_between(curtime,shiftpp2_time):	
+		shift_type = 'PP2'
 	# 	shift_date = shift_date + timedelta(days=-1)
 	if shift_type == 'NA':
 		return 'Wrong Shift Time'
@@ -65,7 +68,7 @@ def mark_checkin(employee=None):
 		else:
 			per_day_basic = 0   
 		if emp[2]:    
-			per_days_ctc = emp[2] / total_working_days 
+			per_day_ctc = emp[2] / total_working_days 
 		else:
 			per_day_ctc = 0    
 	else:
@@ -97,7 +100,7 @@ def mark_checkin(employee=None):
 			else:
 				per_day_basic = 0   
 			if emp[2]:    
-				per_days_ctc = emp[2] / total_working_days 
+				per_day_ctc = emp[2] / total_working_days 
 			else:
 				per_day_ctc = 0    
 		else:
@@ -143,7 +146,7 @@ def mark_checkin(employee=None):
 			else:
 				per_day_basic = 0   
 			if emp[2]:    
-				per_days_ctc = emp[2] / total_working_days 
+				per_day_ctc = emp[2] / total_working_days 
 			else:
 				per_day_ctc = 0    
 		else:

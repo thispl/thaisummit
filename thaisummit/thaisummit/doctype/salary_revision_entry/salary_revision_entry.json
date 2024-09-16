@@ -1,0 +1,198 @@
+{
+ "actions": [],
+ "autoname": "Rev Entry.#####",
+ "creation": "2024-04-25 17:56:40.791849",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "employee_name",
+  "column_break_3",
+  "date",
+  "components_details_section",
+  "basic",
+  "hra",
+  "convey",
+  "spl",
+  "other",
+  "ma",
+  "epf",
+  "esi",
+  "gross",
+  "ctc",
+  "column_break_14",
+  "leave",
+  "pos",
+  "child",
+  "hostel",
+  "wash",
+  "weld",
+  "temp",
+  "service",
+  "ppe",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "employee.first_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "components_details_section",
+   "fieldtype": "Section Break",
+   "label": "Components Details"
+  },
+  {
+   "fieldname": "basic",
+   "fieldtype": "Currency",
+   "label": "Basic"
+  },
+  {
+   "fieldname": "hra",
+   "fieldtype": "Currency",
+   "label": "House Rent Allowance"
+  },
+  {
+   "fieldname": "convey",
+   "fieldtype": "Currency",
+   "label": "Conveyance Allowance"
+  },
+  {
+   "fieldname": "spl",
+   "fieldtype": "Currency",
+   "label": "Special Allowance"
+  },
+  {
+   "fieldname": "other",
+   "fieldtype": "Currency",
+   "label": "Other Allowance"
+  },
+  {
+   "fieldname": "ma",
+   "fieldtype": "Currency",
+   "label": "Medical Allowance"
+  },
+  {
+   "fieldname": "epf",
+   "fieldtype": "Currency",
+   "label": "EPF ER"
+  },
+  {
+   "fieldname": "esi",
+   "fieldtype": "Currency",
+   "label": "ESI ER"
+  },
+  {
+   "fieldname": "gross",
+   "fieldtype": "Currency",
+   "label": "Gross"
+  },
+  {
+   "fieldname": "ctc",
+   "fieldtype": "Currency",
+   "label": "CTC"
+  },
+  {
+   "fieldname": "column_break_14",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "leave",
+   "fieldtype": "Currency",
+   "label": "Leave Travel Allowance"
+  },
+  {
+   "fieldname": "pos",
+   "fieldtype": "Currency",
+   "label": "Position Allowance"
+  },
+  {
+   "fieldname": "child",
+   "fieldtype": "Currency",
+   "label": "Children Education"
+  },
+  {
+   "fieldname": "hostel",
+   "fieldtype": "Currency",
+   "label": "Children Hostel"
+  },
+  {
+   "fieldname": "wash",
+   "fieldtype": "Currency",
+   "label": "Washing Allowance"
+  },
+  {
+   "fieldname": "weld",
+   "fieldtype": "Currency",
+   "label": "Welding Allowance"
+  },
+  {
+   "fieldname": "temp",
+   "fieldtype": "Currency",
+   "label": "Temp Allowance"
+  },
+  {
+   "fieldname": "service",
+   "fieldtype": "Currency",
+   "label": "Service Charge"
+  },
+  {
+   "fieldname": "ppe",
+   "fieldtype": "Currency",
+   "label": "PPE"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Salary Revision Entry",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-04-26 08:14:17.169478",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "Salary Revision Entry",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

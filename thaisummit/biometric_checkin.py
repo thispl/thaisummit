@@ -9,7 +9,7 @@ def get_checkins(**args):
 
 @frappe.whitelist(allow_guest=True)
 def mark_checkin(**args):
-	if frappe.db.exists('Employee',{'biometric_pin':args['employee'],'status':"Active"}):
+	if frappe.db.exists('Employee',{'biometric_pin':args['employee']}):
 		if not frappe.db.exists('Employee Checkin',{'biometric_pin':args['employee'],'time':args['time']}):
 			try:
 				if args['device_id'] == 'BC/NT IN':

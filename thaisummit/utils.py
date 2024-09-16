@@ -45,10 +45,10 @@ def reset_supplier_invoice_no():
 def leave_restriction(leave,from_date):
     before = frappe.get_value('Leave Type',{'name':leave},['before'])*-1
     after = frappe.get_value('Leave Type',{'name':leave},['after'])
-    frappe.errprint(before)
-    frappe.errprint(after)
-    frappe.errprint(add_days(today(),after))
-    frappe.errprint(add_days(today(),before))
+    # frappe.errprint(before)
+    # frappe.errprint(after)
+    # frappe.errprint(add_days(today(),after))
+    # frappe.errprint(add_days(today(),before))
     if from_date > add_days(today(),after):
         frappe.errprint("HI")
         return 'No'
@@ -154,6 +154,7 @@ def get_open_production_qty():
                 opo = frappe.db.exists('Open Production Order',{'mat_no':mat_no['mat_no'],'daily_order_date':today})
                 if opo:
                     opo_id = frappe.get_doc('Open Production Order',opo)
+                    
                 else:
                     opo_id = frappe.new_doc('Open Production Order')
                 opo_id.update({
