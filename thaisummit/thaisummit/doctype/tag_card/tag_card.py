@@ -129,6 +129,25 @@ def update_workflow_list():
 						return actual_flow
 
 
+
+
+@frappe.whitelist()
+def update_list(production_line):
+    prod_line_emp = []
+    user = frappe.session.user
+    if user != 'Administrator':
+        emp_details = frappe.db.sql("""select name from `tabEmployee Production Line Details` where user_id ='%s' """%(user),as_dict=1)[0]
+        emp_name = emp_details['name']
+        emp_doc = frappe.get_doc('Employee Production Line Details', emp_name)
+        emp_prod_line = emp_doc.get('production_line')
+        for e in emp_prod_line:
+            prod_line_emp.append(e.production_line_no)
+        tag_production_line = production_line
+        if tag_production_line in prod_line_emp:
+            return tag_production_line
+        else:
+            frappe.throw(_('This Tag Card doesnt belongs to your production line'))
+
 			
 		
 		
