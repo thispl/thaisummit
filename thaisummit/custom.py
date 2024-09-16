@@ -1371,15 +1371,15 @@ def miss_att(doc,method):
     if frappe.db.exists("Attendance",{'attendance_date':doc.attendance_date,'employee':doc.employee,'docstatus':1}):
         frappe.throw(_('Attendance Closed for this day %s'%(doc.attendance_date)))        
                     
-@frappe.whitelist()
-def ot_att(doc,method):
-    user = frappe.session.user
-    user_roles = frappe.get_roles(user)
-    if not ("System Manager" in user_roles):
-        if frappe.db.exists("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1}):
-            att = frappe.get_doc("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1},["*"])
-            if att.shift_status not in ["OD","ODW","ODH"]:
-                frappe.throw(_('Attendance Closed for this day %s. For additional details kindly contact the HR Team'%(doc.ot_date)))
+# @frappe.whitelist()
+# def ot_att(doc,method):
+#     user = frappe.session.user
+#     user_roles = frappe.get_roles(user)
+#     if not ("System Manager" in user_roles):
+#         if frappe.db.exists("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1}):
+#             att = frappe.get_doc("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1},["*"])
+#             if att.shift_status not in ["OD","ODW","ODH"]:
+#                 frappe.throw(_('Attendance Closed for this day %s. For additional details kindly contact the HR Team'%(doc.ot_date)))
 
 # @frappe.whitelist()
 # def make_old_iym_sheet():

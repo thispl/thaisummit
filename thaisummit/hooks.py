@@ -274,7 +274,7 @@ doc_events = {
 		"validate":["thaisummit.custom.miss_att"]
 	},
     "Overtime Request":{
-		"validate":["thaisummit.custom.ot_att"]
+		"validate":["thaisummit.thaisummit.doctype.overtime_request.overtime_request.ot_att"]
 	},
     "Attendance":{
         'on_update': 'thaisummit.mark_attendance.update_att_shift_status'

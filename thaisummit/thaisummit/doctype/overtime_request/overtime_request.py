@@ -316,3 +316,15 @@ def ot_hours(shift,from_time,to_time,ot_date):
     frappe.errprint(str(t_diff)) 
     frappe.errprint(str(ot_hours))         
     return [str(t_diff),str(ot_hours)]
+
+
+@frappe.whitelist()
+def ot_att(doc,method):
+    user = frappe.session.user
+    user_roles = frappe.get_roles(user)
+    if not ("System Manager" in user_roles):
+        if frappe.db.exists("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1}):
+            att = frappe.get_doc("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1},["*"])
+            if att.shift_status not in ["OD","ODW","ODH"]:
+                frappe.throw(_('Attendance Closed for this day %s. For additional details kindly contact the HR Team'%(doc.ot_date)))
+
