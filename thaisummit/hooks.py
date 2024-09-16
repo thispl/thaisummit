@@ -264,7 +264,7 @@ doc_events = {
 		'after_insert':[
 			"thaisummit.api.push_invoice",
 		],
-		'on_update': "thaisummit.custom.get_gst_percent"
+		'on_update': "thaisummit.thaisummit.doctype.tsai_invoice.tsai_invoice.get_gst_percent"
 
 	},
     "Leave Application":{
