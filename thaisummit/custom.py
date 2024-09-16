@@ -1633,6 +1633,8 @@ def update_attendance():
 @frappe.whitelist()
 def round_up_to_pf_esi(doc,method):	
     amo = 0
+
+    
     for detail in doc.get('earnings'):
         if detail.do_not_include_in_total==0:
             amo += detail.amount
