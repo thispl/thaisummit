@@ -16,6 +16,25 @@ def ping():
 def get_server_date():
     return today()
 
+
+from datetime import datetime, timedelta
+@frappe.whitelist()
+def get_server_dates(from_date):
+    today = datetime.now().date()
+    allow_dat = frappe.db.get_single_value('HR Time Settings','allowed__after')
+    # frappe.errprint(today)
+    # frappe.errprint(allow_dat)
+    new_date = today - timedelta(days=allow_dat)
+    # frappe.errprint(new_date)
+    # frappe.errprint(type(new_date))
+    # frappe.errprint(type(from_date))
+    date_object = datetime.strptime(from_date, "%Y-%m-%d").date()
+    # frappe.errprint(type(date_object))
+    if new_date > date_object:
+        return "ok"
+
+
+
 @frappe.whitelist()
 def reset_supplier_invoice_no():
     suppliers = frappe.get_all('TSAI Supplier')
@@ -26,9 +45,16 @@ def reset_supplier_invoice_no():
 def leave_restriction(leave,from_date):
     before = frappe.get_value('Leave Type',{'name':leave},['before'])*-1
     after = frappe.get_value('Leave Type',{'name':leave},['after'])
+    # frappe.errprint(before)
+    # frappe.errprint(after)
+    # frappe.errprint(add_days(today(),after))
+    # frappe.errprint(add_days(today(),before))
     if from_date > add_days(today(),after):
+        frappe.errprint("HI")
         return 'No'
+        
     elif from_date < add_days(today(),before):
+        frappe.errprint("HII")
         return 'No'
 
 @frappe.whitelist()
@@ -128,6 +154,7 @@ def get_open_production_qty():
                 opo = frappe.db.exists('Open Production Order',{'mat_no':mat_no['mat_no'],'daily_order_date':today})
                 if opo:
                     opo_id = frappe.get_doc('Open Production Order',opo)
+                    
                 else:
                     opo_id = frappe.new_doc('Open Production Order')
                 opo_id.update({

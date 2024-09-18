@@ -66,7 +66,7 @@ class GenerateTagCard(Document):
 	def validate(self):
 		prod_line_emp = []
 		user = frappe.session.user
-		if user != 'Administrator':
+		if user not in ['Administrator','gururaja528@gmail.com']:
 			emp_details = frappe.db.sql("""select name from `tabEmployee Production Line Details` where user_id ='%s' """%(user),as_dict=1)[0]
 			emp_name = emp_details['name']
 			emp_doc = frappe.get_doc('Employee Production Line Details', emp_name)
@@ -138,7 +138,7 @@ class GenerateTagCard(Document):
 				# Child Parts Quantity Shortage	
 				bom_list = frappe.db.sql("""select * from `tabTSAI BOM` where fm ='%s' and depth = '2' and uom != '' """%(self.mat_number),as_dict=1)
 				for c in bom_list:
-					warehouse_qty = get_live_stock(c.item)
+					warehouse_qty = get_live_stock(c.item,self.mat_number)
 					qty_short = c.item_quantity * self.quantity
 					if warehouse_qty < qty_short:
 						short_qty = warehouse_qty - qty_short
@@ -268,7 +268,7 @@ class GenerateTagCard(Document):
 			# Child Parts Quantity Shortage	
 			bom_list = frappe.db.sql("""select * from `tabTSAI BOM` where fm ='%s' and depth = '2' and uom != '' """%(self.mat_number),as_dict=1)
 			for c in bom_list:
-				warehouse_qty = get_live_stock(c.item)
+				warehouse_qty = get_live_stock(c.item,self.mat_number)
 				qty_short = c.item_quantity * self.quantity
 				if warehouse_qty < qty_short:
 					short_qty = warehouse_qty - qty_short
@@ -374,7 +374,7 @@ class GenerateTagCard(Document):
 			}
 			response = requests.request("POST", url, headers=headers, data=payload)
 			res = json.loads(response.text)
-			frappe.log_error(res['Status'])
+			# frappe.log_error(res['Status'])
 			tab.status = res['Status']
 			tab.append('workflow_tracker_table',{
 				'flow_name': children[0].workflow,
@@ -382,9 +382,9 @@ class GenerateTagCard(Document):
 				'date':date.today(),
 				'user_name':self.user_name
 			})
-			frappe.log_error(title="generate_tag_card",message=payload)
+			# frappe.log_error(title="generate_tag_card",message=payload)
 			u_name = frappe.db.sql("""select username from `tabUser` where name='%s' """%(frappe.session.user),as_dict=1)[0]
-			frappe.log_error(title="generate_tag_card",message=u_name['username'])
+			# frappe.log_error(title="generate_tag_card",message=u_name['username'])
 			tab.save(ignore_permissions=True)
 			frappe.db.commit()
 
@@ -398,7 +398,7 @@ class GenerateTagCard(Document):
 		self.set('child_parts', [])
 		bom_list = frappe.db.sql("""select * from `tabTSAI BOM` where fm ='%s' and depth = '2' and uom != '' """%(self.mat_number),as_dict=1)
 		for c in bom_list:
-			warehouse_qty = get_live_stock(c.item)
+			warehouse_qty = get_live_stock(c.item,self.mat_number)
 			qty_short = c.item_quantity * self.quantity
 			if warehouse_qty < qty_short:
 				short_qty = warehouse_qty - qty_short
@@ -482,7 +482,7 @@ class GenerateTagCard(Document):
 		self.set('child_parts', [])
 		bom_list = frappe.db.sql("""select * from `tabTSAI BOM` where fm ='%s' and depth = '2' and uom != '' """%(self.mat_number),as_dict=1)
 		for c in bom_list:
-			warehouse_qty = get_live_stock(c.item)
+			warehouse_qty = get_live_stock(c.item,self.mat_number)
 			qty_short = c.item_quantity * self.quantity
 			if warehouse_qty < qty_short:
 				short_qty = warehouse_qty - qty_short
@@ -501,7 +501,7 @@ class GenerateTagCard(Document):
 		data += '<table class="table table-bordered" style="width:100%"><tr><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Mat Number</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Item Description</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>UOM</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Quantity</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Warehouse</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Depth</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Bom Type</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Warehouse Qty</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Print Qty</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Shortage Qty</b></center></td><td style="padding:1px;border: 1px solid black;background-color:#7CFC00;"><center><b>Status</b></center></td></tr>'
 		item_name = None
 		for b in bom_list:
-			warehouse_qty = get_live_stock(b.item)
+			warehouse_qty = get_live_stock(b.item,self.mat_number)
 			part_name = frappe.db.sql("""select parts_name from `tabTSAI Part Master` where name ='%s' """%(b.item),as_dict=1)[0]
 			if part_name['parts_name']:
 				item_name = part_name['parts_name']
@@ -519,8 +519,8 @@ class GenerateTagCard(Document):
 		return data
 
 @frappe.whitelist()
-def get_live_stock(mat_no):
-	whse = frappe.db.sql("""select whse from `tabTSAI BOM` where item='%s' """%(mat_no),as_dict=1)[0]
+def get_live_stock(mat_no,fm):
+	whse = frappe.db.sql("""select whse from `tabTSAI BOM` where item ='%s' and fm = '%s' """%(mat_no,fm),as_dict=1)[0]
 	whse_name = whse['whse']
 	url = "http://apioso.thaisummit.co.th:10401/api/GetItemInventory"
 	payload = json.dumps({

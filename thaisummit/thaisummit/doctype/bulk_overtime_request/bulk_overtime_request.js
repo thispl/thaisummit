@@ -192,19 +192,19 @@ frappe.ui.form.on('Bulk OT', {
 			})
 		}
 	}
-		if (child.ot_date) {
-			frappe.call({
-				method: 'thaisummit.custom.application_allowed_from',
-				args: {
-					date: child.ot_date
-				},
-				callback(r) {
-					if (r.message == 'NO') {
-						child.ot_date = ''
-						frm.refresh_field('employees')
-					}
-				}
-			})
-		}
+		// if (child.ot_date) {
+		// 	frappe.call({
+		// 		method: 'thaisummit.custom.application_allowed_from',
+		// 		args: {
+		// 			date: child.ot_date
+		// 		},
+		// 		callback(r) {
+		// 			if (r.message == 'NO') {
+		// 				child.ot_date = ''
+		// 				frm.refresh_field('employees')
+		// 			}
+		// 		}
+		// 	})
+		// }
 	}
 })

@@ -60,6 +60,7 @@ class PartMasterData(Document):
         <td style="background-color:#ffedcc; padding:1px; border: 1px solid black; font-size:7.5px;"><center><b>Machine</b></center></td>
         <td style="background-color:#ffedcc; padding:1px; border: 1px solid black; font-size:7.5px;"><center><b>FG MAT</center></td>
         <td style="background-color:#ffedcc; padding:1px; border: 1px solid black; font-size:7.5px;"><center><b>FG NAME</b></center></td>
+        <td style="background-color:#ffedcc; padding:1px; border: 1px solid black; font-size:7.5px;"><center><b>NDOL</b></center></td>
 
 
 
@@ -105,9 +106,10 @@ class PartMasterData(Document):
             <td style="padding:1px; border: 1px solid black; font-size:7.5px;"><center>%s</center></td>
             <td style="padding:1px; border: 1px solid black; font-size:7.5px;"><center>%s</center></td>
             <td style="padding:1px; border: 1px solid black; font-size:7.5px;"><center>%s</center></td>
+            <td style="padding:1px; border: 1px solid black; font-size:7.5px;"><center>%s</center></td>
             </tr>
             """%(i,p.mat_no,p.parts_no or '',p.parts_name or '',p.production_line or '',p.model or '',p.customer or '',p.mrp_sales_price,p.mrp_purchase_price,p.kanban_group or '',p.mat_type or '', p.operator,p.manual_welder,p.spater_cleaner,p.inspector,p.final_inspector,p.buffing_and_rework,p.retap,p.boring,
-                        p.manpower_std,p.packing_std,p.cycle_time,p.uph,p.min_day,p.max_day,p.parts_weight,p.scrap_weight,p.mrp_daily_order,p.transfer_rate,p.rack_no or '',p.rack_resposible_person or '',p.after_spot_nut,p.machine,p.fg_mat,p.fg_name,
+                        p.manpower_std,p.packing_std,p.cycle_time,p.uph,p.min_day,p.max_day,p.parts_weight,p.scrap_weight,p.mrp_daily_order,p.transfer_rate,p.rack_no or '',p.rack_resposible_person or '',p.after_spot_nut,p.machine,p.fg_mat,p.fg_name,p.ndol
                    )
             i += 1
         return data
@@ -127,7 +129,7 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
 
     ws = wb.create_sheet(sheet_name, 0)
     header = ["Mat No","Part No","Part Name","Production Line","Model","Customer","MRP Sales Price","MRP Purchase Price","Kanban Group","Mat Type","Operator","Manual Welder","Spater Cleaner","Inspector","Final Inspector","Buffing and Rework","Retap","Boring","Manpower Std","Packing Std","Cycle Time","UPH","Min Day","Max Day","Parts Weight","Scrap Weight","MRP Daily Order",
-                "Transfer Rate","Rack No","Rack Responsible Person","After Spot Nut","Machine","FG MAT","FG NAME",]
+                "Transfer Rate","Rack No","Rack Responsible Person","After Spot Nut","Machine","FG MAT","FG NAME","NDOL"]
     ws.append(header)
 
     data = get_parts()
@@ -161,7 +163,7 @@ def get_parts():
     parts = frappe.get_all('TSAI Part Master',['*'],order_by="mat_no")
     for p in parts:
         data.append([p.mat_no,p.parts_no,p.parts_name,p.production_line,p.model,p.customer,p.mrp_sales_price,p.mrp_purchase_price,p.kanban_group,p.mat_type,p.operator,p.manual_welder,p.spater_cleaner,p.inspector,p.final_inspector,p.buffing_and_rework,p.retap,p.boring,p.manpower_std,p.packing_std,p.cycle_time,p.uph,p.min_day,p.max_day,p.parts_weight,p.scrap_weight,p.mrp_daily_order,p.transfer_rate,p.rack_no or '-',
-                    p.rack_resposible_person or '-',p.after_spot_nut or '-',p.machine or '-',p.fg_mat or '-',p.fg_name or '-',
+                    p.rack_resposible_person or '-',p.after_spot_nut or '-',p.machine or '-',p.fg_mat or '-',p.fg_name or '-',p.ndol or '-',
                     ])
     return data
 
@@ -212,6 +214,7 @@ def upload(file):
             doc.machine = pp[31]   
             doc.fg_mat = pp[32]
             doc.fg_name = pp[33]
+            doc.ndol = pp[34]
             doc.save(ignore_permissions=True)
             frappe.db.commit()
         else:
@@ -250,6 +253,7 @@ def upload(file):
             doc.machine = pp[31]   
             doc.fg_mat = pp[32]
             doc.fg_name = pp[33] 
+            doc.ndol = pp[34]
             doc.save(ignore_permissions=True)
             frappe.db.commit()
-    frappe.log_error('Part Master Uploaded successfully')
+    # frappe.log_error('Part Master Uploaded successfully')

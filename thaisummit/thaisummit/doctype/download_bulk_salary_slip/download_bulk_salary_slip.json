@@ -1,6 +1,6 @@
 {
  "actions": [],
- "creation": "2022-12-17 10:07:32.426408",
+ "creation": "2023-08-14 13:05:22.823752",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -9,25 +9,11 @@
   "column_break_2",
   "start_date",
   "column_break_4",
-  "view_details",
-  "section_break_6",
-  "salary_slip",
-  "download_slip"
+  "download_slip",
+  "column_break_6",
+  "salary_slip"
  ],
  "fields": [
-  {
-   "fieldname": "start_date",
-   "fieldtype": "Date",
-   "label": "Start Date"
-  },
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_4",
-   "fieldtype": "Column Break"
-  },
   {
    "fieldname": "employee_type",
    "fieldtype": "Select",
@@ -35,34 +21,41 @@
    "options": "\nWC\nBC\nFT\nNT\nTH\nCL"
   },
   {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "download_slip",
    "fieldtype": "Button",
    "label": "Download Slip"
   },
   {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "salary_slip",
-   "fieldtype": "Table",
-   "label": "Salary Slip",
-   "options": "Salary Slip Child"
-  },
-  {
-   "fieldname": "section_break_6",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "view_details",
-   "fieldtype": "Button",
-   "label": "View Details"
+   "fieldtype": "Attach",
+   "label": "Salary Slip"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-04-17 18:24:43.240176",
+ "modified": "2023-08-14 13:05:22.823752",
  "modified_by": "Administrator",
  "module": "Thaisummit",
- "name": "Bulk Salary Slip Download",
+ "name": "Download Bulk Salary Slip",
  "owner": "Administrator",
  "permissions": [
   {

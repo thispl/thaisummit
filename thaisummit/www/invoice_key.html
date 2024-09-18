@@ -125,7 +125,7 @@
       options = {
         columns: window.cols,
         data: r.message,
-        layout: 'fixed',
+        layout: 'fluid',
         freezeMessage: 'Loading',
         getEditor(colIndex, rowIndex, value, parent, column, row, data) {
           const $input = document.createElement('input');
@@ -342,6 +342,7 @@
   <div class="col-xs-1">
     <br>
     <button id="submit" class="btn" onclick="submit_po()">Submit</button>
+    <!-- <button id="submit" class="btn">Submit</button> -->
   </div>
   <div class="col-xs-1">
     <br>
@@ -351,6 +352,16 @@
 <!-- <div class="container"> -->
 <div id="datatable"></div>
 <!-- </div> -->
+<!-- <script>
+  document.getElementById("submit").onclick = function () {
+    frappe.call({
+			"method": "thaisummit.www.invoice_key.submit_po",
+		
+			freeze: true,
+			freeze_message: 'Processing Attendance....',
+		})
+  };
+</script> -->
 <style>
   .btn {
     transition-duration: 0.4s;

@@ -17,6 +17,10 @@ from pytz import HOUR
 class OvertimeRequest(Document):
     
     def on_submit(self):
+        user = frappe.session.user
+        employee = frappe.get_value("Employee",{'user_id':user},['name'])
+        if self.employee == employee :
+            frappe.throw(_("HODs can't approve their own Overtime Application"))
         if self.workflow_state == 'Approved':
             if not frappe.db.exists('Overtime Request',{'overtime_request':self.name}):
                 doc = frappe.new_doc('Timesheet')
@@ -47,7 +51,6 @@ class OvertimeRequest(Document):
         if self.workflow_state == 'Approved':
             payroll_start_date = frappe.db.get_value('Payroll Dates',{'name':'PAYROLL OT PERIOD DATE 0001'},['payroll_start_date'])
             payroll_end_date = frappe.db.get_value('Payroll Dates',{'name':'PAYROLL OT PERIOD DATE 0001'},['payroll_end_date'])
-            # employee = frappe.db.get_value('Employee',{'name':self.employee},['department'])
             get_ot_hour_dept = frappe.db.get_value('Department',{'name':self.department},['overtime_hours_limit'])
             ot_request = frappe.db.get_all('Overtime Request',{'department':self.department,'ot_date':('between',(payroll_start_date,payroll_end_date)),'workflow_state':'Approved'},['*'])
             for ot in ot_request:
@@ -218,8 +221,19 @@ class OvertimeRequest(Document):
         if self.ot_date:
             holiday = frappe.db.sql("""select `tabHoliday`.holiday_date from `tabHoliday List`
             left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(self.ot_date),as_dict=True)
+
             if not holiday:
                 return 'NO'
+
+@frappe.whitelist()
+def check_holidays(ot_date):
+    if ot_date:
+        holiday = frappe.db.sql("""select `tabHoliday`.holiday_date from `tabHoliday List`
+        left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(ot_date),as_dict=True)
+        if holiday:
+            return holiday
+        
+
 
 
 @frappe.whitelist()
@@ -260,22 +274,57 @@ def ot_hours(shift,from_time,to_time,ot_date):
         time_diff = datetime.strptime(str(t_diff), '%H:%M:%S')
         if time_diff.hour > 24:
             frappe.throw('OT cannot applied for more than 24 hours')
-        ot_hours = time(0,0,0)
-        if time_diff.hour >= 1:
+    ot_hours = time(0,0,0)
+    if time_diff.hour >= 1:
+        if time_diff.minute <= 29:
+            ot_hours = time(time_diff.hour,0,0)
+        else:
+            ot_hours = time(time_diff.hour,30,0)
+    if time_diff.hour > 3:
+        if shift == '1':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour-1,30,0)
+            else:
+                ot_hours = time(time_diff.hour,0,0)
+        elif shift == '2':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour-1,30,0)
+            else:
+                ot_hours = time(time_diff.hour,0,0)
+        elif  shift == '3':
             if time_diff.minute <= 29:
                 ot_hours = time(time_diff.hour,0,0)
             else:
                 ot_hours = time(time_diff.hour,30,0)
-        if time_diff.hour > 4:
-            if shift != '3':
-                if time_diff.minute <= 29:
-                    ot_hours = time(time_diff.hour-1,30,0)
-                else:
-                    ot_hours = time(time_diff.hour,0,0)
+    if time_diff.hour > 12:
+        # /ot_hours = time(time_diff.hour-1,0,0)
+        if shift == '1':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour-1,0,0)
             else:
-                if time_diff.minute <= 29:
-                    ot_hours = time(time_diff.hour,0,0)
-                else:
-                    ot_hours = time(time_diff.hour,30,0)
-                    
+                ot_hours = time(time_diff.hour-1,30,0)
+        elif shift == '2':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour-1,30,0)
+            else:
+                ot_hours = time(time_diff.hour,0,0)
+        elif  shift == '3':
+            if time_diff.minute <= 29:
+                ot_hours = time(time_diff.hour,0,0)
+            else:
+                ot_hours = time(time_diff.hour,30,0)
+    frappe.errprint(str(t_diff)) 
+    frappe.errprint(str(ot_hours))         
     return [str(t_diff),str(ot_hours)]
+
+
+@frappe.whitelist()
+def ot_att(doc,method):
+    user = frappe.session.user
+    user_roles = frappe.get_roles(user)
+    if not ("System Manager" in user_roles):
+        if frappe.db.exists("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1}):
+            att = frappe.get_doc("Attendance",{'attendance_date':doc.ot_date,'employee':doc.employee,'docstatus':1},["*"])
+            if att.shift_status not in ["OD","ODW","ODH"]:
+                frappe.throw(_('Attendance Closed for this day %s. For additional details kindly contact the HR Team'%(doc.ot_date)))
+

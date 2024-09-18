@@ -1,0 +1,81 @@
+{
+ "actions": [],
+ "creation": "2023-10-07 12:33:05.924074",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "customer",
+  "grade",
+  "rm_length",
+  "rm_width",
+  "rm_thick",
+  "column_break_6",
+  "old",
+  "impact",
+  "new"
+ ],
+ "fields": [
+  {
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Grade"
+  },
+  {
+   "fieldname": "rm_length",
+   "fieldtype": "Float",
+   "label": "RM Length"
+  },
+  {
+   "fieldname": "rm_width",
+   "fieldtype": "Float",
+   "label": "RM Width"
+  },
+  {
+   "fieldname": "rm_thick",
+   "fieldtype": "Data",
+   "label": "RM Thick"
+  },
+  {
+   "fieldname": "old",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Old"
+  },
+  {
+   "fieldname": "impact",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Impact"
+  },
+  {
+   "fieldname": "new",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "New"
+  },
+  {
+   "fieldname": "column_break_6",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-10-07 12:44:35.333421",
+ "modified_by": "Administrator",
+ "module": "Thaisummit",
+ "name": "IYM Tube",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

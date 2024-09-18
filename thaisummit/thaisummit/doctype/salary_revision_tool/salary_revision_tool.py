@@ -49,38 +49,58 @@ class SalaryRevisionTool(Document):
                 if pp[0] != 'Employee ID':
                     frappe.errprint(pp[0])
                     if pp[0]:
-                        emp = frappe.get_doc('Employee',pp[0])
-                        if emp.basic != 0:
-                            emp.append('salary_revision',{
-                                'date' : self.date,
-                                'basic' : emp.basic,
-                                'house_rent_allowance':emp.house_rent_allowance,
-                                'conveyance_allowance':emp.conveyance_allowance,
-                                'special_allowance':emp.special_allowance,
-                                'other_allowance':emp.other_allowance,
-                                'medical_allowance':emp.medical_allowance,
-                                'leave_travel_allowance':emp.leave_travel_allowance,
-                                'position_allowance':emp.position_allowance,
-                                'children_education':emp.children_education,
-                                'children_hostel':emp.children_hostel,
-                                'washing_allowance':emp.washing_allowance,
-                                'welding_allowance':emp.welding_allowance,
-                                'temp_allowance':emp.temp_allowance
-                            })
+                        emp = frappe.new_doc('Salary Revision Entry')
+                        emp.employee=pp[0]
+                        emp.employee_name=pp[1]
                         emp.basic = pp[2]
-                        emp.house_rent_allowance = pp[3]
-                        emp.conveyance_allowance = pp[4]
-                        emp.special_allowance = pp[5]
-                        emp.other_allowance = pp[6]
-                        emp.medical_allowance = pp[7]
+                        emp.hra = pp[3]
+                        emp.convey = pp[4]
+                        emp.spl = pp[5]
+                        emp.other = pp[6]
+                        emp.ma = pp[7]
                         emp.leave_travel_allowance = pp[8]
-                        emp.position_allowance = pp[9]
-                        emp.children_education = pp[10]
-                        emp.children_hostel = pp[11]
-                        emp.washing_allowance = pp[12]
-                        emp.temp_allowance = pp[13]
-                        emp.service_charge = pp[14]
+                        emp.pos = pp[9]
+                        emp.child = pp[10]
+                        emp.hostel = pp[11]
+                        emp.wash = pp[12]
+                        emp.temp = pp[13]
+                        emp.service = pp[14]
                         emp.ppe = pp[15]
+                        emp.epf =pp[16]
+                        emp.esi=pp[17]
+                        emp.gross=pp[18]
+                        emp.ctc=pp[19]
+                        # if emp.basic != 0:
+                        #     emp.append('salary_revision',{
+                        #         'date' : self.date,
+                        #         'basic' : emp.basic,
+                        #         'house_rent_allowance':emp.house_rent_allowance,
+                        #         'conveyance_allowance':emp.conveyance_allowance,
+                        #         'special_allowance':emp.special_allowance,
+                        #         'other_allowance':emp.other_allowance,
+                        #         'medical_allowance':emp.medical_allowance,
+                        #         'leave_travel_allowance':emp.leave_travel_allowance,
+                        #         'position_allowance':emp.position_allowance,
+                        #         'children_education':emp.children_education,
+                        #         'children_hostel':emp.children_hostel,
+                        #         'washing_allowance':emp.washing_allowance,
+                        #         'welding_allowance':emp.welding_allowance,
+                        #         'temp_allowance':emp.temp_allowance
+                        #     })
+                        # emp.basic = pp[2]
+                        # emp.house_rent_allowance = pp[3]
+                        # emp.conveyance_allowance = pp[4]
+                        # emp.special_allowance = pp[5]
+                        # emp.other_allowance = pp[6]
+                        # emp.medical_allowance = pp[7]
+                        # emp.leave_travel_allowance = pp[8]
+                        # emp.position_allowance = pp[9]
+                        # emp.children_education = pp[10]
+                        # emp.children_hostel = pp[11]
+                        # emp.washing_allowance = pp[12]
+                        # emp.temp_allowance = pp[13]
+                        # emp.service_charge = pp[14]
+                        # emp.ppe = pp[15]
                         emp.save(ignore_permissions=True)
                         frappe.db.commit()
 
@@ -106,7 +126,7 @@ def get_template():
 
 
 def add_header(w):
-    w.writerow(['Employee ID','Employee Name','Basic','House Rent Allowance','Conveyance Allowance','Special Allowance','Other Allowance','Medical Allowance','Leave Travel Allowance','Position Allowance','Children Education','Children Hostel','Washing Allowance','Welding Allowance','Temp Allowance','Service Charge','PPE'])
+    w.writerow(['Employee ID','Employee Name','Basic','House Rent Allowance','Conveyance Allowance','Special Allowance','Other Allowance','Medical Allowance','Leave Travel Allowance','Position Allowance','Children Education','Children Hostel','Washing Allowance','Welding Allowance','Temp Allowance','Service Charge','PPE','EPF ER','ESI ER','Gross','CTC'])
     return w
 
 

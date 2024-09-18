@@ -120,7 +120,6 @@ def get_tag_list():
                 opq_qty = get_opq(fm['fm'])
                 total_opq += flt(fm['item_quantity']) * opq_qty
                 # frappe.log_error("total_opq:"+str(total_opq)+"/opq_qty:"+str(opq_qty)+"/fm:"+str(fm['fm'])+"/Qty:"+str(fm['item_quantity']))
-        #opq = get_open_production_qty(tbs['name']) or 0
         opq = total_opq
         
         packing_std = tbs['packing_std']
@@ -179,14 +178,15 @@ def get_opq(fm):
     total_open_qty = 0
     if frappe.db.exists('TSAI Part Master',{'mat_no':fm}):
         
-        url = "http://172.16.1.18/StockDetail/Service1.svc/GetOpenProductionOrder"
+        url = "http://apioso.thaisummit.co.th:10401/api/OpenProductionOrder"
         payload = json.dumps({
             "ProductNo": fm,
             "Fromdate": "",
             "Todate": ""
         })
         headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'API_KEY': '/1^i[#fhSSDnC8mHNTbg;h^uR7uZe#ninearin!g9D:pos+&terpTpdaJ$|7/QYups;==~w~!AWwb&DU'
         }
         response = requests.request(
             "POST", url, headers=headers, data=payload)
@@ -196,7 +196,6 @@ def get_opq(fm):
             if stocks:
                 openqty = stocks[0]['OpenQty']
                 completed_qty = stocks[0]['CmpltQty']
-                planned_qty = stocks[0]['PlannedQty']
                 for stock in stocks:
                     total_open_qty += cint(stock['OpenQty'])
     return total_open_qty
@@ -226,23 +225,6 @@ def get_parent_open_qty(mat_no):
                 total_open_qty += cint(stock['OpenQty'])
     return total_open_qty
 
-def get_open_production_qty(mat_no):
-    open_qty = 0
-    reqd_open_qty = 0
-    parent_mat = frappe.db.exists('TSAI BOM',{'item':mat_no,'depth':1})
-    if parent_mat:
-       open_qty =  get_parent_open_qty(mat_no)
-    else:
-        fms = frappe.get_all('TSAI BOM',{'item':mat_no,'depth':('!=','1')},['fm','item_quantity'])
-        for fm in fms:
-            mat_type = frappe.get_value('TSAI Part Master',fm['fm'],'mat_type')
-            if mat_type == 'FG':
-                reqd_open_qty = get_parent_open_qty(fm['fm'])
-                open_qty += flt(reqd_open_qty) * flt(fm['item_quantity'])
-    return open_qty
-    
-   
-    
 
             
 def get_live_stock(mat_no):

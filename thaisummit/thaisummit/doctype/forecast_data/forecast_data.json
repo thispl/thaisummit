@@ -19,7 +19,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Mat No"
+   "label": "Mat No",
+   "reqd": 1
   },
   {
    "fieldname": "part_no",
@@ -54,7 +55,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-11-09 22:38:34.340708",
+ "modified": "2023-06-01 12:30:35.319637",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Forecast Data",

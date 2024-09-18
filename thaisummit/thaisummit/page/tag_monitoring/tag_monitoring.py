@@ -7,10 +7,8 @@ from datetime import timedelta,datetime
 
 @frappe.whitelist()
 def get_content():
-        frappe.errprint("hi")
         total_tbs = frappe.db.sql(""" select parts_name,name,required_quantity,sap_quantity,difference,model,date_and_time,mat_no,delay_duration from `tabTAG Master` where date(date_and_time) = CURDATE() and item_delivered = 0""",as_dict=True)
         total_tbs_monthly = frappe.db.sql(""" select parts_name,name,required_quantity,sap_quantity,difference,model,date_and_time,mat_no,delay_duration from `tabTAG Master` where month(date_and_time) = month(CURDATE()) and item_delivered = 0""",as_dict=True)
-        frappe.errprint("hi")
         updated_tbs_list = []
         updated_tbs_dict = {}
         tbs_ontime = tbs_delay = 0

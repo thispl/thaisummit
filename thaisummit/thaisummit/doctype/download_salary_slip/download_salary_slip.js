@@ -3,24 +3,20 @@
 
 frappe.ui.form.on('Download Salary Slip', {
 	refresh: function (frm) {
-		frappe.call({
-			method:'frappe.client.get_value',
-			args:{
-				doctype : 'Employee',
-				filters:{
-					'user_id':frappe.session.user
-				},
-				fieldname:['name']
-			},
-			callback(r){
-				if (r.message){
-				frm.set_value('employee',r.message.name)
-				}
-				else{
-					frappe.msgprint("Salary Slip Not Found")
-				}
-			}
-		})
+		
+		if (!frappe.user.has_role('System Manager')) {
+			frappe.db.get_value("Employee",{ "user_id": frappe.session.user },["name","employee_name"])
+					.then(r=>{
+						console.log(r)
+						frm.set_value('employee',r.message.name)
+						frm.set_value('employee__name',r.message.employee_name)
+					})
+			frm.set_df_property("employee","read_only",1)
+		}
+		else{
+			console.log("HIII")
+			frm.set_df_property("employee","read_only",0)
+		}
 		frm.disable_save()
 	},
 	month(frm) {

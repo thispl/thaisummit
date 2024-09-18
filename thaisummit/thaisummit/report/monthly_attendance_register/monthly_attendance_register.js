@@ -145,11 +145,4 @@ frappe.query_reports["Monthly Attendance Register"] = {
 			})
 		}
 	},
-	// from_date: function(report){
-	// 	var filters = report.get_values();
-	// 	var to_date = frappe.query_report.get_filter('to_date');
-	// 	to_date.refresh();
-	// 	// to_date.set_input(frappe.datetime.add_days(filters.from_date,30))
-	// 	to_date.set_input(filters.from_date)
-	// }
 };

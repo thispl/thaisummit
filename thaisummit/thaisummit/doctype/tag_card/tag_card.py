@@ -51,6 +51,19 @@ from operator import itemgetter
 from frappe import _
 
 class TagCard(Document):
+	def on_submit(self):
+		user = frappe.session.user
+		u_name = frappe.db.sql("""select username from `tabUser` where name='%s' """%(frappe.session.user),as_dict=1)[0]
+		if user == 'gururaja528@gmail.com':
+			self.append('workflow_tracker_table',{
+				'flow_name': "Closed by Rajaguru",
+				'time':datetime.now().strftime('%H:%M:%S'),
+				'date':date.today(),
+				'user_name':u_name['username']
+			})
+			self.save()
+			self.submit()
+
 
 	def on_update(self):
 		part_master = frappe.db.sql("""select tag_card_flow_master as tc from `tabTSAI Part Master` where mat_no ='%s' """%(self.mat_number),as_dict=1)[0]
@@ -88,7 +101,7 @@ class TagCard(Document):
 def update_list():
 	prod_line_emp = []
 	user = frappe.session.user
-	if user != 'Administrator':
+	if user not in ['Administrator','gururaja528@gmail.com']:
 		emp_details = frappe.db.sql("""select name from `tabEmployee Production Line Details` where user_id ='%s' """%(user),as_dict=1)[0]
 		emp_name = emp_details['name']
 		emp_doc = frappe.get_doc('Employee Production Line Details', emp_name)
@@ -102,7 +115,7 @@ def update_list():
 def update_workflow_list():
 	actual_flow = []
 	user = frappe.session.user
-	if user != 'Administrator':
+	if user not in ['Administrator','gururaja528@gmail.com']:
 		user_roles = frappe.get_roles(user)
 		tag_card = frappe.db.sql("""select name from `tabTag Card`""",as_dict=1)
 		for t in tag_card:
@@ -115,6 +128,25 @@ def update_workflow_list():
 						frappe.errprint(f.allowed_for)
 						return actual_flow
 
+
+
+
+@frappe.whitelist()
+def update_list(production_line):
+    prod_line_emp = []
+    user = frappe.session.user
+    if user != 'Administrator':
+        emp_details = frappe.db.sql("""select name from `tabEmployee Production Line Details` where user_id ='%s' """%(user),as_dict=1)[0]
+        emp_name = emp_details['name']
+        emp_doc = frappe.get_doc('Employee Production Line Details', emp_name)
+        emp_prod_line = emp_doc.get('production_line')
+        for e in emp_prod_line:
+            prod_line_emp.append(e.production_line_no)
+        tag_production_line = production_line
+        if tag_production_line in prod_line_emp:
+            return tag_production_line
+        else:
+            frappe.throw(_('This Tag Card doesnt belongs to your production line'))
 
 			
 		

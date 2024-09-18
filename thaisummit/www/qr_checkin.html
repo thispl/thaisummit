@@ -103,27 +103,11 @@
         label.style.color = 'teal';
         clearTimeout(label.highlightTimeout);
         label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 100);
-        
-        // let opts = {
-        //             method: "thaisummit.www.qr_checkin.mark_checkin",
-        //             args: {
-        //                 employee: result
-        //             }
-        //         }
-        //         frappe.call(opts).then(r => {
-        //             frappe.msgprint(__(r.message));
-        //             if (r.message == 'Checkin Marked Successfully') {
-        //                 setTimeout(function () {
-        //                     window.location.href = '/app/scan-qr';
-        //                 }, 1000);
-        //             }
-        //             return;
-        //         })
-
         let opts = {
             method: "thaisummit.qr_utils.validation_scan_qr",
             args: {
-                user: frappe.session.user
+                user: frappe.session.user,
+                result: result
             }
         }
         frappe.call(opts).then(r => {

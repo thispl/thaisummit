@@ -71,7 +71,7 @@ def get_data(filters):
             bonus = round(bonus_vaue/12)
 
         row += [ss.total_deduction]
-        row += [ ss.net_pay ]
+        row += [ ss.rounded_total ]
         row += [ bonus ]
         row += [ frappe.get_value('Salary Detail',{'salary_component':'Others','parent':ss.name},['amount']) ]
         row += [ss.gross_pay]

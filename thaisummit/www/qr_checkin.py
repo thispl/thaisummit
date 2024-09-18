@@ -25,11 +25,14 @@ def mark_checkin(employee=None):
 	qr_scanned_by += frappe.get_value('Employee',{'user_id':frappe.session.user},'employee_name')
 	nowtime = datetime.now()
 	shift_date = date.today()
-	shift = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
-	shift1_time = [time(hour=shift[0].seconds//3600,minute=((shift[0].seconds//60)%60),second=0),time(hour=shift[1].seconds//3600,minute=((shift[1].seconds//60)%60),second=0)]
-	shift2_time = [time(hour=15, minute=31, second=0),time(hour=19, minute=0, second=0)]
-	shift3_time = [time(hour=00, minute=45, second=0),time(hour=7, minute=0, second=0)]
-	# shiftpp2_time = [time(hour=6, minute=20, second=0),time(hour=6, minute=30, second=0)]
+	shift1 = frappe.db.get_value('Shift Type',{'name':'1'},['qr_start_time','qr_end_time'])
+	shift1_time = [time(hour=shift1[0].seconds//3600,minute=((shift1[0].seconds//60)%60),second=0),time(hour=shift1[1].seconds//3600,minute=((shift1[1].seconds//60)%60),second=0)]
+	shift2 = frappe.db.get_value('Shift Type',{'name':'2'},['qr_start_time','qr_end_time'])
+	shift2_time = [time(hour=shift2[0].seconds//3600,minute=((shift2[0].seconds//60)%60),second=0),time(hour=shift2[1].seconds//3600,minute=((shift2[1].seconds//60)%60),second=0)]
+	shift3 = frappe.db.get_value('Shift Type',{'name':'3'},['qr_start_time','qr_end_time'])
+	shift3_time = [time(hour=shift3[0].seconds//3600,minute=((shift3[0].seconds//60)%60),second=0),time(hour=shift3[1].seconds//3600,minute=((shift3[1].seconds//60)%60),second=0)]
+	shiftpp2 = frappe.db.get_value('Shift Type',{'name':'PP2'},['qr_start_time','qr_end_time'])
+	shiftpp2_time = [time(hour=shiftpp2[0].seconds//3600,minute=((shiftpp2[0].seconds//60)%60),second=0),time(hour=shiftpp2[1].seconds//3600,minute=((shiftpp2[1].seconds//60)%60),second=0)]
 	curtime = time(hour=nowtime.hour, minute=nowtime.minute, second=nowtime.second)
 	shift_type = 'NA'
 	if is_between(curtime,shift1_time):
@@ -39,8 +42,8 @@ def mark_checkin(employee=None):
 	if is_between(curtime,shift3_time):
 		shift_type = '3'
 		shift_date = shift_date + timedelta(days=-1)
-	# if is_between(curtime,shiftpp2_time):
-	# 	shift_type = 'PP2'
+	if is_between(curtime,shiftpp2_time):	
+		shift_type = 'PP2'
 	# 	shift_date = shift_date + timedelta(days=-1)
 	if shift_type == 'NA':
 		return 'Wrong Shift Time'
@@ -60,23 +63,23 @@ def mark_checkin(employee=None):
 	total_working_days = date_diff(end_date,start_date) - holidays
 	# frappe.errprint(type(total_working_days))
 	if emp[3] != 'CL':
-	    if emp[1]:
-	        per_day_basic = emp[1] / total_working_days
-	    else:
-	        per_day_basic = 0   
-	    if emp[2]:    
-	        per_days_ctc = emp[2] / total_working_days 
-	    else:
-	        per_day_ctc = 0    
+		if emp[1]:
+			per_day_basic = emp[1] / total_working_days
+		else:
+			per_day_basic = 0   
+		if emp[2]:    
+			per_day_ctc = emp[2] / total_working_days 
+		else:
+			per_day_ctc = 0    
 	else:
-	    if emp[1]: 
-	        per_day_basic = emp[1] 
-	    else: 
-	        per_day_basic = 0 
-	    if emp[2]:
-	        per_day_ctc = emp[2] 
-	    else: 
-	        per_day_ctc = 0      
+		if emp[1]: 
+			per_day_basic = emp[1] 
+		else: 
+			per_day_basic = 0 
+		if emp[2]:
+			per_day_ctc = emp[2] 
+		else: 
+			per_day_ctc = 0      
 
 
 	existing_employee = frappe.db.exists('Employee',{'employee':employee, 'status':'Active','employee_type':('!=','WC')})
@@ -92,23 +95,23 @@ def mark_checkin(employee=None):
 		holidays = len(get_holiday_dates_for_employee(emp[0],start_date,end_date))
 		total_working_days = date_diff(end_date,start_date) - holidays
 		if emp[3] != 'CL':
-		    if emp[1]:
-		        per_day_basic = emp[1] / total_working_days
-		    else:
-		        per_day_basic = 0   
-		    if emp[2]:    
-		        per_days_ctc = emp[2] / total_working_days 
-		    else:
-		        per_day_ctc = 0    
+			if emp[1]:
+				per_day_basic = emp[1] / total_working_days
+			else:
+				per_day_basic = 0   
+			if emp[2]:    
+				per_day_ctc = emp[2] / total_working_days 
+			else:
+				per_day_ctc = 0    
 		else:
-		    if emp[1]:
-		        per_day_basic = emp[1] 
-		    else:
-		        per_day_basic = 0
-		    if emp[2]:        
-		        per_day_ctc = emp[2] 
-		    else:
-		        per_day_ctc = 0 
+			if emp[1]:
+				per_day_basic = emp[1] 
+			else:
+				per_day_basic = 0
+			if emp[2]:        
+				per_day_ctc = emp[2] 
+			else:
+				per_day_ctc = 0 
 		employee_name,employee_type = frappe.get_value('Employee',employee,['employee_name','employee_type'])
 		qr_checkin = frappe.new_doc('QR Checkin')
 		qr_checkin.update({
@@ -138,23 +141,23 @@ def mark_checkin(employee=None):
 		holidays = len(get_holiday_dates_for_employee(emp[0],start_date,end_date))
 		total_working_days = date_diff(end_date,start_date) - holidays
 		if emp[3] != 'CL':
-		    if emp[1]:
-		        per_day_basic = emp[1] / total_working_days
-		    else:
-		        per_day_basic = 0   
-		    if emp[2]:    
-		        per_days_ctc = emp[2] / total_working_days 
-		    else:
-		        per_day_ctc = 0    
+			if emp[1]:
+				per_day_basic = emp[1] / total_working_days
+			else:
+				per_day_basic = 0   
+			if emp[2]:    
+				per_day_ctc = emp[2] / total_working_days 
+			else:
+				per_day_ctc = 0    
 		else:
-		    if emp[1]:
-		        per_day_basic = emp[1] 
-		    else:
-		        per_day_basic = 0
-		    if emp[2]:        
-		        per_day_ctc = emp[2] 
-		    else:
-		        per_day_ctc = 0 
+			if emp[1]:
+				per_day_basic = emp[1] 
+			else:
+				per_day_basic = 0
+			if emp[2]:        
+				per_day_ctc = emp[2] 
+			else:
+				per_day_ctc = 0 
 		employee_name,employee_type = frappe.get_value('Employee',employee,['employee_name','employee_type'])
 		qr_checkin = frappe.new_doc('QR Checkin')
 		qr_checkin.update({
@@ -223,7 +226,7 @@ def set_tag_card_work_flow_for_approve(tag_card_no):
 	u_name = frappe.db.sql("""select username from `tabUser` where name='%s' """%(frappe.session.user),as_dict=1)[0]
 	tag_card = frappe.db.sql("""select name,production_line from `tabTag Card` where name ='%s' and docstatus = 0 """%(tag_card_no),as_dict =1)[0]
 	card_no = tag_card['name']
-	if user == 'Administrator':
+	if user in ['Administrator','gururaja528@gmail.com']:
 		if card_no:
 			current_row_no = frappe.db.sql("""select workflow,roleflow from `tabTag Card` where name = '%s' """%(card_no),as_dict=1)[0]
 			current_no = current_row_no['workflow']
@@ -325,7 +328,7 @@ def set_tag_card_work_flow_for_reject(tag_card_no):
 	user = frappe.session.user
 	tag_card = frappe.db.sql("""select name,production_line from `tabTag Card` where name ='%s' and docstatus = 0 """%(tag_card_no),as_dict =1)[0]
 	card_no = tag_card['name']
-	if user == 'Administrator':
+	if user in ['Administrator','gururaja528@gmail.com']:
 		if card_no:
 			current_row_no = frappe.db.sql("""select workflow,roleflow from `tabTag Card` where name = '%s' """%(card_no),as_dict=1)[0]
 			current_no = current_row_no['workflow']
@@ -407,71 +410,3 @@ def set_tag_card_work_flow_for_reject(tag_card_no):
 					frappe.throw(_("Tag Card is already submitted"))
 		else:
 			frappe.throw(_("You doesn't belongs to this production line"))
-
-
-
-
-
-
-
-
-
-
-
-#      var workflow_table = frm.doc.workflow_table || [];
-#         var num_rows = workflow_table.length;
-		
-#         var current_row = frm.doc.workflow || 0;
-		
-
-#         function display_button() {
-#             if (frm.doc.current_workflow == "Rejected"){
-#              var custom_button_approve = frm.add_custom_button(__('Approve: ' + frm.doc.previous_workflow), function() {
-#     frm.set_value('previous_workflow', frm.doc.previous_workflow);
-#     frm.set_value('current_workflow', frm.doc.previous_workflow);
-#     frm.save();
-#     frappe.show_alert({message: 'State updated to ' + frm.doc.previous_workflow, indicator: 'green'});
-#     custom_button_approve.css('display', 'none');
-#     custom_button_reject.css('display', 'none');
-#     current_row++;
-#     frm.doc.workflow = current_row-1;
-#     if (current_row < num_rows) {
-#         display_button();
-#     }
-# }).css({'color':'white','background-color':"#008000"});
-#         }
-#         else{
-#             var custom_button_approve = frm.add_custom_button(__('Approve: ' + workflow_table[current_row].workflow), function() {
-#     frm.set_value('previous_workflow', workflow_table[current_row].workflow);
-#     frm.set_value('current_workflow', workflow_table[current_row].workflow);
-#     frm.save();
-#     frappe.show_alert({message: 'State updated to ' + workflow_table[current_row].workflow, indicator: 'green'});
-#     custom_button_approve.css('display', 'none');
-#     custom_button_reject.css('display', 'none');
-#     current_row++;
-#     frm.doc.workflow = current_row;
-#     if (current_row < num_rows) {
-#         display_button();
-#     }
-# }).css({'color':'white','background-color':"#008000"});
-#         }
-		  
-
-# var custom_button_reject = frm.add_custom_button(__('Reject'), function() {
-	
-#     frm.set_value('current_workflow', "Rejected");
-#     frm.save();
-	
-   
-# }).css({'color':'white','background-color':"red"});
-# if (frm.doc.current_workflow == 'Rejected')  {
-#     var first_workflow = workflow_table[0].workflow;
-#     frm.add_custom_button(__('Set to: ' + first_workflow),function(){
-#          frm.set_value('previous_workflow',first_workflow );
-#     frm.set_value('current_workflow', first_workflow);
-#     frm.set_value('workflow','1')
-#     frm.save();
-		
-#     }).css({'color':'white','background-color':"black"});
-   
-# }

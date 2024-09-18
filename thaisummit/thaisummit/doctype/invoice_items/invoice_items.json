@@ -34,7 +34,7 @@
   {
    "columns": 1,
    "fieldname": "mat_no",
-   "fieldtype": "Int",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "MAT No"
   },
@@ -163,7 +163,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-04-19 14:03:33.888125",
+ "modified": "2023-09-27 16:26:56.348759",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Invoice Items",

@@ -19,6 +19,7 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Employee ID",
    "options": "Employee"
   },
@@ -33,7 +34,6 @@
    "options": "\nJan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSep\nOct\nNov\nDec"
   },
   {
-   "default": "2022",
    "fieldname": "year",
    "fieldtype": "Link",
    "label": "Year",
@@ -57,6 +57,7 @@
    "label": "Download"
   },
   {
+   "depends_on": "eval:doc.employee",
    "fetch_from": "employee.employee_name",
    "fieldname": "employee__name",
    "fieldtype": "Data",
@@ -68,7 +69,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-01-29 20:51:12.035017",
+ "modified": "2024-04-02 08:24:34.003343",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Download Salary Slip",

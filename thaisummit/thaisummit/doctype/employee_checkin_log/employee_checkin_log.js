@@ -3,11 +3,8 @@
 
 frappe.ui.form.on('Employee Checkin Log', {
 	refresh: function(frm) {
-		
 		frm.add_custom_button(__("Process Checkins"), function(){
 			frm.call('process_checkin_log')
-			
 		  })
 	}
-	
 });

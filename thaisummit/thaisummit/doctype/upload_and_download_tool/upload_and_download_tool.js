@@ -43,7 +43,7 @@ frappe.ui.form.on('Upload and Download Tool', {
 	},
 	upload_pcs_part_master:function(frm){
 		frappe.call({
-			method: "thaisummit.thaisummit.doctype.upload_and_download_tool.upload_and_download_tool.enqueue_scrap_master",
+			method: "thaisummit.thaisummit.doctype.upload_and_download_tool.upload_and_download_tool.enqueue_pcs_part_master",
 			args:{
 				attach_file : frm.doc.attach_pcs_part_master
 			},

@@ -18,7 +18,17 @@
   "shift_2_amount",
   "shift_pp2_amount",
   "column_break_12",
-  "shift_3_amount"
+  "shift_3_amount",
+  "manual_attendance_correction_section",
+  "allowed__after",
+  "section_break_16",
+  "leave_limit_for_bc",
+  "overtime_amount_updation_section",
+  "from_date",
+  "column_break_16",
+  "to_date",
+  "column_break_18",
+  "update_amount"
  ],
  "fields": [
   {
@@ -83,13 +93,60 @@
    "fieldname": "shift_3_amount",
    "fieldtype": "Currency",
    "label": "Shift 3 Amount"
+  },
+  {
+   "fieldname": "overtime_amount_updation_section",
+   "fieldtype": "Section Break",
+   "label": "Overtime Amount Updation"
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date"
+  },
+  {
+   "fieldname": "column_break_16",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date"
+  },
+  {
+   "fieldname": "column_break_18",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "update_amount",
+   "fieldtype": "Button",
+   "label": "Update Amount"
+  },
+  {
+   "fieldname": "manual_attendance_correction_section",
+   "fieldtype": "Section Break",
+   "label": "Manual Attendance Correction"
+  },
+  {
+   "fieldname": "allowed__after",
+   "fieldtype": "Int",
+   "label": "Allowed  After"
+  },
+  {
+   "fieldname": "section_break_16",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "leave_limit_for_bc",
+   "fieldtype": "Int",
+   "label": "Leave Limit for BC"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-04-18 00:13:52.443558",
+ "modified": "2023-05-19 19:26:32.458027",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "HR Time Settings",

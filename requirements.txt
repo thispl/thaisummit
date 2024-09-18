@@ -2,3 +2,4 @@ frappe
 requests
 pyzbar
 pypika
+PyPDF2

@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "field:part_no",
+ "autoname": "field:item_code",
  "creation": "2023-04-11 11:40:40.583679",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -26,19 +26,22 @@
   "net_weight",
   "process_cost",
   "admin_cost",
-  "transport_cost"
+  "transport_cost",
+  "reduction_cost",
+  "final",
+  "final_amount"
  ],
  "fields": [
   {
    "fieldname": "item_code",
    "fieldtype": "Data",
-   "label": "Item Code"
+   "label": "Item Code",
+   "unique": 1
   },
   {
    "fieldname": "part_no",
    "fieldtype": "Data",
-   "label": "Part No",
-   "unique": 1
+   "label": "Part No"
   },
   {
    "fieldname": "parts_name",
@@ -86,53 +89,79 @@
   },
   {
    "fieldname": "rm_thick",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "RM Thick"
   },
   {
+   "default": "0.000",
    "fieldname": "strip_qty",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "Strip Qty"
   },
   {
    "fieldname": "gross_weight",
-   "fieldtype": "Data",
-   "label": "Gross Weight"
+   "fieldtype": "Float",
+   "label": "Gross Weight",
+   "precision": "5"
   },
   {
    "fieldname": "net_weight",
-   "fieldtype": "Data",
-   "label": "Net Weight"
+   "fieldtype": "Float",
+   "label": "Net Weight",
+   "precision": "5"
   },
   {
    "fieldname": "process_cost",
-   "fieldtype": "Data",
-   "label": "Process Cost"
+   "fieldtype": "Float",
+   "label": "Process Cost",
+   "precision": "5"
   },
   {
    "fieldname": "admin_cost",
-   "fieldtype": "Data",
-   "label": "Admin Cost"
+   "fieldtype": "Float",
+   "label": "Admin Cost",
+   "precision": "5"
   },
   {
    "fieldname": "transport_cost",
-   "fieldtype": "Data",
-   "label": "Transport Cost"
+   "fieldtype": "Float",
+   "label": "Transport Cost",
+   "precision": "5"
   },
   {
+   "default": "0.000",
    "fieldname": "rm_length",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "RM Length"
   },
   {
    "fieldname": "rm__width",
-   "fieldtype": "Data",
+   "fieldtype": "Float",
    "label": "RM  Width"
+  },
+  {
+   "fieldname": "reduction_cost",
+   "fieldtype": "Float",
+   "label": "Reduction Cost",
+   "precision": "5"
+  },
+  {
+   "fieldname": "final",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Final",
+   "precision": "2"
+  },
+  {
+   "fieldname": "final_amount",
+   "fieldtype": "Float",
+   "label": "Final Amount",
+   "precision": "2"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-11 12:43:16.013119",
+ "modified": "2023-12-29 20:03:46.852103",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "PCS Part Master",

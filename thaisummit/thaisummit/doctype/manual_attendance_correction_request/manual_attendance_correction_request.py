@@ -10,6 +10,8 @@ from frappe.utils import cstr, cint, getdate,get_first_day, get_last_day, today
 from frappe.utils import (getdate, cint, add_months, date_diff, add_days,
     nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime)
 import json
+from datetime import date
+
 
 class ManualAttendanceCorrectionRequest(Document):
     @frappe.whitelist()
@@ -23,6 +25,14 @@ class ManualAttendanceCorrectionRequest(Document):
                 if not frappe.db.exists("Miss Punch Application",{'attendance_date':att.attendance_date,'employee':att.employee}):
                     att_list.append(att)
             return att_list
+
+    @frappe.whitelist()
+    def check(self):
+        today = date.today()
+        frappe.errprint(today)
+        frappe.errprint(type(today))
+        frappe.errprint(int(frappe.db.get_single_value('HR Time Settings','leave_limit_for_bc')))
+			
     
     # @frappe.whitelist()
     # def create_miss_punch_application(self,row,from_date):

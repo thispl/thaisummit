@@ -14,7 +14,7 @@
  "is_standard": 1,
  "label": "PCS Portal",
  "links": [],
- "modified": "2023-05-04 18:20:19.387689",
+ "modified": "2023-06-09 17:15:23.711719",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "PCS Portal",
@@ -31,13 +31,7 @@
   {
    "doc_view": "",
    "label": "PCS Scrap Master",
-   "link_to": "Scrap Master",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "",
-   "label": "Upload and Download Tool",
-   "link_to": "Upload and Download Tool",
+   "link_to": "PCS Scrap Master",
    "type": "DocType"
   },
   {
@@ -48,20 +42,32 @@
   },
   {
    "doc_view": "",
-   "label": "PCS Portal Report Download",
-   "link_to": "PCS Portal Report Download",
-   "type": "DocType"
-  },
-  {
-   "doc_view": "",
    "label": "History",
    "link_to": "PCS Report History",
    "type": "DocType"
   },
   {
    "doc_view": "",
+   "label": "PCS Portal Report",
+   "link_to": "PCS Portal Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Quarterly PCS Report",
+   "link_to": "Quarterly PCS Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
    "label": "PCS History Report",
    "link_to": "PCS History Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "PCS Part Master Data Report",
+   "link_to": "PCS Part Master Data",
    "type": "Report"
   }
  ]

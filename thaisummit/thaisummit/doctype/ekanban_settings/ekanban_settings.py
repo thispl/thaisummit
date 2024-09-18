@@ -87,7 +87,7 @@ def enqueue_update_bom(file):
 @frappe.whitelist()
 def update_bom(file):
 	frappe.db.sql("""delete from `tabTSAI BOM`""")
-	frappe.log_error(title="BOM Delete",message="BOM Deleted By %s" % frappe.session.user)
+	# frappe.log_error(title="BOM Delete",message="BOM Deleted By %s" % frappe.session.user)
 	filepath = get_file(file)
 	pps = read_csv_content(filepath[1])
 	for p in pps[1:]:
@@ -321,28 +321,28 @@ def enqueue_overall_invoice_key():
 @frappe.whitelist()
 def enqueue_overall_invoice_key_cron_145am():
 	enqueue(download_invoice_key, queue='default', timeout=6000, event='build_xlsx_response',enqueue_id=random_string(5))
-	frappe.log_error(title="overall_invoice_key_cron",message="Overall Invoice Key Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
+	# frappe.log_error(title="overall_invoice_key_cron",message="Overall Invoice Key Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
 
 @frappe.whitelist()
 def enqueue_overall_invoice_key_cron_930pm():
 	enqueue(download_invoice_key, queue='default', timeout=6000, event='build_xlsx_response',enqueue_id=random_string(5))
-	frappe.log_error(title="overall_invoice_key_cron",message="Overall Invoice Key Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
+	# frappe.log_error(title="overall_invoice_key_cron",message="Overall Invoice Key Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
 
 @frappe.whitelist()
 def fetch_ekanban_bom():
 	frappe.db.sql("delete from `tabTest BOM`")
-	frappe.log_error(title="BOM Delete",message="BOM Deleted By %s" % frappe.session.user)
+	# frappe.log_error(title="BOM Delete",message="BOM Deleted By %s" % frappe.session.user)
 
 
 @frappe.whitelist()
 def enqueue_overall_invoice_key_cron_930am():
 	enqueue(download_invoice_key, queue='default', timeout=6000, event='build_xlsx_response',enqueue_id=random_string(5))
-	frappe.log_error(title="overall_invoice_key_cron",message="Overall Invoice Key Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
+	# frappe.log_error(title="overall_invoice_key_cron",message="Overall Invoice Key Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
 
 @frappe.whitelist()
 def enqueue_overall_invoice_key_cron():
 	enqueue(download_invoice_key, queue='default', timeout=6000, event='build_xlsx_response',enqueue_id=random_string(5))
-	frappe.log_error(title="overall_invoice_key_cron",message="Overall Invoice Key Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
+	# frappe.log_error(title="overall_invoice_key_cron",message="Overall Invoice Key Download is successsfully Initiated. Kindly wait for sometime and refresh the page.")
 
 @frappe.whitelist()
 def download_invoice_key(enqueue_id):

@@ -6,6 +6,21 @@ frappe.ui.form.on('Attendance Summary', {
 		frm.fields_dict.html.$wrapper.empty()
 		frm.disable_save()
 		frappe.model.clear_table(frm.doc,"attendance");
+		if (!frappe.user.has_role('System Manager')) {
+			frappe.db.get_value("Employee",{'user_id':frappe.session.user},['department'], (r) => {
+				if (r){
+					console.log(r.department)
+					frm.set_query('employee', function(doc) {
+						return {
+							filters: {
+								"status": "Active",
+								"department" : r.department
+							}
+						};
+					})
+				}
+			});
+		}
 		frappe.db.get_value("Employee",{'user_id':frappe.session.user},['employee','employee_name'], (r) => {
 			if (r){
 				frm.set_value('employee',r.employee)
@@ -13,11 +28,28 @@ frappe.ui.form.on('Attendance Summary', {
 			}
 		})
 		frm.set_value('to_date',frappe.datetime.add_days(frappe.datetime.month_start(), 24))
-
 		var d = frappe.datetime.add_months(frappe.datetime.month_start(), -1)
 		frm.set_value('from_date',frappe.datetime.add_days(d, 25))
 	},
 	onload(frm){
+		frm.disable_save()
+		console.log(frappe.session.user)
+		console.log("HI")
+		if (!frappe.user.has_role('System Manager')) {
+			frappe.db.get_value("Employee",{'user_id':frappe.session.user},['department'], (r) => {
+				if (r){
+					console.log(r.department)
+					frm.set_query('employee', function(doc) {
+						return {
+							filters: {
+								"status": "Active",
+								"department" : r.department
+							}
+						};
+					})
+				}
+			});
+		}
 		frm.fields_dict.html.$wrapper.empty()
 		frappe.model.clear_table(frm.doc,"attendance");
 		frappe.call({
@@ -66,25 +98,6 @@ frappe.ui.form.on('Attendance Summary', {
 		else {
 			frm.fields_dict.html.$wrapper.empty().append("<center><h2>Attendance Not Found</h2></center>")
 		}
-		// frappe.db.get_value('Employee', { "employee_number": frm.doc.employee }, 'employee', (r) => {
-		// 	console.log(r.employee)
-		// 	if (r.employee) {
-		// 		frappe.call({
-		// 			method: "thaisummit.thaisummit.doctype.attendance_summary.attendance_summary.get_data_system",
-		// 			args: {
-		// 				emp: r.employee,
-		// 				from_date: frm.doc.from_date,
-		// 				to_date: frm.doc.to_date
-		// 			},
-		// 			callback: function (r) {
-		// 				frm.fields_dict.html.$wrapper.empty().append(r.message)
-		// 			}
-		// 		})
-		// 	}
-		// 	else {
-		// 		frm.fields_dict.html.$wrapper.empty().append("<center><h2>Attendance Not Found</h2></center>")
-		// 	}
-		// })
 	},
 	get_data_mobile(frm) {
 		if (frm.doc.employee) {
@@ -103,23 +116,5 @@ frappe.ui.form.on('Attendance Summary', {
 		else {
 			frm.fields_dict.html.$wrapper.empty().append("<center><h2>Attendance Not Found</h2></center>")
 		}
-		// frappe.db.get_value('Employee', { "name": frm.doc.employee }, 'employee', (r) => {
-		// 	if (r.employee) {
-		// 		frappe.call({
-		// 			method: "thaisummit.thaisummit.doctype.attendance_summary.attendance_summary.get_data_mobile",
-		// 			args: {
-		// 				emp: r.employee,
-		// 				from_date: frm.doc.from_date,
-		// 				to_date: frm.doc.to_date
-		// 			},
-		// 			callback: function (r) {
-		// 				frm.fields_dict.html.$wrapper.empty().append(r.message)
-		// 			}
-		// 		})
-		// 	}
-		// 	else {
-		// 		frm.fields_dict.html.$wrapper.empty().append("<center><h2>Attendance Not Found</h2></center>")
-		// 	}
-		// })
 	},
 });

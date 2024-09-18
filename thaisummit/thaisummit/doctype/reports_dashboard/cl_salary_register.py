@@ -68,7 +68,6 @@ def make_xlsx(data, sheet_name=None, wb=None, column_widths=None):
     for rows in ws.iter_rows(min_row=1, max_row=len(get_data(args))+4, min_col=1, max_col=len(title1(args))):
         for cell in rows:
             cell.border = border  
-
     ws.merge_cells(start_row=1, start_column=1, end_row=3, end_column= 6)
     ws.merge_cells(start_row=1, start_column=7, end_row=1, end_column= len(add_header(args)))
     ws.merge_cells(start_row=1, start_column=len(add_header(args))+1, end_row=3, end_column= len(add_header(args))+8)

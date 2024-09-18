@@ -20,11 +20,12 @@ class GRNUpload(Document):
 					# date = datetime.strptime(str(pp[1]),'%d/%m/%Y').date()
 					doc = frappe.get_doc('TSAI Invoice',pp[3])
 					for row in doc.invoice_items:
-						if row.mat_no == int(pp[4]):
+						if row.mat_no == pp[4]:
 							row.grn = 1
 							row.grn_no = pp[0]
 							row.grn_date = date
 							row.grn_qty = pp[5]
+							frappe.errprint(pp[0])
 					doc.save(ignore_permissions=True)
 					frappe.db.commit()
 				except:

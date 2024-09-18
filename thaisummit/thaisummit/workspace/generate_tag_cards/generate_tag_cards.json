@@ -14,7 +14,7 @@
  "is_standard": 1,
  "label": "Generate Tag Cards",
  "links": [],
- "modified": "2023-05-04 16:23:57.109869",
+ "modified": "2023-06-09 10:26:15.067258",
  "modified_by": "Administrator",
  "module": "Thaisummit",
  "name": "Generate Tag Cards",
@@ -91,13 +91,19 @@
   {
    "doc_view": "",
    "label": "TAG Card SAP Status",
-   "link_to": "TAG CARD SAP STATUS",
+   "link_to": "Tag Card SAP Status Report",
    "type": "Report"
   },
   {
    "doc_view": "",
    "label": "Tag Card Flow Master Report",
    "link_to": "Tag Card Flow Master Report",
+   "type": "Report"
+  },
+  {
+   "doc_view": "",
+   "label": "Tag Card Closed by Rajaguru",
+   "link_to": "Tag Card Closed by Rajaguru",
    "type": "Report"
   }
  ]
