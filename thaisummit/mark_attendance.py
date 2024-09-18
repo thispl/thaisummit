@@ -950,7 +950,8 @@ def delete_urc_automatically():
 	urc = frappe.db.sql("""delete from `tabUnregistered Employee Checkin` where date(biometric_time) between '%s' and '%s'  """%(from_date,to_date),as_dict = True)
 	
 
-	
+
+
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
 @frappe.whitelist()
 def update_leave_att():
