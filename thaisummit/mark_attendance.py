@@ -53,8 +53,8 @@ def mark_shift_status():
 		from_date = add_days(from_date,1)
 
 def mark_att_manual():
-	from_date = "2024-09-09"
-	to_date = "2024-09-09"
+	from_date = "2024-09-11"
+	to_date = "2024-09-11"
 	dates = get_dates(from_date,to_date)
 	for date in dates:
 		mark_att(date)

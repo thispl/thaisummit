@@ -40,22 +40,6 @@ from frappe.utils import getdate, cint, add_months, date_diff, add_days, nowdate
 from frappe import throw,_
 
 
-# @frappe.whitelist()
-# def update_list(production_line):
-#     prod_line_emp = []
-#     user = frappe.session.user
-#     if user != 'Administrator':
-#         emp_details = frappe.db.sql("""select name from `tabEmployee Production Line Details` where user_id ='%s' """%(user),as_dict=1)[0]
-#         emp_name = emp_details['name']
-#         emp_doc = frappe.get_doc('Employee Production Line Details', emp_name)
-#         emp_prod_line = emp_doc.get('production_line')
-#         for e in emp_prod_line:
-#             prod_line_emp.append(e.production_line_no)
-#         tag_production_line = production_line
-#         if tag_production_line in prod_line_emp:
-#             return tag_production_line
-#         else:
-#             frappe.throw(_('This Tag Card doesnt belongs to your production line'))
 
 @frappe.whitelist()
 def get_opq_api():
@@ -1233,35 +1217,6 @@ def ot_dept_count():
     print(sum(data))
 
 
-# # calculating cgst and sgst for tsai invoice
-# @frappe.whitelist()
-# def get_gst_percent(doc,method):
-#     doc_name = frappe.get_doc("TSAI Invoice",doc.name)
-#     children = doc_name.invoice_items
-#     cgst = 0
-#     count = 0
-#     sgst = 0
-#     igst = 0
-#     for c in children:
-#         cgst += c.cgst
-#         count += 1
-#         sgst += c.sgst
-#         igst += c.igst
-#     tot_cgst = cgst/count
-#     tot_sgst = sgst/count
-#     tot_igst = igst/count
-#     if doc.igst > 0 :
-#         igst_amount = float(tot_igst / 100) * float(doc.total_basic_amount)
-#         tot_amount = igst_amount + doc.total_basic_amount
-#         frappe.db.set_value("TSAI Invoice",doc.name,"total_invoice_amount",tot_amount)
-#     else:
-#         total_gst_amount = (tot_cgst / 100) * 2
-#         grand_total_gst = ((float(doc.total_basic_amount) * (total_gst_amount)))
-#         tot_amount = (grand_total_gst + doc.total_basic_amount)
-#         frappe.db.set_value("TSAI Invoice",doc.name,"cgst",tot_cgst)
-#         frappe.db.set_value("TSAI Invoice",doc.name,"sgst",tot_sgst)
-#         frappe.db.set_value("TSAI Invoice",doc.name,"total_gst_amount",grand_total_gst)
-#         frappe.db.set_value("TSAI Invoice",doc.name,"total_invoice_amount",tot_amount)
 
 @frappe.whitelist()
 def update_ots():

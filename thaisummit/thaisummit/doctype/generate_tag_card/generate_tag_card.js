@@ -8,7 +8,7 @@ frappe.ui.form.on('Generate Tag Card', {
 		}
 		if (frm.doc.production_line){
 			frappe.call({
-				method: "thaisummit.custom.update_list",
+				method: "thaisummit.thaisummit.doctype.tag_card.tag_card.update_list",
 				args: {
 					'production_line': frm.doc.production_line,
 				},
