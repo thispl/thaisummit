@@ -53,8 +53,8 @@ def mark_shift_status():
 		from_date = add_days(from_date,1)
 
 def mark_att_manual():
-	from_date = "2024-09-11"
-	to_date = "2024-09-11"
+	from_date = "2024-09-12"
+	to_date = "2024-09-12"
 	dates = get_dates(from_date,to_date)
 	for date in dates:
 		mark_att(date)
@@ -913,7 +913,9 @@ def method():
 				ot_hr = round(hr/3600,1)
 				frappe.db.set_value('Overtime Request',ot.name,'ot_amount',round(ot_hr*basic))
 
-				
+
+
+
 @frappe.whitelist()
 def get_urc_to_ec(from_date):
 	frappe.errprint(from_date)
@@ -946,6 +948,8 @@ def delete_urc_automatically():
 	from_date = add_days(today(),-100)  
 	to_date = add_days(today(),-34)  
 	urc = frappe.db.sql("""delete from `tabUnregistered Employee Checkin` where date(biometric_time) between '%s' and '%s'  """%(from_date,to_date),as_dict = True)
+	
+
 	
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
 @frappe.whitelist()
