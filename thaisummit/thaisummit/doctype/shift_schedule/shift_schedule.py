@@ -160,10 +160,10 @@ class ShiftSchedule(Document):
 			regards = "Thanks & Regards,<br>hrPRO"
 			hod = frappe.db.get_value('Department',self.department,"hod")
 			# frappe.msgprint(content+table+data)
-			frappe.sendmail(
-				recipients=[hod,'mohan.pan@thaisummit.co.in'],
-				subject='Reg.Shift Schedule Approval',
-				message = content+table+data+regards)
+			# frappe.sendmail(
+			# 	recipients=[hod,'mohan.pan@thaisummit.co.in'],
+			# 	subject='Reg.Shift Schedule Approval',
+			# 	message = content+table+data+regards)
 
 	def validate(self):
 		if self.workflow_state == 'Pending for GM':
@@ -287,10 +287,10 @@ class ShiftSchedule(Document):
 			regards = "Thanks & Regards,<br>hrPRO"
 			gm = frappe.db.get_value('Department',self.department,"gm")
 			# frappe.msgprint(content+table+data)
-			frappe.sendmail(
-				recipients=[gm,'mohan.pan@thaisummit.co.in'],
-				subject='Reg.Shift Schedule Approval',
-				message = content+table+data+regards)
+			# frappe.sendmail(
+			# 	recipients=[gm,'mohan.pan@thaisummit.co.in'],
+			# 	subject='Reg.Shift Schedule Approval',
+			# 	message = content+table+data+regards)
 
 	@frappe.whitelist()
 	def validate_employees(self):
