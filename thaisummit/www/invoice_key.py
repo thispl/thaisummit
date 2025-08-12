@@ -168,8 +168,8 @@ def get_data():
         except :
             frappe.msgprint("Unable to display Invoice Key due to API Issue")
         data = []
+        frappe.log_error(title='po',message=pos)
         if pos:
-            frappe.log_error(title='pos',message=pos)
             for po in pos:
                 if frappe.db.exists('TSAI Part Master', po['Mat_No']):
                     pr_name = frappe.db.get_value(
@@ -261,6 +261,7 @@ def get_data():
                     # data.append([po['Mat_No'], po['Part_No'], po['Part_Name'], po['PoNo'], po_date, delivery_date, po['Supplier_name'], po['Uom'], round(float(po['Unit_Pice']), 2), round(float(po['Po_Qty'])), open_qty, round(
                     #     (open_qty/float(po['Po_Qty']))*100), packing_std, daily_order, share, max_qty, min_qty, stock, in_transit_qty, t_qty, req_qty, '', '', float(po['GSTPercentage']), '', ''])
                     data.append([po['Mat_No'], po['Part_No'], po['Part_Name'],po['PoNo'],po['PoEntry'], po_date, po['Uom'],round(float(po['Unit_Pice']), 2),po['HSN_code'], open_qty, open_percent, packing_std, req_qty, '', '', float(po['CGST']),float(po['SGST']),float(po['IGST']), '', ''])
+        frappe.log_error(title='data',message=data)
         return data
 
 

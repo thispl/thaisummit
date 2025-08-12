@@ -201,7 +201,6 @@ def fetch_ekanban_bom():
 
 @frappe.whitelist(allow_guest=True)
 def test_api(**args):
-    frappe.log_error(title='ESSL', message=args)
     return "Checkin Marked"
 
 

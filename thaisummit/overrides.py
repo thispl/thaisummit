@@ -23,7 +23,6 @@ class CustomAdditionalSalary(AdditionalSalary):
 			if add_salary >=1:
 				frappe.throw(_('Employee %s  have already Additional Salary'%(self.employee)))
 				message = ('Employee %s have already Additional Salary'%(self.employee))
-				frappe.log_error('Additional Salary',message)
 
 class CustomOvertimeRequest(OvertimeRequest):
 	
@@ -38,7 +37,6 @@ class CustomEmployee(Employee):
 		if self.status == 'Active':
 			if self.ctc <= 0.0:
 				frappe.throw(_('Please Fill the Salary Components Details'))
-				frappe.log_error('Employe %s Please fill the salary Components'%(self.employee_number))
 
 
 class CustomSalarySlip(SalarySlip):
@@ -183,11 +181,12 @@ class CustomSalarySlip(SalarySlip):
 				transport_days += 1
 			if d.status == 'Half Day' :
 				transport_days += 0.5			
-		self.shift_1 = shift1
-		self.shift_2 = shift2
-		self.shift_3 = shift3
-		self.shift_pp1 = shiftpp1
-		self.shift_pp2 = shiftpp2
+		if not self.designation =="Assistant Manager":
+			self.shift_1 = shift1
+			self.shift_2 = shift2
+			self.shift_3 = shift3
+			self.shift_pp1 = shiftpp1
+			self.shift_pp2 = shiftpp2
 		self.transport_days = transport_days
 		self.leave_days = leave_days
 		self.transport_allowance = frappe.db.get_value('Designation',self.designation,'transport_allowance')

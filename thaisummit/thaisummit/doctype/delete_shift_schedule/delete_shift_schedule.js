@@ -44,12 +44,12 @@ frappe.ui.form.on('Delete Shift Schedule', {
 
 	// 	}
 	// },
-	from_date(frm) {
-		if (frm.doc.from_date) {
-			if (frm.doc.from_date < frappe.datetime.now_date()) {
-				frappe.msgprint("Date should not be a Past Date")
-				frm.set_value('from_date', '')
-			}
-		}
-	}
+	// from_date(frm) {
+	// 	if (frm.doc.from_date) {
+	// 		if (frm.doc.from_date < frappe.datetime.now_date()) {
+	// 			frappe.msgprint("Date should not be a Past Date")
+	// 			frm.set_value('from_date', '')
+	// 		}
+	// 	}
+	// }
 });

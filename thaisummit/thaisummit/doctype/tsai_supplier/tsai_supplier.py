@@ -16,6 +16,7 @@ class TSAISupplier(Document):
             frappe.db.commit()
 
     def after_insert(self):
+        
         user = frappe.new_doc('User')
         user.email = self.email
         user.first_name = self.supplier_name
