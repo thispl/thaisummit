@@ -3,6 +3,14 @@
 
 frappe.ui.form.on('Bulk Overtime Request', {
 	refresh: function (frm) {
+			frm.fields_dict["employees"].grid.get_field("employee").get_query = function () {
+				return {
+					filters: {
+						"employee_type": "WC"
+					}
+				};
+			};
+		
 		frm.disable_save()
 		frm.set_value("requested_by", frappe.session.user)
 		if (frm.doc.employees) {

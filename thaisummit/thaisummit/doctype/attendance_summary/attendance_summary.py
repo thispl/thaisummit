@@ -108,6 +108,8 @@ def get_data_system(emp,from_date,to_date):
     data += "</table>"
     return data
 
+
+
 def check_holiday(date):
     holiday = frappe.db.sql("""select `tabHoliday`.holiday_date,`tabHoliday`.weekly_off from `tabHoliday List` 
     left join `tabHoliday` on `tabHoliday`.parent = `tabHoliday List`.name where `tabHoliday List`.name = 'Holiday List - 2021' and holiday_date = '%s' """%(date),as_dict=True)

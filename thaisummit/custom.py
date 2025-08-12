@@ -1623,3 +1623,101 @@ def round_up_to_pf_esi(doc,method):
     doc.net_pay = doc.gross_pay - doc.total_deduction
 
 
+@frappe.whitelist()
+#send a mail alert if any scheduled job failed
+def schedule_log_fail(doc,method):
+    if doc.status=='Failed':
+        message = """
+        The schedule Job type <b>{}</b> is failed.<br> Kindly check the log <b>{}</b>
+        """.format(doc.scheduled_job_type,doc.name)
+        frappe.sendmail(
+                recipients=["erp@groupteampro.com"],
+                subject='Scheduled Job type failed(TSA)',
+                message=message
+            )
+
+
+@frappe.whitelist()
+def emp_checkin_update():
+    filename='User (3)bc750b.csv'
+    from frappe.utils.file_manager import get_file
+    filepath = get_file(filename)
+    pps = read_csv_content(filepath[1])
+    ind=0
+    for pp in pps:
+        frappe.db.set_value("User",{"name":pp[0]},"enabled",pp[1])
+        ind+=1
+        print(pp[0])
+        print(pp[1])
+    print(ind)
+
+
+# @frappe.whitelist()
+# def update_query():
+#     frappe.db.sql("""
+#         UPDATE `tabEmployee Checkin`
+#         SET 
+#             skip_auto_attendance = 0, 
+#             attendance = NULL 
+#         WHERE 
+#             DATE(`time`) = "2024-11-23"
+#     """)
+
+#     frappe.db.commit()  # Commit the changes to the database
+
+
+# @frappe.whitelist()
+# def update_query_attendance():
+#     frappe.db.sql("""
+#         UPDATE `tabAttendance` 
+#         SET 
+           
+#             docstatus =0,
+#             in_time=NULL,
+#             out_time=NULL,
+#             shift=NULL    
+#         WHERE 
+#             attendance_date = '2024-11-23' and Status != "On Leave"
+#     """)
+
+# @frappe.whitelist()
+# def update_query():
+#     frappe.db.sql("""
+#         UPDATE `tabEmployee Checkin` 
+#         SET 
+#             skip_auto_attendance = 0, 
+#             attendance = NULL 
+#         WHERE 
+#             employee = 'TSAI0330'
+#             AND employee_type = 'WC'
+#             AND time = '2024-11-19'
+#     """)
+
+
+# @frappe.whitelist()
+# def emp_checkin_update():
+#     import frappe
+#     import pandas as pd
+#     from frappe.utils.file_manager import get_file
+
+#     # Specify the filename
+#     filename = 'User (3).xlsx'
+
+#     # Get the file path
+#     filepath = get_file(filename)
+
+#     # Read the Excel file
+#     df = pd.read_excel(filepath[1])
+
+#     ind = 0
+#     # Iterate through the rows of the dataframe
+#     for index, row in df.iterrows():
+#         try:
+#             # Update the `enabled` field in the `User` doctype
+#             frappe.db.set_value("User", {"name": row[0]}, "enabled", row[1])
+#             ind += 1
+#             print(f"Updated User: {row[0]} with Enabled: {row[1]}")
+#         except Exception as e:
+#             print(f"Error updating User: {row[0]}, Error: {str(e)}")
+
+#     print(f"Total Records Updated: {ind}")

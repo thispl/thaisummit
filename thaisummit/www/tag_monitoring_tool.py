@@ -10,7 +10,6 @@ from datetime import timedelta,datetime
 no_cache = 1
 
 def get_context(context):
-    frappe.log_error(title='taglist',message=get_tag_list())
     if frappe.session.user != 'Guest':
         context.tag_list = get_tag_list()
         
@@ -75,7 +74,6 @@ def get_tag_list():
         failure_percent_month = round((failure_month/recieved_month)*100, 2)
 
     data = [updated_tbs_list,current_datetime,recieved,on_time_sent['count'],tbs_ontime,failure,failure_percent,(failure + delay_sent['count']),recieved_month,on_time_sent_monthly['count'],failure_month,failure_percent_month,(failure_month + delay_sent_monthly["count"])]
-    frappe.log_error(title='taglist',message=data)
     return data
 
 @frappe.whitelist()

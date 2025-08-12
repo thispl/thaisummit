@@ -257,6 +257,9 @@ doc_events = {
 		],
 		"validate": "thaisummit.custom.inactive_employee"
 	},
+    'Scheduled Job Log':{
+       "validate":"thaisummit.custom.schedule_log_fail" 
+	},
 	"IYM Sequence Plan Upload":{
 		'on_submit': "thaisummit.thaisummit.doctype.tsa_master.tsa_master.enqueue_master_creation"
 	},
